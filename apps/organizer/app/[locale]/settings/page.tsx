@@ -1,14 +1,14 @@
 import OrganizerLayout from '@/components/Layouts/OrganizerLayout'
 import { SimpleTopbar } from '@/components/Layouts/Topbars'
 import { Link } from '@/i18n/navigation'
-import { ButtonPrimary, ButtonRed, ButtonSecondary } from '@workspace/ui/components/buttons'
 import { Add, ArrowRight2, ArrowSwapHorizontal, CardPos, I24Support, Icon, Notification, Profile2User, SecuritySafe, Setting5, User } from 'iconsax-react'
 import { getTranslations } from 'next-intl/server'
 import React from 'react'
-// import { ButtonRed } from "@workspace/ui/components/Buttons"
+import Signout from './Signout'
 
 export default async function Settings() {
     const t = await getTranslations('Settings')
+
     const links = [
         {
             label: t('account.title'),
@@ -61,9 +61,7 @@ export default async function Settings() {
                 <li className='lg:hidden'>
                     <SettingsCardLink Icon={Add} href={''} label={t('new')} />
                 </li>
-                <li className='lg:hidden'>
-                    <ButtonRed className='w-full'>{t('logout')}</ButtonRed>
-                </li>
+                <Signout />
             </ul>
         </OrganizerLayout>
     )

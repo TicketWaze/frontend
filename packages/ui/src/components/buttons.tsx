@@ -1,5 +1,5 @@
 import React from 'react'
-import { cn } from '@workspace/ui/lib/utils.js'
+import { cn } from '@workspace/ui/lib/utils'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
@@ -22,7 +22,7 @@ function Button({ className, children, ...props }: ButtonProps) {
 
 export function ButtonPrimary({ children, className, ...props }: ButtonProps) {
   return (
-    <Button {...props} className={cn('bg-primary-500 hover:bg-primary-500/80 hover:border-primary-600', className)}>
+    <Button {...props} className={cn('bg-primary-500 disabled:bg-primary-500/50 hover:bg-primary-500/80 hover:border-primary-600', className)}>
       {children}
     </Button>
   )
@@ -46,7 +46,7 @@ export function ButtonBlack({ children, className, ...props }: ButtonProps) {
 
 export function ButtonAccent({ children, className, ...props }: ButtonProps) {
   return (
-    <Button {...props} className={cn('border-primary-500 text-primary-500 bg-primary-50', className)}>
+    <Button {...props} className={cn('border-primary-500 text-primary-500 bg-primary-100', className)}>
       {children}
     </Button>
   )

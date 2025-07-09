@@ -11,14 +11,19 @@
     scroll-behavior: smooth;
 }
 
-.fill-icon {
-    fill: #737C8A;
-    stroke: #737C8A;
+input:not(:placeholder-shown) + label {
+  @apply top-2.5 text-[1.2rem];
 }
 
-.fill-icon-active {
-    fill: #E45B00;
-    stroke: #E45B00;
+::-webkit-scrollbar {
+  display: none;
+}
+.bg {
+  background-image: url('./auth-bg.png');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  width: 100%;
+  /* background-size: 700px; */
 }
 
 @keyframes fadeInTop {

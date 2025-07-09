@@ -4,6 +4,8 @@ import "@workspace/ui/styles/globals.css";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import AuthProvider from "@/lib/AuthProvider";
+import { Toaster } from "sonner";
 
 const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -44,7 +46,12 @@ export default async function RootLayout({
       <body
         className={`${bricolageGrotesque.variable} ${dmMono.variable} ${dmSans.className} `}
       >
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <AuthProvider>
+              {children}
+          </AuthProvider>
+          <Toaster richColors position="top-right"/>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

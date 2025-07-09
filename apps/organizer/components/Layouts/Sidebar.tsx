@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import VerifierOrganisationCheckMark from "@/components/VerifiedOrganisationCheckMark"
+import { signOut } from "next-auth/react";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");
@@ -112,7 +113,7 @@ function Sidebar({ className }: { className: string }) {
           {/* logout */}
           <li className={'flex gap-4 items-center'}>
             <button
-              // onClick={() => post('/auth/logout')}
+              onClick={() => signOut()}
               className={'flex gap-4 items-center cursor-pointer p-4'}
             >
               <Logout size="20" color="#737c8a" variant="Bulk" />
