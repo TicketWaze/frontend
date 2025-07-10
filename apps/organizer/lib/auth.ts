@@ -1,6 +1,5 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { cookies } from "next/headers";
 
 const nextAuthResult = NextAuth({
   session: {
@@ -10,8 +9,6 @@ const nextAuthResult = NextAuth({
   jwt: {
     maxAge: 2 * 60 * 60,
   },
-  trustHost : false,
-  
   providers: [
     Credentials({
       credentials: {

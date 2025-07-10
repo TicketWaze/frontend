@@ -24,7 +24,7 @@ export default function UserProfileForm({ user, accessToken }: { user: User; acc
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<TUpdateProfileSchema>({
         resolver: zodResolver(UpdateProfileSchema),
     });

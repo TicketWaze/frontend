@@ -2,8 +2,6 @@
 import User from '@/types/User'
 import { Image as ImageIcon, UserCirlceAdd } from 'iconsax-react'
 import { useTranslations } from 'next-intl'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
 
 
 function ProfileImage({ user }: { user: User }) {

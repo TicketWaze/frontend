@@ -3,7 +3,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { cn } from '@workspace/ui/lib/utils'
 import { Chart1, Moneys, Setting2, Ticket } from 'iconsax-react';
 import { useTranslations } from 'next-intl';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 export default function MobileNavigation({ className }: { className?: string; }) {
     const t = useTranslations("Layout.sidebar");

@@ -1,19 +1,5 @@
-'use client'
 import OrganizerLayout from "@/components/Layouts/OrganizerLayout";
-// import { api } from "@/lib/axios";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-
 export default function Page() {
-  // const { data: session } = useSession()
-  // const api = useAxios()
-  // useEffect(() => {
-
-  //   api.get('/users/me')
-  //     .then((res) => console.log(res.data))
-  //     .catch((err) => console.error('Failed to fetch user', err))
-  // }, [])
-
 
   return <OrganizerLayout title={"Analytics"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse viverra quam ut nisl luctus, vitae pulvinar risus ullamcorper. Praesent id scelerisque odio. Nunc at ligula eu sapien posuere aliquet quis ac leo. Fusce vehicula velit libero. Cras bibendum odio sed ante condimentum feugiat. Etiam ac condimentum dolor, in luctus elit. Cras at condimentum ex. Morbi vel tortor dapibus, fringilla mi sit amet, volutpat tortor.
 
