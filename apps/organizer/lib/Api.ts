@@ -29,7 +29,7 @@ export async function patch(endpoint: string, accessToken : string, body : unkno
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            "Authorization": `Bearer ${accessToken}`
+            "Authorization": `Bearer ${accessToken}`,
         },
         body : JSON.stringify(body)
 

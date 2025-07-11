@@ -475,12 +475,18 @@
     },
     "security": {
       "title": "Security",
+      "back" : "Back",
       "subtitle": "Change Password",
       "reset": "Reset password",
       "placeholders": {
         "password": "Current Password",
         "new": "New Password",
         "confirm": "Confirm New Password"
+      },
+      "errors" : {
+        "blank" : "Field cannot be blank",
+        "password" : "Password must me at least 8 characters",
+        "confirm" : "Password must be the same"
       },
       "two_factor": "Two Factor Authentication",
       "enable": "Enable"
