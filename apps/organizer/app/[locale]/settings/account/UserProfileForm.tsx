@@ -24,7 +24,7 @@ export default function UserProfileForm({ user, accessToken }: { user: User; acc
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<TUpdateProfileSchema>({
         resolver: zodResolver(UpdateProfileSchema),
     });
@@ -45,13 +45,13 @@ export default function UserProfileForm({ user, accessToken }: { user: User; acc
             </span>
             {/* <div> */}
             <div className={'flex flex-col w-full lg:flex-row lg:justify-between gap-[1.5rem]'}>
-                <Input type='text' {...register('firstName')} name='firstName' error={errors.firstName?.message} defaultValue={user.firstName} className='flex-1 w-full'>{t('placeholders.firstname')}</Input>
-                <Input type='text' {...register('lastName')} name='lastName' error={errors.lastName?.message} defaultValue={user.lastName} className='flex-1 w-full'>{t('placeholders.lastname')}</Input>
+                <Input type='text' {...register('firstName')} isLoading={isSubmitting} name='firstName' error={errors.firstName?.message} defaultValue={user.firstName} className='flex-1 w-full'>{t('placeholders.firstname')}</Input>
+                <Input type='text' {...register('lastName')} isLoading={isSubmitting} name='lastName' error={errors.lastName?.message} defaultValue={user.lastName} className='flex-1 w-full'>{t('placeholders.lastname')}</Input>
             </div>
 
             {/* </div> */}
             <Input defaultValue={user.email} readOnly disabled className='cursor-not-allowed' type='email'>{t('placeholders.email')}</Input>
-            <Input defaultValue={user.phoneNumber} {...register('phoneNumber')} name='phoneNumber' error={errors.phoneNumber?.message} type='string'>{t('placeholders.phone')}</Input>
+            <Input defaultValue={user.phoneNumber} {...register('phoneNumber')} isLoading={isSubmitting} name='phoneNumber' error={errors.phoneNumber?.message} type='string'>{t('placeholders.phone')}</Input>
             <Input defaultValue={birthdate.toLocaleDateString('en-US', {
                 year: "numeric",
                 month: "long",
