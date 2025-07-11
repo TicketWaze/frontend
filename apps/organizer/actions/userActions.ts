@@ -16,3 +16,34 @@ export async function UpdateUserProfile(firstName: string, lastName: string, pho
     }
     revalidatePath('/settings/account')
 }
+
+export async function UpdateUserProfileImage(accessToken: string, body: FormData) {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/upload-image`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: body,
+        })
+
+        const data = await res.json()
+        if (data.status === 'success') {
+            revalidatePath('/settings/account')
+            return {
+                status : 'success',
+                message: "Image Uploaded"
+            }
+        } else {
+            return {
+                status : 'failed',
+                message: data.message
+            }
+        }
+    } catch (err: any) {
+        return {
+            error: err?.message ?? 'An unknown error occurred'
+        }
+    }
+
+}
