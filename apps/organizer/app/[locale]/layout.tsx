@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import AuthProvider from "@/lib/AuthProvider";
 import { Toaster } from "sonner";
+import OrganisationProvider from "@/lib/StoreProvider";
 
 const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider>
           <AuthProvider>
+            <OrganisationProvider/>
               {children}
           </AuthProvider>
           <Toaster richColors position="top-right"/>

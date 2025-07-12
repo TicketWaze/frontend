@@ -413,9 +413,9 @@
       "setProfile": "Set profile image",
       "personal": "Personal Information",
       "placeholders": {
-        "firstname" :"First Name",
-        "lastname" : "Last Name",
-        "email" : "Email Address",
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "email": "Email Address",
         "gender": "Gender",
         "male": "Male",
         "female": "Female",
@@ -423,10 +423,10 @@
         "dob": "Date of Birth",
         "phone": "Phone Number"
       },
-      "errors" : {
-        "firstName" : "First name cannot be blank",
-        "lastName" : "Last name cannot be blank",
-        "phoneNumber" : "Phone Number should be at least 8 characters"
+      "errors": {
+        "firstName": "First name cannot be blank",
+        "lastName": "Last name cannot be blank",
+        "phoneNumber": "Phone Number should be at least 8 characters"
       },
       "event": {
         "title": "Event",
@@ -442,13 +442,29 @@
     },
     "profile": {
       "title": "Profile",
+      "back": "Back",
       "edit": "Edit",
       "save": "Save",
+      "setProfile": "Set profile image",
       "subtitle": "Organisation Profile",
-      "city": "City",
-      "state": "State",
-      "website": "Organisation website",
-      "setProfile": "Set profile image"
+      "placeholders": {
+        "name" :  "Organisation Name",
+        "description" : "Organisation Description",
+        "country" : "Country",
+        "city": "City",
+        "state": "State/Region",
+        "website": "Organisation website"
+      },
+      "errors" : {
+        "name" : {
+          "min" : "Organisation name cannot be blank",
+          "max" : "Organisation name cannot be more than 30 characters"
+        },
+        "description" : {
+          "min" : "Organisation description cannot be less than 150 characters",
+          "max" : "Organisation description cannot be more than 350 characters"
+        }
+      }
     },
     "team": {
       "title": "Team",
@@ -475,7 +491,7 @@
     },
     "security": {
       "title": "Security",
-      "back" : "Back",
+      "back": "Back",
       "subtitle": "Change Password",
       "reset": "Reset password",
       "placeholders": {
@@ -483,10 +499,10 @@
         "new": "New Password",
         "confirm": "Confirm New Password"
       },
-      "errors" : {
-        "blank" : "Field cannot be blank",
-        "password" : "Password must me at least 8 characters",
-        "confirm" : "Password must be the same"
+      "errors": {
+        "blank": "Field cannot be blank",
+        "password": "Password must me at least 8 characters",
+        "confirm": "Password must be the same"
       },
       "two_factor": "Two Factor Authentication",
       "enable": "Enable"

@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^5.1.1",
     "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-tooltip": "^1.2.7",
+    "@tanstack/react-store": "^0.7.3",
     "@types/luxon": "^3.6.2",
     "@workspace/ui": "workspace:*",
     "iconsax-react": "^0.0.8",
@@ -33,6 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@workspace/typescript-config": "workspace:*",
+    "cookies-next": "^6.0.0",
     "typescript": "^5.7.3"
   }
 }

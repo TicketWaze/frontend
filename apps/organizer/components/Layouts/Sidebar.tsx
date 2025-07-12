@@ -9,11 +9,15 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import VerifierOrganisationCheckMark from "@/components/VerifiedOrganisationCheckMark"
 import { signOut } from "next-auth/react";
+import { useStore } from "@tanstack/react-store";
+import organisationStore from "@/store/OrganisationStore";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");
   const pathname = usePathname();
-  
+
+  const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
+
   const links = [
     {
       label: t("analytics"),
@@ -53,7 +57,7 @@ function Sidebar({ className }: { className: string }) {
                   <Link href={path} className={`group flex items-center gap-4 py-4 relative text-[1.5rem] leading-[20px] ${isActive(path) ? 'font-semibold text-primary-500 is-active' : 'text-neutral-700 hover:text-primary-500'}`}>
                     <Icon
                       size="20"
-                      className={`transition-all duration-500 ${isActive(path) ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500" }  `}
+                      className={`transition-all duration-500 ${isActive(path) ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
                       // className={`${isActive(path) ? "fill-icon-active" : "fill-icon"} group-hover:fill-icon-active`}
                       variant="Bulk"
                     />
@@ -136,8 +140,8 @@ function Sidebar({ className }: { className: string }) {
                 </span>
 
                 <div className={'text-neutral-700 text-[1.5rem] flex-1 leading-[20px]'}>
-                <span>Cap-Haitien Music Alliance <VerifierOrganisationCheckMark /></span>
-              </div>
+                  <span>{organisation?.organisationName} {organisation?.isVerified ? <VerifierOrganisationCheckMark /> : null}</span>
+                </div>
               </Link>
             </div>
           </li>
@@ -156,9 +160,9 @@ function Sidebar({ className }: { className: string }) {
               </span>
 
               <div className={'text-neutral-700 text-[1.5rem] flex-1 leading-[20px]'}>
-                <span>Cap-Haitien Music Alliance <VerifierOrganisationCheckMark /></span>
+                <span>{organisation?.organisationName} {organisation?.isVerified ? <VerifierOrganisationCheckMark /> : null}</span>
               </div>
-               
+
             </Link>
           </li>
         </ul>
