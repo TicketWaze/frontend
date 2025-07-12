@@ -1,6 +1,6 @@
 export async function api(endpoint: string, accessToken : string) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
-        cache: 'no-store',
+        // cache: 'no-store',
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

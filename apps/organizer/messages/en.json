@@ -409,6 +409,7 @@
       "back": "Back",
       "edit": "Edit",
       "save": "Save",
+      "resize" : "Resize your image",
       "subtitle": "User Information",
       "setProfile": "Set profile image",
       "personal": "Personal Information",
@@ -447,6 +448,7 @@
       "save": "Save",
       "setProfile": "Set profile image",
       "subtitle": "Organisation Profile",
+      "resize" : "Resize your image",
       "placeholders": {
         "name" :  "Organisation Name",
         "description" : "Organisation Description",

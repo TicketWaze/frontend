@@ -133,11 +133,11 @@ function Sidebar({ className }: { className: string }) {
                 href="/settings/profile"
                 className="flex items-center gap-4 bg-neutral-100 p-4 rounded-[10px]"
               >
-                <span
+                {organisation?.profileImageUrl ? <Image src={organisation.profileImageUrl} width={35} height={35} alt={organisation.organisationName} className="rounded-full" /> : <span
                   className="w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary"
                 >
-                  C
-                </span>
+                  {organisation?.organisationName.slice()[0]?.toUpperCase()}
+                </span>}
 
                 <div className={'text-neutral-700 text-[1.5rem] flex-1 leading-[20px]'}>
                   <span>{organisation?.organisationName} {organisation?.isVerified ? <VerifierOrganisationCheckMark /> : null}</span>
@@ -151,13 +151,11 @@ function Sidebar({ className }: { className: string }) {
               href={'/settings/profile'}
               className={'flex items-center gap-4 bg-neutral-100 p-4 mx-2 mb-2 rounded-[10px]'}
             >
-              <span
-                className={
-                  'w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary'
-                }
-              >
-                C
-              </span>
+              {organisation?.profileImageUrl ? <Image src={organisation.profileImageUrl} width={35} height={35} alt={organisation.organisationName} className="rounded-full"/> : <span
+                  className="w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary"
+                >
+                  {organisation?.organisationName.slice()[0]?.toUpperCase()}
+                </span>}
 
               <div className={'text-neutral-700 text-[1.5rem] flex-1 leading-[20px]'}>
                 <span>{organisation?.organisationName} {organisation?.isVerified ? <VerifierOrganisationCheckMark /> : null}</span>
