@@ -537,6 +537,7 @@
     },
     "notification": {
       "title": "Notification",
+      "back": "Back",
       "email": "Email Notifications",
       "ticket_sales": "Ticket Sales Updates",
       "event_check_in": "Event Check-In Alerts",

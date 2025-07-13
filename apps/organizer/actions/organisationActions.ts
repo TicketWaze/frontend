@@ -73,3 +73,23 @@ export async function UpdateOrganisationPaymentInformation(organisationId: strin
         }
     }
 }
+
+export async function UpdateOrganisationNotificationPreferences(organisationId: string, body: unknown, accessToken: string) {
+    try {
+        const data = await patch(`/organisations/${organisationId}/notifications-preferences`, accessToken ?? '', body)
+
+        if (data.status === 'success') {
+            revalidatePath('/settings/notification')
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(data.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
