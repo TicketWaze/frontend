@@ -1,19 +1,20 @@
 'use server'
 
-import { patch } from "@/lib/Api"
+import { patch, post } from "@/lib/Api"
 import { revalidatePath } from "next/cache"
 
 export async function UpdateOrganisationProfile(organisationId: string, organisationName: string, organisationDescription: string, accessToken: string) {
     try {
         const data = await patch(`/organisations/${organisationId}`, accessToken ?? '', { organisationName, organisationDescription })
-        if (data.status === 'failed') {
-            throw new Error(data.message)
-        } else {
+        if (data.status === 'success') {
             revalidatePath('/settings/profile')
             return {
                 status: "success",
                 organisation: data.organisation
             }
+
+        } else {
+            throw new Error(data.message)
         }
     } catch (error: any) {
         return {
@@ -51,4 +52,24 @@ export async function UpdateOrganisationProfileImage(organisationId: string, acc
         }
     }
 
+}
+
+export async function UpdateOrganisationPaymentInformation(organisationId: string, bankName: string, bankAccountName: string, bankAccountNumber: string, accessToken: string) {
+    try {
+        const data = await patch(`/organisations/${organisationId}/payment-informations`, accessToken ?? '', { bankName, bankAccountName, bankAccountNumber })
+
+        if (data.status === 'success') {
+            revalidatePath('/settings/payment')
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(data.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
 }

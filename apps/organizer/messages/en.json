@@ -513,7 +513,13 @@
       "title": "Payment",
       "edit": "Edit",
       "save": "Save",
+      "back": "Back",
       "subtitle": "Withdrawal Account",
+      "errors" : {
+        "bank_name" : "Bank name cannot be blank",
+        "bank_account_name" : "Bank name cannot be blank",
+        "bank_account_number" : "Bank name cannot be blank"
+      },
       "bank": "Bank Details",
       "bank_name": "Bank name",
       "bank_account_name": "Bank account name",
