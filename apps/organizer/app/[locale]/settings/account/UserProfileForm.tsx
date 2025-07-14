@@ -1,5 +1,6 @@
 'use client'
 import { UpdateUserProfile } from '@/actions/userActions'
+import FormatDate from '@/lib/FormatDate'
 import User from '@/types/User'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@workspace/ui/components/Inputs'
@@ -29,8 +30,6 @@ export default function UserProfileForm({ user, accessToken }: { user: User; acc
         resolver: zodResolver(UpdateProfileSchema),
     });
 
-    const birthdate = new Date(user.dateOfBirth.toString())
-
     async function submitHandler(data: TUpdateProfileSchema) {
 
         const result = await UpdateUserProfile(data.firstName, data.lastName, String(data.phoneNumber), accessToken)
@@ -52,11 +51,7 @@ export default function UserProfileForm({ user, accessToken }: { user: User; acc
             {/* </div> */}
             <Input defaultValue={user.email} readOnly disabled className='cursor-not-allowed' type='email'>{t('placeholders.email')}</Input>
             <Input defaultValue={user.phoneNumber} {...register('phoneNumber')} isLoading={isSubmitting} name='phoneNumber' error={errors.phoneNumber?.message} type='string'>{t('placeholders.phone')}</Input>
-            <Input defaultValue={birthdate.toLocaleDateString('en-US', {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            })} readOnly disabled className='cursor-not-allowed' type='text'>{t('placeholders.dob')}</Input>
+            <Input defaultValue={FormatDate(user.dateOfBirth)} readOnly disabled className='cursor-not-allowed' type='text'>{t('placeholders.dob')}</Input>
             <Input disabled readOnly className='cursor-not-allowed' defaultValue={Capitalize(user.gender)} type='text'>{t('placeholders.gender')}</Input>
         </form>
     )

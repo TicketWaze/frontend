@@ -1,6 +1,6 @@
 'use server'
 
-import { patch, post } from "@/lib/Api"
+import { api, patch, post } from "@/lib/Api"
 import { revalidatePath } from "next/cache"
 
 export async function UpdateOrganisationProfile(organisationId: string, organisationName: string, organisationDescription: string, accessToken: string) {
@@ -93,3 +93,45 @@ export async function UpdateOrganisationNotificationPreferences(organisationId: 
         }
     }
 }
+
+export async function AddMemberAction(organisationId: string, body: unknown, accessToken: string, locale: string, origin: string) {
+    try {
+        const data = await post(`/organisations/${organisationId}/invite-user`, accessToken ?? '', body, locale, origin)
+        if (data.status === 'success') {
+            revalidatePath('/settings/team')
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(data.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
+
+export async function RemoveInvitation(organisationId: string, accessToken: string, email: string, locale: string, origin: string) {
+    try {
+        const data = await api(`/organisations/${organisationId}/remove-invite/${email}`, accessToken ?? '', locale, origin)
+
+        if (data.status === 'success') {
+            revalidatePath('/settings/team')
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(data.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
+
+
+

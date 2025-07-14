@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import * as z from "zod/v4";
+import { z } from "zod/v4";
 
 export default function LoginPage() {
     const t = useTranslations('Auth.login')

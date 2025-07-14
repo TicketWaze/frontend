@@ -9,6 +9,7 @@ import { getTranslations } from 'next-intl/server'
 import { auth } from '@/lib/auth'
 import { api } from '@/lib/Api'
 import UserProfileForm from './UserProfileForm'
+import FormatDate from '@/lib/FormatDate'
 
 export default async function UserInformations() {
     const t = await getTranslations('Settings.account')
@@ -79,11 +80,7 @@ export default async function UserInformations() {
                             {t('account.created')}
                         </p>
                         <span className={'font-medium text-[1.6rem] leading-8 text-deep-100'}>
-                            {new Date(user.createdAt.toString()).toLocaleDateString('en-US', {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                            })}
+                            {FormatDate(user.createdAt)}
                         </span>
                     </div>
                     <ButtonRed>{t('account.delete')}</ButtonRed>

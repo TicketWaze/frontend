@@ -409,7 +409,7 @@
       "back": "Back",
       "edit": "Edit",
       "save": "Save",
-      "resize" : "Resize your image",
+      "resize": "Resize your image",
       "subtitle": "User Information",
       "setProfile": "Set profile image",
       "personal": "Personal Information",
@@ -448,28 +448,29 @@
       "save": "Save",
       "setProfile": "Set profile image",
       "subtitle": "Organisation Profile",
-      "resize" : "Resize your image",
+      "resize": "Resize your image",
       "placeholders": {
-        "name" :  "Organisation Name",
-        "description" : "Organisation Description",
-        "country" : "Country",
+        "name": "Organisation Name",
+        "description": "Organisation Description",
+        "country": "Country",
         "city": "City",
         "state": "State/Region",
         "website": "Organisation website"
       },
-      "errors" : {
-        "name" : {
-          "min" : "Organisation name cannot be blank",
-          "max" : "Organisation name cannot be more than 30 characters"
+      "errors": {
+        "name": {
+          "min": "Organisation name cannot be blank",
+          "max": "Organisation name cannot be more than 30 characters"
         },
-        "description" : {
-          "min" : "Organisation description cannot be less than 150 characters",
-          "max" : "Organisation description cannot be more than 350 characters"
+        "description": {
+          "min": "Organisation description cannot be less than 150 characters",
+          "max": "Organisation description cannot be more than 350 characters"
         }
       }
     },
     "team": {
       "title": "Team",
+      "back": "Back",
       "search": "Search for member",
       "add": "Add member",
       "active": "Active",
@@ -479,9 +480,10 @@
       "edit": "Edit member",
       "remove": "Remove member",
       "remove_member": "Remove member",
+      "remove_invitation": "Remove invitation",
       "confirm_text": "Are you sure you want to remove this member? They will lose all access to this organization.",
       "confirm": "Yes, remove",
-      "date_added": "Date Added",
+      "joined_at": "Joined At",
       "added_by": "Added By",
       "last_login": "Last Login",
       "table": {
@@ -489,6 +491,10 @@
         "email": "Email Address",
         "role": "Role",
         "status": "Status"
+      },
+      "errors": {
+        "name": "Name cannot be blank",
+        "email": "Enter a valid email address"
       }
     },
     "security": {
@@ -515,10 +521,10 @@
       "save": "Save",
       "back": "Back",
       "subtitle": "Withdrawal Account",
-      "errors" : {
-        "bank_name" : "Bank name cannot be blank",
-        "bank_account_name" : "Bank name cannot be blank",
-        "bank_account_number" : "Bank name cannot be blank"
+      "errors": {
+        "bank_name": "Bank name cannot be blank",
+        "bank_account_name": "Bank name cannot be blank",
+        "bank_account_number": "Bank name cannot be blank"
       },
       "bank": "Bank Details",
       "bank_name": "Bank name",
