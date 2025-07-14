@@ -488,7 +488,7 @@
       "last_login": "Last Login",
       "table": {
         "name": "Full Name",
-        "email": "Email Address",
+        "email": "Email",
         "role": "Role",
         "status": "Status"
       },

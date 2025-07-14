@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl"
 export default function UserInformation({ member }: { member: OrganisationMember }) {
   const t = useTranslations('Settings.team')
   return (
-    <DrawerContent className={'w-[360px] lg:w-[520px] bg-white my-6 p-[30px] rounded-[30px]'}>
+    <DrawerContent className={'w-[360px] lg:w-[520px] bg-white my-6 p-12 rounded-[30px]'}>
       <div className={'w-full flex flex-col items-center overflow-y-scroll'}>
         <DrawerTitle className={'pb-[40px]'}>
           <span
@@ -102,7 +102,7 @@ export default function UserInformation({ member }: { member: OrganisationMember
           <div className={'flex gap-8 w-full items-center'}>
             <Dialog>
               <DialogTrigger className={'w-full flex-1'}>
-                <span className={'w-full border-failure text-failure bg-[#FCE5EA] px-[3rem] py-[15px] border-2 rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center'}>{t('remove')}</span>
+                <span className={'w-full border-failure text-failure bg-[#FCE5EA] px-[1rem] py-[15px] border-2 rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center'}>{t('remove')}</span>
               </DialogTrigger>
               <DialogContent className={'w-[360px] lg:w-[520px] '}>
                 <DialogHeader>
