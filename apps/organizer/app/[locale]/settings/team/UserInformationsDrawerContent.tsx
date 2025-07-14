@@ -32,7 +32,7 @@ export default function UserInformation({ member }: { member: OrganisationMember
                 {member.firstName} {member.lastName}
               </span>
             </span>
-            <span
+            <span aria-hidden
               className={
                 'flex justify-between items-center text-[1.4rem] leading-[20px] text-neutral-600'
               }
@@ -41,12 +41,13 @@ export default function UserInformation({ member }: { member: OrganisationMember
               <span className={'text-deep-100 font-medium leading-[20px]'}>{member.email}</span>
             </span>
             <span
+            aria-hidden
               className={
                 'flex justify-between items-center text-[1.4rem] leading-[20px] text-neutral-600'
               }
             >
               {t('table.role')}
-              <span className={'text-deep-100 font-medium leading-[20px]'}>{member.role}</span>
+              <span aria-hidden className={'text-deep-100 font-medium leading-[20px]'}>{member.role}</span>
             </span>
           </span>
           <Separator />
