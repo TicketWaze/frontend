@@ -26,7 +26,7 @@ function Sidebar({ className }: { className: string }) {
     },
     {
       label: t("events"),
-      path: "events",
+      path: "/events",
       Icon: Ticket,
     },
     {

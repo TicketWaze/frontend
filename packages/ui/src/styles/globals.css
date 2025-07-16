@@ -186,6 +186,7 @@ input:not(:placeholder-shown) + label {
     --color-deep-100: #2E3237;
     --color-background: #F1F2F3;
     --color-black: #0D0D0D;
+    --color-dark: #000000;
     --color-success: #349C2E;
     --color-failure: #DE0028;
     --color-warning: #EA961C;

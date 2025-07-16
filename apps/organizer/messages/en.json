@@ -270,7 +270,7 @@
       }
     }
   },
-  "Event": {
+  "Events": {
     "title": "Event Overview",
     "search": "Search for event",
     "create": "Create event",
@@ -342,6 +342,8 @@
     "create_event": {
       "title": "Create Event",
       "basic": "Basic Details",
+      "category_search": "Search for category",
+      "no_result": "They is no result for the keyword ",
       "date_time": "Date & Time",
       "ticket": "Ticket",
       "event_type": "Event Type",
@@ -351,16 +353,17 @@
       "proceed": "Proceed",
       "event_details": "Event Details",
       "event_name": "Event name",
-      "description": "Description",
+      "description": "Tell attendees what your event is about, who's it for, and what they can expect.",
       "event_tags": "Event tags",
       "select_tags": "Select event tags",
       "location": "Location",
       "address": "Address",
       "city": "City",
-      "state": "State",
+      "state": "State / Region / Province",
       "country": "Country",
       "thumbnail": "Event Thumbnail",
       "thumbnail_text": "Drop your thumbnail here or ",
+      "resize": "Resize your image",
       "browse": "browse",
       "day": "Day",
       "start_date": "Start date",
@@ -382,7 +385,37 @@
       "password": "Password (if needed)",
       "mark_as_free": "Mark this event as free",
       "general_default": "Enjoy full access without any cost! Join us for an unforgettable experience. Secure your spot today!",
-      "draft": "Save as draft"
+      "draft": "Save as draft",
+      "optional": "optional",
+      "errors": {
+        "basicDetails": {
+          "name": "Event name should be at leat 10 characters",
+          "description": {
+            "min": "Event description cannot be less than 150 characters",
+            "max": "Event description cannot be more than 350 characters"
+          },
+          "address": "Address field cannot be blank",
+          "state": "This field Cannot be blank",
+          "city": "City field cannot be blank",
+          "country": "Select a country",
+          "tags": "Select at least one tag",
+          "image": {
+            "required": "Event should have a cover image",
+            "max": "Max file size is 200ko.",
+            "type": ".jpg, .jpeg, .png and .webp files are accepted."
+          }
+        },
+        "dateAndTime": {
+          "startDate": "Start date field is required",
+          "startTime": "Start time field is required"
+        },
+        "ticketClass": {
+          "name": "Select one ticket class name",
+          "description": "Ticket class description should be at least 20 characters",
+          "price": "Price cannot be empty",
+          "quantity": "Quantity cannot be empty"
+        }
+      }
     },
     "filters": {
       "first": {
