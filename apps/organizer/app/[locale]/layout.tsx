@@ -49,7 +49,7 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider>
           <AuthProvider>
-            <OrganisationProvider/>
+            {/* <OrganisationProvider/> */}
               {children}
           </AuthProvider>
           <Toaster richColors position="top-right"/>

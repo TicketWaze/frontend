@@ -23,7 +23,8 @@ function ProfileImage() {
     const t = useTranslations('Settings.profile')
     const { data: session } = useSession()
     const [isUploading, setIsUploading] = useState(false)
-    const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
+    // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
+    const organisation = session?.activeOrganisation
     const triggerRef = useRef<HTMLSpanElement>(null)
     const CloseRef = useRef<HTMLSpanElement>(null)
 

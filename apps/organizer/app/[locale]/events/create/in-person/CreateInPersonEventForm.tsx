@@ -21,15 +21,24 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import EventTags from '@/lib/EventTags'
+import { CreateInPersonEvent } from '@/actions/EventActions'
+import { useSession } from 'next-auth/react'
+import { toast } from 'sonner'
+import EventTag from '@/types/EventTag'
+import Capitalize from '@workspace/ui/lib/Capitalize'
+import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
+import { redirect } from 'next/navigation'
 
 
-export default function CreateInPersonEventForm() {
+export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) {
   const t = useTranslations('Events.create_event')
-  const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
+  // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
+  const {data : session} = useSession()
+  const organisation = session?.activeOrganisation
   const countries = UseCountries()
 
   const FormDataSchema = z.object({
-    eventName: z.string().min(10, t('errors.basicDetails.name')),
+    eventName: z.string().min(10, t('errors.basicDetails.name')).max(50),
     eventDescription: z.string()
       .min(150, t('errors.basicDetails.description.min'))
       .max(350, t('errors.basicDetails.description.max')),
@@ -38,8 +47,8 @@ export default function CreateInPersonEventForm() {
     city: z.string().min(1, t('errors.basicDetails.city')),
     country: z.string({ error: issue => issue.input === undefined ? t('errors.basicDetails.country') : t('errors.basicDetails.country') })
       .min(1, t('errors.basicDetails.country')),
-    eventTags: z.array(z.object({ label: z.string(), tagId: z.string() }), { error: issue => issue.input === undefined ? t('errors.basicDetails.tags') : t('errors.basicDetails.tags') }).min(1, t('errors.basicDetails.tags')),
-    image: z
+    eventTags: z.array(z.object({ tagId: z.string(), tagName: z.string() }), { error: issue => issue.input === undefined ? t('errors.basicDetails.tags') : t('errors.basicDetails.tags') }).min(1, t('errors.basicDetails.tags')),
+    eventImage: z
       .file({ error: issue => issue.input === undefined ? t('errors.basicDetails.image.required') : t('errors.basicDetails.image.required') })
       .max(504800, t('errors.basicDetails.image.max'))
       .mime(['image/jpeg',
@@ -52,11 +61,13 @@ export default function CreateInPersonEventForm() {
         startTime: z.string().min(1, t('errors.dateAndTime.startTime')),
         endTime: z.string().optional()
       })),
-    ticketClasses: z.array(z.object({
-      ticketClassName: z.string().min(1, t('errors.ticketClass.name')),
-      ticketClassDescription: z.string().min(20, t('errors.ticketClass.description')).max(100),
-      ticketClassPrice: z.string().min(1, t('errors.ticketClass.price')),
-      ticketClassQuantity: z.string().min(1, t('errors.ticketClass.quantity'))
+    ticketTypes: z.array(z.object({
+      ticketTypeName: z.string().min(1, t('errors.ticketClass.name')),
+      ticketTypeDescription: z.string().min(20, t('errors.ticketClass.description')).max(100),
+      ticketTypePrice: z.string().min(1, t('errors.ticketClass.price')),
+      ticketTypeQuantity: z.string().min(1, t('errors.ticketClass.quantity.empty')).refine((val) => /^[1-9]\d*$/.test(val), {
+        message: t('errors.ticketClass.quantity.decimal'),
+      }),
     }))
   })
   type TInpuFormDataSchema = z.infer<typeof FormDataSchema>
@@ -70,7 +81,7 @@ export default function CreateInPersonEventForm() {
       name: t('date_time'),
       fields: ['eventDays']
     },
-    { name: t('ticket'), fields: ['ticketClasses'] }
+    { name: t('ticket'), fields: ['ticketTypes'] }
   ]
 
   const [previousStep, setPreviousStep] = useState(0)
@@ -93,13 +104,45 @@ export default function CreateInPersonEventForm() {
     setValue,
     control,
     trigger,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<TInpuFormDataSchema>({
-    resolver: zodResolver(FormDataSchema)
+    resolver: zodResolver(FormDataSchema),
+    values: {
+      eventName: '',
+      eventDescription: '',
+      address: '',
+      state: '',
+      city: '',
+      country: Capitalize(organisation?.country ?? ''),
+      eventTags: [],
+      eventImage: undefined as unknown as File,
+      eventDays: [{ startDate: '', startTime: '', endTime: '' }],
+      ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
+    }
   })
 
-  const processForm: SubmitHandler<TInpuFormDataSchema> = data => {
-    console.log(data)
+  const processForm: SubmitHandler<TInpuFormDataSchema> = async data => {
+    const formData = new FormData()
+    formData.append('eventName', data.eventName)
+    formData.append('eventDescription', data.eventDescription)
+    formData.append('address', data.address)
+    formData.append('state', data.state)
+    formData.append('city', data.city)
+    formData.append('country', data.country)
+    formData.append('eventTags', JSON.stringify(data.eventTags))
+    formData.append('eventImage', data.eventImage)
+    formData.append('eventDays', JSON.stringify(data.eventDays))
+    formData.append('ticketTypes', JSON.stringify(data.ticketTypes))
+    formData.append('currencyId', session?.user.currency.currencyId ?? '')
+
+    const result = await CreateInPersonEvent(organisation?.organisationId ?? '', session?.user.accessToken ?? '', formData)
+    if (result.status === 'success') {
+      toast.success('success')
+      redirect('/events')
+    }
+    if (result.error) {
+      toast.error(result.error)
+    }
   }
 
   type FieldName = keyof TInpuFormDataSchema
@@ -154,7 +197,7 @@ export default function CreateInPersonEventForm() {
     if (!imageSrc || !croppedAreaPixels) return
     const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels)
     const file = new File([croppedBlob], 'profile.jpg', { type: croppedBlob.type })
-    setValue('image', file, { shouldValidate: true })
+    setValue('eventImage', file, { shouldValidate: true })
     setImagePreview(URL.createObjectURL(file))
   }
 
@@ -166,27 +209,27 @@ export default function CreateInPersonEventForm() {
   // handling event Days end
 
   // handling ticketClasses start
-  const [ticketClasses, setTicketClasses] = useState<{ ticketClassName: string, ticketClassDescription: string, ticketClassPrice: string, ticketClassQuantity: string }[]>([{ ticketClassName: '', ticketClassDescription: '', ticketClassPrice: '', ticketClassQuantity: '' }])
+  const [ticketClasses, setTicketClasses] = useState<{ ticketTypeName: string, ticketTypeDescription: string, ticketTypePrice: string, ticketTypeQuantity: string }[]>([{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }])
   const updateTicketClasses = (
     index: number,
-    key: 'ticketClassName' | 'ticketClassDescription' | 'ticketClassPrice' | 'ticketClassQuantity',
+    key: 'ticketTypeName' | 'ticketTypeDescription' | 'ticketTypePrice' | 'ticketTypeQuantity',
     value: string
   ) => {
     const updated = [...ticketClasses]
 
     // Fill missing fields if undefined (to satisfy strict types)
-    const current = updated[index] ?? { ticketClassName: '', ticketClassDescription: '', ticketClassPrice: '', ticketClassQuantity: '' }
+    const current = updated[index] ?? { ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }
 
     updated[index] = {
-      ticketClassName: current.ticketClassName,
-      ticketClassDescription: current.ticketClassDescription,
-      ticketClassPrice: current.ticketClassPrice,
-      ticketClassQuantity: current.ticketClassQuantity,
+      ticketTypeName: current.ticketTypeName,
+      ticketTypeDescription: current.ticketTypeDescription,
+      ticketTypePrice: current.ticketTypePrice,
+      ticketTypeQuantity: current.ticketTypeQuantity,
       [key]: value
     }
 
     setTicketClasses(updated)
-    setValue('ticketClasses', updated, { shouldValidate: true })
+    setValue('ticketTypes', updated, { shouldValidate: true })
   }
 
   // handling ticketClasses ends
@@ -197,8 +240,9 @@ export default function CreateInPersonEventForm() {
         <ButtonPrimary
           onClick={next}
           className=' w-full max-w-[530px] mx-auto  '
+          disabled={isSubmitting}
         >
-          {t('proceed')}
+          {isSubmitting ? <LoadingCircleSmall/> : t('proceed')}
         </ButtonPrimary>
       </div>
       <div className='fixed lg:hidden bottom-36 w-full px-8 z-50 left-0'>
@@ -312,7 +356,7 @@ export default function CreateInPersonEventForm() {
               <span className={'font-semibold text-[16px] leading-[22px] text-deep-100'}>
                 {t('event_details')}
               </span>
-              <Input {...register('eventName')} type='text' error={errors.eventName?.message}>{t('event_name')}</Input>
+              <Input {...register('eventName')} type='text' maxLength={50} error={errors.eventName?.message}>{t('event_name')}</Input>
               <div>
                 <textarea
                   {...register('eventDescription')}
@@ -355,6 +399,7 @@ export default function CreateInPersonEventForm() {
                       {...field}
                       value={field.value}
                       onValueChange={field.onChange}
+                      defaultValue={Capitalize(organisation?.country ?? '')}
                     >
                       <SelectTrigger className="bg-neutral-100 w-full rounded-[5rem] p-12 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500 z">
                         <SelectValue placeholder={t('country')} />
@@ -399,10 +444,10 @@ export default function CreateInPersonEventForm() {
                     <Select
                       {...field}
                       isMulti
-                      options={EventTags}
+                      options={tags}
                       placeholder={t('event_tags')}
                       styles={{ control: () => ({ borderColor: 'transparent', display: 'flex' }) }}
-                      getOptionLabel={(option) => option.label}
+                      getOptionLabel={(option) => option.tagName}
                       getOptionValue={(option) => option.tagId}
                       className={
                         'bg-neutral-100 w-full rounded-[5rem] p-4 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500'
@@ -462,7 +507,7 @@ export default function CreateInPersonEventForm() {
               )}
 
               <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
-                {errors.image?.message}
+                {errors.eventImage?.message}
               </span>
             </div>
             <div></div>
@@ -621,14 +666,14 @@ export default function CreateInPersonEventForm() {
                         className={'cursor-pointer'}
                         onClick={() => {
                           const updated = ticketClasses.filter((_, i) => i !== index)
-                          setValue('ticketClasses', updated, { shouldValidate: true })
+                          setValue('ticketTypes', updated, { shouldValidate: true })
                           setTicketClasses(updated)
                         }}
                         size={20}
                       />
                     )}
                   </div>
-                  <UISelect onValueChange={e => setValue(`ticketClasses.${index}.ticketClassName`, e)}>
+                  <UISelect onValueChange={e => setValue(`ticketTypes.${index}.ticketTypeName`, e)}>
                     <SelectTrigger className="bg-neutral-100 w-full rounded-[5rem] p-12 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500 z">
                       <SelectValue placeholder={t('class_name')} />
                     </SelectTrigger>
@@ -659,14 +704,14 @@ export default function CreateInPersonEventForm() {
                         'h-[150px] resize-none bg-neutral-100 w-full rounded-[2rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500 '
                       }
                       placeholder={t('class_description')}
-                      {...register(`ticketClasses.${index}.ticketClassDescription`)}
+                      {...register(`ticketTypes.${index}.ticketTypeDescription`)}
                       onChange={handleTicketClassWordCount}
                       maxLength={100}
                       minLength={20}
                     />
                     <div className='flex items-center justify-between'>
                       <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
-                        {errors && errors.ticketClasses?.[index]?.ticketClassDescription?.message}
+                        {errors && errors.ticketTypes?.[index]?.ticketTypeDescription?.message}
                       </span>
                       {ticketClassDescriptionWordCount > 0 && <span className={`text-[1.2rem] self-end px-8 py-2 ${ticketClassDescriptionWordCount < 20 ? 'text-failure' : 'text-success'}`}>{ticketClassDescriptionWordCount} / 100</span>}
                     </div>
@@ -682,12 +727,12 @@ export default function CreateInPersonEventForm() {
                           className={'outline-none'}
                           type="number"
                           placeholder={`${t('price')}`}
-                          {...register(`ticketClasses.${index}.ticketClassPrice`)}
+                          {...register(`ticketTypes.${index}.ticketTypePrice`)}
                         />
-                        {/* <span>{organisation?.ccurrency.isoCode}</span> */}
+                        <span>{session?.user.currency.isoCode}</span>
                       </div>
                       <span className={"text-[1.2rem] lg:hidden px-8 py-2 text-failure"}>
-                        {errors.ticketClasses?.[index]?.ticketClassPrice?.message}
+                        {errors.ticketTypes?.[index]?.ticketTypePrice?.message}
                       </span>
                     </div>
 
@@ -699,19 +744,19 @@ export default function CreateInPersonEventForm() {
                         type="number"
                         step={'1'}
                         placeholder={t('quantity')}
-                        {...register(`ticketClasses.${index}.ticketClassQuantity`)}
+                        {...register(`ticketTypes.${index}.ticketTypeQuantity`)}
                       />
                       <span className={"text-[1.2rem] lg:hidden px-8 py-2 text-failure"}>
-                        {errors.ticketClasses?.[index]?.ticketClassQuantity?.message}
+                        {errors.ticketTypes?.[index]?.ticketTypeQuantity?.message}
                       </span>
                     </div>
                   </div>
                   <div className='flex items-center justify-between'>
                     <span className={"text-[1.2rem] flex-1 hidden lg:block px-8 py-2 text-failure"}>
-                      {errors.ticketClasses?.[index]?.ticketClassPrice?.message}
+                      {errors.ticketTypes?.[index]?.ticketTypePrice?.message}
                     </span>
                     <span className={"text-[1.2rem] flex-1 hidden lg:block px-8 py-2 text-failure"}>
-                      {errors.ticketClasses?.[index]?.ticketClassQuantity?.message}
+                      {errors.ticketTypes?.[index]?.ticketTypeQuantity?.message}
                     </span>
                   </div>
                 </div>
@@ -720,7 +765,7 @@ export default function CreateInPersonEventForm() {
             <div className='w-full max-w-[540px] mx-auto flex justify-between '>
               <div></div>
               <button
-                onClick={() => setTicketClasses(prev => [...prev, { ticketClassName: '', ticketClassDescription: '', ticketClassPrice: '', ticketClassQuantity: '' }])}
+                onClick={() => setTicketClasses(prev => [...prev, { ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }])}
                 className=" cursor-pointer flex gap-4 items-center"
               >
                 <AddCircle color={'#E45B00'} variant={'Bulk'} size={'20'} />

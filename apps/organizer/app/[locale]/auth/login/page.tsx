@@ -9,7 +9,7 @@ import { getCookie, setCookie } from 'cookies-next/client'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from "zod/v4";
 
@@ -25,14 +25,17 @@ export default function LoginPage() {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<TLoginSchema>({
         resolver: zodResolver(LoginSchema),
     });
     const cookie = getCookie('organisation-id')
 
+    const [isLoading, setIsloading] = useState(false)
+
     const router = useRouter()
     async function submitHandler(data: TLoginSchema) {
+        setIsloading(true)
         const result = await signIn('credentials', {
             email: data.email,
             password: data.password,
@@ -46,21 +49,23 @@ export default function LoginPage() {
 
             const token = session?.user?.accessToken
 
-            if (token) {
-                localStorage.setItem('accessToken', token)
-            }
-            if (!cookie) {
-                setCookie('organisation-id', session.user.organisations[0].organisationId, {
-                    path: '/',
-                    maxAge: 60 * 60 * 24 * 7,
-                    sameSite: 'lax',
+            // if (token) {
+            //     localStorage.setItem('accessToken', token)
+            // }
+            // if (token) {
+            //     setCookie('organisation-id', session.user.organisations[0].organisationId, {
+            //         path: '/',
+            //         maxAge: 60 * 60 * 24 * 7,
+            //         sameSite: 'lax',
 
-                })
-            }
+            //     })
+            // }
             router.push('/analytics')
         } else {
             console.error('Login failed')
         }
+
+        setIsloading(false)
 
     }
     return (
@@ -82,15 +87,15 @@ export default function LoginPage() {
                         </div>
                     </div>
                     <div className='w-full hidden lg:block'>
-                        <ButtonPrimary type='submit' disabled={isSubmitting} className='w-full'>
-                            {isSubmitting ? <LoadingCircleSmall /> : t('cta.submit')}
+                        <ButtonPrimary type='submit' disabled={isLoading} className='w-full'>
+                            {isLoading ? <LoadingCircleSmall /> : t('cta.submit')}
                         </ButtonPrimary>
                     </div>
                 </div>
             </div>
             <div className='flex flex-col gap-6 w-full'>
-                <ButtonPrimary type='submit' disabled={isSubmitting} className='w-full lg:hidden'>
-                    {isSubmitting ? <LoadingCircleSmall /> : t('cta.submit')}
+                <ButtonPrimary type='submit' disabled={isLoading} className='w-full lg:hidden'>
+                    {isLoading ? <LoadingCircleSmall /> : t('cta.submit')}
                 </ButtonPrimary>
                 <div className='border border-neutral-100 w-full lg:w-auto p-4 pl-6 flex items-center justify-between lg:gap-[1.8rem] rounded-[100px]'>
                     <span className='text-[1.8rem] leading-[2.5rem] text-neutral-700'>{t('footer.text')}</span>

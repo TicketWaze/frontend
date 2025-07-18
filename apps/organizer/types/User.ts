@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import type Organisation from './Organisation';
+import Currency from './Currency';
 export default interface User {
     accessToken: string
     userId: string;
@@ -21,5 +22,6 @@ export default interface User {
     createdAt : DateTime
     updatedAt : DateTime
     organisations : Organisation[]
+    currency : Currency
 
 };

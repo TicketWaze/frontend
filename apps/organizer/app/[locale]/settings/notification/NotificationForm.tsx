@@ -4,7 +4,6 @@ import organisationStore from '@/store/OrganisationStore'
 import NotificationPreference from '@/types/NotificationPreference'
 import { useStore } from '@tanstack/react-store'
 import ToggleIcon from '@workspace/ui/components/ToggleIcon'
-import { error } from 'console'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import React from 'react'
@@ -12,8 +11,9 @@ import { toast } from 'sonner'
 
 export default function NotificationForm({ notificationPreferences }: { notificationPreferences: NotificationPreference }) {
     const t = useTranslations('Settings.notification')
-    const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
+    // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
     const { data: session } = useSession()
+    const organisation = session?.activeOrganisation
     async function changeHandler(e: React.FormEvent<HTMLFormElement>) {
         const formData = new FormData(e.currentTarget)
         const emailTicketSalesUpdate = formData.get('emailTicketSalesUpdate') === 'on'

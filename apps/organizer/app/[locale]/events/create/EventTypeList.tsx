@@ -7,6 +7,10 @@ import { SearchNormal } from 'iconsax-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useState } from 'react'
+import InPerson from "@/assets/in-person.jpg"
+import Online from "@/assets/online.jpg"
+import cinema from "@/assets/cinema.jpg"
+import match from "@/assets/match.jpg"
 
 
 export default function EventTypeList() {
@@ -17,25 +21,25 @@ export default function EventTypeList() {
         {
             title: 'In-Person',
             description: 'Events with location-based access like festivals, conferences, or meetups.',
-            image: 'https://rose-managing-bird-871.mypinata.cloud/ipfs/bafkreighcst7j4jnrigywck2jr4lmxc3vuosc7vstg6s2oatjznz4t4ode',
+            image: InPerson,
             value: 'in-person',
         },
         {
             title: 'Online',
             description: 'Virtual events you can attend from anywhere.',
-            image: 'https://rose-managing-bird-871.mypinata.cloud/ipfs/bafkreighcst7j4jnrigywck2jr4lmxc3vuosc7vstg6s2oatjznz4t4ode',
+            image: Online,
             value: 'online',
         },
         {
             title: 'Cinema',
             description: 'Watch the latest movies on the big screen.',
-            image: 'https://rose-managing-bird-871.mypinata.cloud/ipfs/bafkreighcst7j4jnrigywck2jr4lmxc3vuosc7vstg6s2oatjznz4t4ode',
+            image: cinema,
             value: 'cinema',
         },
         {
             title: 'Match',
             description: 'Live sports events and thrilling matches.',
-            image: 'https://rose-managing-bird-871.mypinata.cloud/ipfs/bafkreighcst7j4jnrigywck2jr4lmxc3vuosc7vstg6s2oatjznz4t4ode',
+            image: match,
             value: 'match',
         },
 
@@ -77,7 +81,8 @@ export default function EventTypeList() {
                         />
                         <SearchNormal size="20" color="#737c8a" variant="Bulk" />
                     </div>
-                    <ButtonPrimary onClick={()=>router.push(`/events/create/${selected}`)} disabled={!selected}>{t('proceed')}</ButtonPrimary>
+                    <ButtonPrimary className='hidden lg:block' onClick={()=>router.push(`/events/create/${selected}`)} disabled={!selected}>{t('proceed')}</ButtonPrimary>
+                    <ButtonPrimary className='lg:hidden fixed bottom-36 right-8 z-50 ' onClick={()=>router.push(`/events/create/${selected}`)} disabled={!selected}>{t('proceed')}</ButtonPrimary>
                     {/* <ButtonPrimary className='fixed bottom-36 left-0 w-[90vw] mx-auto z-50 lg:hidden' disabled={!selected}>{t('proceed')}</ButtonPrimary> */}
                 </TopBar>
             </div>

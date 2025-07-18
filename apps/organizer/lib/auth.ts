@@ -1,3 +1,4 @@
+import Organisation from "@/types/Organisation";
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
@@ -45,6 +46,7 @@ const nextAuthResult = NextAuth({
     async session({ session, token, user }) {
       // @ts-ignore
       session.user = token;
+      session.activeOrganisation = session.user.organisations[0] as Organisation
       return session;
     },
   },

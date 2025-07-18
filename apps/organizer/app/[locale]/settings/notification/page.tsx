@@ -2,7 +2,7 @@ import OrganizerLayout from '@/components/Layouts/OrganizerLayout'
 import BackButton from '@workspace/ui/components/BackButton'
 import TopBar from '@workspace/ui/components/TopBar'
 import { getTranslations } from 'next-intl/server'
-import React from 'react'
+import React, { Suspense } from 'react'
 import NotificationForm from './NotificationForm'
 import { getCookie } from 'cookies-next/server'
 import { cookies } from 'next/headers'
@@ -11,9 +11,9 @@ import { auth } from '@/lib/auth'
 
 export default async function Page() {
     const t = await getTranslations('Settings.notification')
-    const organisationId = await getCookie('organisation-id', { cookies })
     const session = await auth()
-    const notificationPreferences = await api(`/organisations/${organisationId}/notifications-preferences`, session?.user.accessToken ?? '')
+    const organisation = session?.activeOrganisation
+    const notificationPreferences = await api(`/organisations/${organisation?.organisationId}/notifications-preferences`, session?.user.accessToken ?? '')
 
     return (
         <OrganizerLayout title={t('title')}>
@@ -21,7 +21,9 @@ export default async function Page() {
                 <BackButton text={t('back')} />
                 <TopBar title={t('title')} />
             </div>
-            <NotificationForm notificationPreferences={notificationPreferences.preferences} />
+            <Suspense fallback={<p>loading</p>}>
+                <NotificationForm notificationPreferences={notificationPreferences.preferences} />
+            </Suspense>
         </OrganizerLayout>
     )
 }

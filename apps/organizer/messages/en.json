@@ -413,7 +413,10 @@
           "name": "Select one ticket class name",
           "description": "Ticket class description should be at least 20 characters",
           "price": "Price cannot be empty",
-          "quantity": "Quantity cannot be empty"
+          "quantity": {
+            "empty" : "Quantity cannot be empty",
+            "decimal": "Quantity cannot have decimal or trailling zero"
+          }
         }
       }
     },
