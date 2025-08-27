@@ -3,7 +3,7 @@
 import { api, patch, post } from "@/lib/Api"
 import { revalidatePath } from "next/cache"
 
-export async function CreateInPersonEvent(organisationId: string, accessToken: string, body : FormData) {
+export async function CreateInPersonEvent(organisationId: string, accessToken: string, body: FormData) {
     try {
         const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/in-person/${organisationId}`, {
             method: "POST",
@@ -13,11 +13,39 @@ export async function CreateInPersonEvent(organisationId: string, accessToken: s
             body: body
 
         })
-        const response =  await request.json()
-        console.log(response);
-        
+        const response = await request.json()
+
         if (response.status === 'success') {
             revalidatePath('/events')
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(response.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
+
+export async function UpdateTicketTypes(organisationId: string, eventId: string, accessToken: string, data: unknown, pathname : string) {
+    try {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/in-person/${organisationId}/${eventId}/ticket-types`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(data)
+
+        })
+        const response = await request.json()
+
+        if (response.status === 'success') {
+            revalidatePath(pathname)
             return {
                 status: "success",
             }

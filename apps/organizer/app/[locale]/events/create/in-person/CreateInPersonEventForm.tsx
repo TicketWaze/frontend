@@ -38,7 +38,9 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
   const countries = UseCountries()
 
   const FormDataSchema = z.object({
-    eventName: z.string().min(10, t('errors.basicDetails.name')).max(50),
+    eventName: z.string().min(10, t('errors.basicDetails.name')).max(50).regex(/^[a-zA-Z0-9 ]+$/, {
+    message: t('errors.basicDetails.no_special'),
+  }),
     eventDescription: z.string()
       .min(150, t('errors.basicDetails.description.min'))
       .max(350, t('errors.basicDetails.description.max')),

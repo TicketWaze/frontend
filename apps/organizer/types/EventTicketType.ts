@@ -9,6 +9,6 @@ export default interface EventTicketType {
     ticketTypePrice: number
     currencyId: string
     ticketTypeQuantity: number
-    createdAt: DateTime
-    updatedAt: DateTime
+    createdAt?: DateTime
+    updatedAt?: DateTime
 }

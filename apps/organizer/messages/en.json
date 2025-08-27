@@ -280,7 +280,9 @@
     "free": "Free",
     "single_event": {
       "check_in": "Check In",
+      "back" :"Back",
       "share": "Share Event",
+      "share_text" : "Spread the word and invite your friends! Share this event on social media or via direct message.",
       "create_ticket": "Create Ticket",
       "ticket": "Ticket Classes",
       "checkers": "Checkers",
@@ -390,6 +392,7 @@
       "errors": {
         "basicDetails": {
           "name": "Event name should be at leat 10 characters",
+          "no_special" : "This field doesn't allow special characters",
           "description": {
             "min": "Event description cannot be less than 150 characters",
             "max": "Event description cannot be more than 350 characters"

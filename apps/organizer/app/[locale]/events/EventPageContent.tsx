@@ -5,6 +5,7 @@ import Event from '@/types/Event'
 import EventCard from '@/components/EventCard'
 import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
+import Slugify from '@/lib/Slugify'
 
 export default function EventPageContent({ events }: { events: Event[] }) {
     const {data:session} = useSession()
@@ -20,9 +21,10 @@ export default function EventPageContent({ events }: { events: Event[] }) {
                     <ul className='list pt-4'>
                         {events.map(event => {
                             const date = new Date(event.eventDays[0]?.startDate ?? '')
+                            const slug  = Slugify(event.eventName)
                             return <li key={event.eventId}>
                                 <EventCard
-                                    href={`/events/show/${event.eventId}`}
+                                    href={`/events/show/${slug}`}
                                     image={event.eventImageUrl}
                                     name={event.eventName}
                                     date={date}
