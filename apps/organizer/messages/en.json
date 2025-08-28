@@ -304,14 +304,18 @@
       "discount": {
         "subtitle": "Discount Codes",
         "title": "Add discount code",
+        "back" :"Back",
         "code": "Code",
         "type": "Type",
         "fixed": "Fixed",
+        "more": "More",
         "percentage": "Percentage",
+        "expires_in": "Expires In",
         "expires_at": "Expires At",
         "value": "Value",
         "applies": "Applies to",
         "quantity": "Quantity",
+        "days" : "Days",
         "start": "Start date",
         "end": "End date",
         "close": "Close",
@@ -322,7 +326,25 @@
         "times_used": "Times Used",
         "mark_as_active": "Mark as active",
         "mark_as_inactive": "Mark as inactive",
-        "nothing": "Your discount codes will show up here once you start creating them"
+        "nothing": "Your discount codes will show up here once you start creating them",
+        "errors" : {
+          "code" : {
+            "min" : "Discount code cannot be less than 6 characters",
+            "max" : "Discount code cannot exceed 10 characters"
+          },
+          "value" : {
+            "min" :"Value should be at least 1",
+            "negative" : "Value cannot be negative"
+          },
+          "quantity" : {
+            "min" : "Quantity should be at least 1",
+            "negative" : "Quantity cannot be negative"
+          },
+          "expiresIn" : {
+            "min" : "1 hour is the minimum",
+            "negative" :"Hour cannot be negative"
+          }
+        }
       },
       "filters": {
         "all": "All status",

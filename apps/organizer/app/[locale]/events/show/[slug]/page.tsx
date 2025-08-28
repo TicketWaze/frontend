@@ -19,13 +19,11 @@ export default async function Page({
     const eventResponse = await eventRequest.json()
     const event:Event = eventResponse.event
     
-    
-    
   return (
     <OrganizerLayout title=''>
         <BackButton text={t('back')}/>
         
-        <EventPageDetails event={event}/>
+        <EventPageDetails event={event} slug={slug}/>
     </OrganizerLayout>
   )
 }

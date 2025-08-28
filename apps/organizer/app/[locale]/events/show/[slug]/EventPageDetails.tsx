@@ -1,19 +1,20 @@
 'use client'
 import TruncateUrl from '@/lib/TruncateUrl'
 import Event from '@/types/Event'
-import { ButtonNeutral, ButtonPrimary } from '@workspace/ui/components/buttons'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@workspace/ui/components/dialog'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs'
 import TopBar from '@workspace/ui/components/TopBar'
 import Capitalize from '@workspace/ui/lib/Capitalize'
-import { Copy, Money3, Send2 } from 'iconsax-react'
+import { Copy, Money3, MoreCircle, Send2, TicketDiscount } from 'iconsax-react'
 import { useTranslations } from 'next-intl'
 import React from 'react'
 import { toast } from 'sonner'
 import TicketClasses from './TicketClasses'
+import { Popover, PopoverContent, PopoverTrigger } from '@workspace/ui/components/popover'
+import { Link } from '@/i18n/navigation'
 
-export default function EventPageDetails({ event }: { event: Event }) {
+export default function EventPageDetails({ event, slug }: { event: Event, slug : string }) {
   const t = useTranslations('Events.single_event')
   const desiredOrder = ['general', 'vip', 'vvip']
   const sortedTicketClasses = [...event.eventTicketTypes].sort((a, b) => {
@@ -89,6 +90,70 @@ export default function EventPageDetails({ event }: { event: Event }) {
             </DialogContent>
           </Dialog>
           <TicketClasses event={event}/>
+          <Popover>
+              <PopoverTrigger>
+                <div
+                  className={
+                    'w-[35px] h-[35px] cursor-pointer rounded-full bg-neutral-100 flex items-center justify-center'
+                  }
+                >
+                  <MoreCircle variant={'Bulk'} size={20} color={'#737C8A'} />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className={'w-[250px] p-0 m-0 bg-none shadow-none border-none mx-4'}>
+                <ul
+                  className={
+                    'bg-neutral-100 border border-neutral-200 right-8 p-4  mb-8 rounded-[1rem] shadow-xl bottom-full flex flex-col gap-4'
+                  }
+                >
+                  <span
+                    className={
+                      'font-medium py-[5px] border-b-[1px] border-neutral-200 text-[1.4rem] text-deep-100 leading-[20px]'
+                    }
+                  >
+                    {t('more')}
+                  </span>
+                  <div className={'flex flex-col gap-4'}>
+                    {/* {!event.isFree && ( */}
+                      <li>
+                        <Link
+                          href={`${slug}/discount-codes`}
+                          className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                        >
+                          <span className={'text-primary-500'}>
+                            {t('discount.subtitle')}
+                          </span>
+                          <TicketDiscount size="20" variant="Bulk" color={'#E45B00'} />
+                        </Link>
+                      </li>
+                    {/* )} */}
+
+                    {/* <li className={''}>
+                      <Drawer direction={'right'}>
+                        <DrawerTrigger className={'w-full'}>
+                          <button
+                            className={`font-normal cursor-pointer group text-[1.5rem]  border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                          >
+                            <span className={''}>{single_event.details}</span>
+                            <HambergerMenu size="20" variant="Bulk" color={'#2E3237'} />
+                          </button>
+                        </DrawerTrigger>
+                        <EventDrawerContent />
+                      </Drawer>
+                    </li> */}
+                    
+                    {/*<li className={''}>*/}
+                    {/*  <button*/}
+                    {/*    className={`font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}*/}
+                    {/*  >*/}
+                    {/*    <span className={''}>{single_event.export}</span>*/}
+                    {/*    <DocumentDownload size="20" variant="Bulk" color={'#2E3237'} />*/}
+                    {/*  </button>*/}
+                    {/*</li>*/}
+                  </div>
+                </ul>
+              </PopoverContent>
+            </Popover>
         </div>
       </TopBar>
       {/* count details */}
