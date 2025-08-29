@@ -68,7 +68,7 @@ export default function TicketClasses({ event }: { event: Event }) {
       <DrawerTrigger asChild>
         <ButtonPrimary className='px-[15px] py-[7.5px]'>{t('create_ticket')}</ButtonPrimary>
       </DrawerTrigger>
-      <DrawerContent className='lg:w-full h-dvh bg-white px-4 lg:px-28 flex flex-col gap-8'>
+      <DrawerContent className='lg:w-full h-[90vh] bg-white px-4 lg:px-28 flex flex-col gap-8'>
         <DrawerTitle className='sr-only'>{t('create_ticket')}</DrawerTitle>
         <div className='flex items-center justify-between pt-8'>
           <div className='flex gap-4 items-center'>

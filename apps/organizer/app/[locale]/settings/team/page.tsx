@@ -4,8 +4,6 @@ import TopBar from '@workspace/ui/components/TopBar'
 import { getTranslations } from 'next-intl/server'
 import React from 'react'
 import AddMember from './AddMember'
-import { getCookie } from 'cookies-next/server'
-import { cookies } from 'next/headers'
 import { auth } from '@/lib/auth'
 import { api } from '@/lib/Api'
 import MemberList from './MemberList'
@@ -18,8 +16,8 @@ type ApiResponse = {
 
 export default async function Page() {
     const t = await getTranslations('Settings.team')
-    const organisationId = await getCookie('organisation-id', { cookies })
     const session = await auth()
+    const organisationId = session?.activeOrganisation.organisationId
     const members : ApiResponse = await api(`/organisations/${organisationId}/members`, session?.user.accessToken ?? '')
     const waitlistMembers  = await api(`/organisations/${organisationId}/waitlist`, session?.user.accessToken ?? '')
     return (

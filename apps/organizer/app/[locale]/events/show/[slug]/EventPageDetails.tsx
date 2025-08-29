@@ -6,15 +6,19 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@workspace/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs'
 import TopBar from '@workspace/ui/components/TopBar'
 import Capitalize from '@workspace/ui/lib/Capitalize'
-import { Copy, Money3, MoreCircle, Send2, TicketDiscount } from 'iconsax-react'
+import { Copy, HambergerMenu, Money3, MoreCircle, Send2, TicketDiscount } from 'iconsax-react'
 import { useTranslations } from 'next-intl'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import TicketClasses from './TicketClasses'
 import { Popover, PopoverContent, PopoverTrigger } from '@workspace/ui/components/popover'
 import { Link } from '@/i18n/navigation'
+import { Drawer, DrawerTrigger } from '@workspace/ui/components/drawer'
+import EventDrawerContent from './EventDrawerContent'
+import { DateTime } from 'luxon'
+import Ticket from '@/types/Ticket'
 
-export default function EventPageDetails({ event, slug }: { event: Event, slug : string }) {
+export default function EventPageDetails({ event, tickets, slug }: { event: Event, tickets: Ticket[], slug: string }) {
   const t = useTranslations('Events.single_event')
   const desiredOrder = ['general', 'vip', 'vvip']
   const sortedTicketClasses = [...event.eventTicketTypes].sort((a, b) => {
@@ -22,7 +26,17 @@ export default function EventPageDetails({ event, slug }: { event: Event, slug :
     const bIndex = desiredOrder.indexOf(b.ticketTypeName.trim())
     return aIndex - bIndex
   })
-  const currentUrl = window.location.href
+  const [currentUrl, setCurrentUrl] = useState('')
+  useEffect(() => {
+    setCurrentUrl(window.location.href)
+  }, [])
+
+  const today = DateTime.now()
+  const eventStart = event.eventDays?.[0]?.startDate
+    ? DateTime.fromISO(event.eventDays[0].startDate)
+    : null
+  const daysLeft = eventStart ? eventStart.diff(today, 'days').days : null
+  const roundedDays = Math.ceil(daysLeft && daysLeft > 0 ? daysLeft : 0)
   return (
     <div className={'flex flex-col gap-[3rem] overflow-y-scroll'}>
       <TopBar title={event.eventName}>
@@ -89,71 +103,73 @@ export default function EventPageDetails({ event, slug }: { event: Event, slug :
               </div>
             </DialogContent>
           </Dialog>
-          <TicketClasses event={event}/>
+          <TicketClasses event={event} />
+          {/* more */}
           <Popover>
-              <PopoverTrigger>
-                <div
+            <PopoverTrigger>
+              <div
+                className={
+                  'w-[35px] h-[35px] cursor-pointer rounded-full bg-neutral-100 flex items-center justify-center'
+                }
+              >
+                <MoreCircle variant={'Bulk'} size={20} color={'#737C8A'} />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className={'w-[250px] p-0 m-0 bg-none shadow-none border-none mx-4'}>
+              <ul
+                className={
+                  'bg-neutral-100 border border-neutral-200 right-8 p-4  mb-8 rounded-[1rem] shadow-xl bottom-full flex flex-col gap-4'
+                }
+              >
+                <span
                   className={
-                    'w-[35px] h-[35px] cursor-pointer rounded-full bg-neutral-100 flex items-center justify-center'
+                    'font-medium py-[5px] border-b-[1px] border-neutral-200 text-[1.4rem] text-deep-100 leading-[20px]'
                   }
                 >
-                  <MoreCircle variant={'Bulk'} size={20} color={'#737C8A'} />
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className={'w-[250px] p-0 m-0 bg-none shadow-none border-none mx-4'}>
-                <ul
-                  className={
-                    'bg-neutral-100 border border-neutral-200 right-8 p-4  mb-8 rounded-[1rem] shadow-xl bottom-full flex flex-col gap-4'
-                  }
-                >
-                  <span
-                    className={
-                      'font-medium py-[5px] border-b-[1px] border-neutral-200 text-[1.4rem] text-deep-100 leading-[20px]'
-                    }
-                  >
-                    {t('more')}
-                  </span>
-                  <div className={'flex flex-col gap-4'}>
-                    {/* {!event.isFree && ( */}
-                      <li>
-                        <Link
-                          href={`${slug}/discount-codes`}
-                          className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                        >
-                          <span className={'text-primary-500'}>
-                            {t('discount.subtitle')}
-                          </span>
-                          <TicketDiscount size="20" variant="Bulk" color={'#E45B00'} />
-                        </Link>
-                      </li>
-                    {/* )} */}
+                  {t('more')}
+                </span>
+                <div className={'flex flex-col gap-4'}>
+                  {/* {!event.isFree && ( */}
+                  <li>
+                    <Link
+                      href={`${slug}/discount-codes`}
+                      className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                    >
+                      <span className={'text-primary-500'}>
+                        {t('discount.subtitle')}
+                      </span>
+                      <TicketDiscount size="20" variant="Bulk" color={'#E45B00'} />
+                    </Link>
+                  </li>
+                  {/* )} */}
 
-                    {/* <li className={''}>
-                      <Drawer direction={'right'}>
-                        <DrawerTrigger className={'w-full'}>
-                          <button
-                            className={`font-normal cursor-pointer group text-[1.5rem]  border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                          >
-                            <span className={''}>{single_event.details}</span>
-                            <HambergerMenu size="20" variant="Bulk" color={'#2E3237'} />
-                          </button>
-                        </DrawerTrigger>
-                        <EventDrawerContent />
-                      </Drawer>
-                    </li> */}
-                    
-                    {/*<li className={''}>*/}
-                    {/*  <button*/}
-                    {/*    className={`font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}*/}
-                    {/*  >*/}
-                    {/*    <span className={''}>{single_event.export}</span>*/}
-                    {/*    <DocumentDownload size="20" variant="Bulk" color={'#2E3237'} />*/}
-                    {/*  </button>*/}
-                    {/*</li>*/}
-                  </div>
-                </ul>
-              </PopoverContent>
-            </Popover>
+                  <li className={''}>
+                    <Drawer direction={'right'}>
+                      <DrawerTrigger
+                        className={'w-full'}>
+                        <div
+                          className={`font-normal cursor-pointer group text-[1.5rem]  border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                        >
+                          <span className={''}>{t('details')}</span>
+                          <HambergerMenu size="20" variant="Bulk" color={'#2E3237'} />
+                        </div>
+                      </DrawerTrigger>
+                      <EventDrawerContent event={event} />
+                    </Drawer>
+                  </li>
+
+                  {/*<li className={''}>*/}
+                  {/*  <button*/}
+                  {/*    className={`font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}*/}
+                  {/*  >*/}
+                  {/*    <span className={''}>{single_event.export}</span>*/}
+                  {/*    <DocumentDownload size="20" variant="Bulk" color={'#2E3237'} />*/}
+                  {/*  </button>*/}
+                  {/*</li>*/}
+                </div>
+              </ul>
+            </PopoverContent>
+          </Popover>
         </div>
       </TopBar>
       {/* count details */}
@@ -172,6 +188,7 @@ export default function EventPageDetails({ event, slug }: { event: Event, slug :
           </p>
         </li>
         {event.eventTicketTypes.map((t, index) => {
+          const quantity = tickets.filter(ticket => ticket.ticketType === t.ticketTypeName).length
           return (
             <li
               key={t.ticketTypeName}
@@ -181,7 +198,7 @@ export default function EventPageDetails({ event, slug }: { event: Event, slug :
                 {Capitalize(t.ticketTypeName)}
               </span>
               <p className={'font-medium text-[25px] leading-[30px] font-primary'}>
-                {'N/A'}{' '}
+                {quantity}{' '}
                 <span className={'font-normal text-[20px] text-neutral-500'}>
                   / {t.ticketTypeQuantity}
                 </span>
@@ -190,13 +207,13 @@ export default function EventPageDetails({ event, slug }: { event: Event, slug :
           )
         })}
         <li
-          className={`pl-[25px]`}
+          className={`${event.eventTicketTypes.length > 2 ? 'py-[20px]' : 'pl-[25px]'} `}
         >
           <span className={'text-[14px] text-neutral-600 leading-[20px] pb-[5px]'}>
             {t('count_down')}
           </span>
           <p className={'font-medium  text-[25px] leading-[30px] font-primary'}>
-            {'N/A'}
+            {roundedDays}
             <span className={'font-normal text-[20px] text-neutral-500'}>
               {' '}
               {t('day')}
