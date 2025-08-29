@@ -124,6 +124,7 @@
     "forgot": {
       "title": "Reset Password",
       "description": "Please enter you account details to continue",
+      "back" : "Back",
       "errors": {
         "email": "Enter a valid email address"
       },

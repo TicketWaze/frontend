@@ -19,7 +19,10 @@ export default function RegisterPage() {
     email: z.string().min(1, { error: t('errors.email') }),
     password: z.string().min(8, { error: t('errors.password_length') }),
     password_confirmation: z.string().min(8, { error: t('errors.password_length') }),
-  }).refine(data => data.password === data.password_confirmation, { error: t('errors.password_match') })
+  }).refine(data => data.password === data.password_confirmation, {
+    message: t("errors.password_match"),
+    path: ["password_confirmation"],
+  })
   type TRegisterSchema = z.infer<typeof RegisterSchema>
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<TRegisterSchema>({

@@ -63,7 +63,7 @@ export default function LoginPage() {
                         <PasswordInput error={errors.password?.message} {...register("password")}>{t('placeholders.password')}</PasswordInput>
                         <div className='flex items-center justify-between'>
                             <span></span>
-                            <Link className='text-[1.5rem] leading-8 text-primary-500' href={'#'}>{t('forgot')}</Link>
+                            <Link className='text-[1.5rem] leading-8 text-primary-500' href={'/auth/forgot-password'}>{t('forgot')}</Link>
                         </div>
                     </div>
                     <div className='w-full hidden lg:block'>
