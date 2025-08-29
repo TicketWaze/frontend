@@ -1,16 +1,14 @@
 'use client'
-import { Link } from '@/i18n/navigation'
-import organisationStore from '@/store/OrganisationStore'
+import { Link, useRouter } from '@/i18n/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ButtonAccent, ButtonPrimary } from '@workspace/ui/components/buttons'
 import { Input, PasswordInput } from '@workspace/ui/components/Inputs'
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall"
-import { getCookie, setCookie } from 'cookies-next/client'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from "zod/v4";
 
 export default function LoginPage() {
@@ -29,10 +27,7 @@ export default function LoginPage() {
     } = useForm<TLoginSchema>({
         resolver: zodResolver(LoginSchema),
     });
-    const cookie = getCookie('organisation-id')
-
     const [isLoading, setIsloading] = useState(false)
-
     const router = useRouter()
     async function submitHandler(data: TLoginSchema) {
         setIsloading(true)
@@ -42,27 +37,11 @@ export default function LoginPage() {
             redirect: false,
             callbackUrl: '/',
         });
-
-        if (result?.ok) {
-            const sessionRes = await fetch('/api/auth/session')
-            const session = await sessionRes.json()
-
-            const token = session?.user?.accessToken
-
-            // if (token) {
-            //     localStorage.setItem('accessToken', token)
-            // }
-            // if (token) {
-            //     setCookie('organisation-id', session.user.organisations[0].organisationId, {
-            //         path: '/',
-            //         maxAge: 60 * 60 * 24 * 7,
-            //         sameSite: 'lax',
-
-            //     })
-            // }
+        
+        if (result?.error) {
+            toast.error('Login failed')
+        }else{
             router.push('/analytics')
-        } else {
-            console.error('Login failed')
         }
 
         setIsloading(false)

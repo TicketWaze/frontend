@@ -37,7 +37,8 @@ const nextAuthResult = NextAuth({
 
   ],
   pages: {
-    signIn: `/auth/login`
+    signIn: `/auth/login`,
+    error: `/auth/login`
   },
   callbacks: {
     async jwt({ token, user }) {
