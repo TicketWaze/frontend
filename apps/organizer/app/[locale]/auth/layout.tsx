@@ -14,7 +14,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
                 <p className='mb-14 text-[1.8rem] leading-[2.5rem] text-neutral-200 max-w-[422px]'>{t('description')}</p>
                 <Image src={ticket} alt='Ticket auth' className=' self-center' />
             </div>
-            <main className='bg-white lg:rounded-[3rem] px-6 lg:px-32'>
+            <main className='bg-white lg:rounded-[3rem] px-6 lg:px-32 overflow-y-scroll'>
                 {children}
             </main>
         </section>

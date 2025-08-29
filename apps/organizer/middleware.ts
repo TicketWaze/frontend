@@ -9,7 +9,7 @@ import { getLocale } from 'next-intl/server';
 
 const middleware = auth(async (req, event: NextFetchEvent) => {
   const locale  = await getLocale()
-  if (!req.auth && req.nextUrl.pathname !== `/${locale}/auth/login`) {
+  if (!req.auth && !req.nextUrl.pathname.startsWith(`/${locale}/auth/`)) {
     const newUrl = new URL(`/${locale}/auth/login`, req.nextUrl.origin)
     return Response.redirect(newUrl)
   }

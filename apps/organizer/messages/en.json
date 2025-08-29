@@ -5,37 +5,53 @@
       "description": "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place"
     },
     "register": {
-      "form": {
-        "title": "Create an Account",
-        "organizer": "Create an Account",
-        "description": "Please complete the form below to continue.",
-        "placeholders": {
-          "firstname": "First Name",
-          "lastname": "Last Name",
-          "email": "Email Address",
-          "organisation_name": "Organisation Name",
-          "organisation_email": "Organisation Email",
-          "password": "Create Password",
-          "confirm": "Confirm Password"
+      "title": "Create an Account",
+      "organizer": "Create an Account",
+      "description": "Please complete the form below to continue.",
+      "choice": {
+        "title": "Create Account",
+        "description": "Choose an option to continue and set up your account.",
+        "first": {
+          "title": "Attendee",
+          "description": "Easily browse, discover, and purchase tickets for a wide variety of events."
         },
-        "errors": {
-          "password_length": "Password must be at least 8 characters long",
-          "password_match": "Passwords don't match",
-          "firstname_length": "First name must be at least 2 characters",
-          "lastname_length": "Last name must be at least 2 characters",
-          "firstname_validation": "First name must contain only letters, spaces, or hyphens",
-          "lastname_validation": "Last name must contain only letters, spaces, or hyphens"
+        "second": {
+          "title": "Organizer",
+          "description": "Create and manage events effortlessly. Track ticket sales & monitor attendee data."
         },
-        "cta": {
-          "submit": "Create account",
-          "google": "Continue with Google"
-        },
-        "footer": "Back"
-      }
+        "cta": "Continue",
+        "footer": {
+          "text": "Already own an account?",
+          "cta": "Log in"
+        }
+      },
+      "placeholders": {
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "email": "Email Address",
+        "organisation_name": "Organisation Name",
+        "organisation_email": "Organisation Email",
+        "password": "Create Password",
+        "confirm": "Confirm Password"
+      },
+      "errors": {
+        "password_length": "Password must be at least 8 characters long",
+        "password_match": "Passwords don't match",
+        "firstname_length": "First name must be at least 2 characters",
+        "lastname_length": "Last name must be at least 2 characters",
+        "firstname_validation": "First name must contain only letters, spaces, or hyphens",
+        "lastname_validation": "Last name must contain only letters, spaces, or hyphens",
+        "email": "Email field cannot be blank"
+      },
+      "cta": {
+        "submit": "Create account",
+        "google": "Continue with Google"
+      },
+      "footer": "Back"
     },
     "verify": {
       "title": "Verify Account",
-      "description": "A verification mail has been sent to the email address you signed up with.",
+      "description": "A verification mail has been sent to",
       "footer": {
         "text": "Didn't get a mail?",
         "cta": "Resend"
@@ -60,7 +76,7 @@
         "username": "User Name",
         "address": "Address",
         "country": "Country",
-        "state": "State",
+        "state": "State / Region / Province",
         "city": "City",
         "dob": "Date of Birth",
         "gender": "Gender",
@@ -69,8 +85,18 @@
         "no": "Rather not say",
         "about": "About Organizer",
         "email": "Contact Email Address",
-        "phone": "Contact Phone Number",
-        "website": "Organisation Website Url"
+        "phone": "Phone Number",
+        "website": "Organisation Website Url",
+        "currency" : "Currency",
+        "errors" : {
+          "city" : "City field cannot be blank",
+          "state" : "This field Cannot be blank",
+          "gender" : "This field is required",
+          "country" : "Select a country",
+          "dob" : "Please select a date",
+          "currency" : "Please select a currency",
+          "phone" :"Phone Number should be at least 8"
+        }
       },
       "cta": "Complete"
     },
@@ -281,11 +307,11 @@
     "from": "From",
     "free": "Free",
     "single_event": {
-      "close" : "Close",
+      "close": "Close",
       "check_in": "Check In",
-      "back" :"Back",
+      "back": "Back",
       "share": "Share Event",
-      "share_text" : "Spread the word and invite your friends! Share this event on social media or via direct message.",
+      "share_text": "Spread the word and invite your friends! Share this event on social media or via direct message.",
       "create_ticket": "Create Ticket",
       "ticket": "Ticket Classes",
       "checkers": "Checkers",
@@ -307,7 +333,7 @@
       "discount": {
         "subtitle": "Discount Codes",
         "title": "Add discount code",
-        "back" :"Back",
+        "back": "Back",
         "code": "Code",
         "type": "Type",
         "fixed": "Fixed",
@@ -318,7 +344,7 @@
         "value": "Value",
         "applies": "Applies to",
         "quantity": "Quantity",
-        "days" : "Days",
+        "days": "Days",
         "start": "Start date",
         "end": "End date",
         "close": "Close",
@@ -330,22 +356,22 @@
         "mark_as_active": "Mark as active",
         "mark_as_inactive": "Mark as inactive",
         "nothing": "Your discount codes will show up here once you start creating them",
-        "errors" : {
-          "code" : {
-            "min" : "Discount code cannot be less than 6 characters",
-            "max" : "Discount code cannot exceed 10 characters"
+        "errors": {
+          "code": {
+            "min": "Discount code cannot be less than 6 characters",
+            "max": "Discount code cannot exceed 10 characters"
           },
-          "value" : {
-            "min" :"Value should be at least 1",
-            "negative" : "Value cannot be negative"
+          "value": {
+            "min": "Value should be at least 1",
+            "negative": "Value cannot be negative"
           },
-          "quantity" : {
-            "min" : "Quantity should be at least 1",
-            "negative" : "Quantity cannot be negative"
+          "quantity": {
+            "min": "Quantity should be at least 1",
+            "negative": "Quantity cannot be negative"
           },
-          "expiresIn" : {
-            "min" : "1 hour is the minimum",
-            "negative" :"Hour cannot be negative"
+          "expiresIn": {
+            "min": "1 hour is the minimum",
+            "negative": "Hour cannot be negative"
           }
         }
       },
@@ -417,7 +443,7 @@
       "errors": {
         "basicDetails": {
           "name": "Event name should be at leat 10 characters",
-          "no_special" : "This field doesn't allow special characters",
+          "no_special": "This field doesn't allow special characters",
           "description": {
             "min": "Event description cannot be less than 150 characters",
             "max": "Event description cannot be more than 350 characters"
@@ -442,7 +468,7 @@
           "description": "Ticket class description should be at least 20 characters",
           "price": "Price cannot be empty",
           "quantity": {
-            "empty" : "Quantity cannot be empty",
+            "empty": "Quantity cannot be empty",
             "decimal": "Quantity cannot have decimal or trailling zero"
           }
         }

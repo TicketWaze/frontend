@@ -1,7 +1,8 @@
 'use client'
+import { LinkAccent } from '@/components/Links'
 import { Link, useRouter } from '@/i18n/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ButtonAccent, ButtonPrimary } from '@workspace/ui/components/buttons'
+import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import { Input, PasswordInput } from '@workspace/ui/components/Inputs'
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall"
 import { signIn } from 'next-auth/react'
@@ -78,7 +79,7 @@ export default function LoginPage() {
                 </ButtonPrimary>
                 <div className='border border-neutral-100 w-full lg:w-auto p-4 pl-6 flex items-center justify-between lg:gap-[1.8rem] rounded-[100px]'>
                     <span className='text-[1.8rem] leading-[2.5rem] text-neutral-700'>{t('footer.text')}</span>
-                    <ButtonAccent type='button'>{t('footer.cta')}</ButtonAccent>
+                    <LinkAccent href='/auth/register'>{t('footer.cta')}</LinkAccent>
                 </div>
             </div>
         </form>

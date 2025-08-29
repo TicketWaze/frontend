@@ -40,7 +40,7 @@ export function LinkAccent({ href, children, className }: LinkProps) {
     <Link
       href={href}
       className={cn(
-        'border-2 border-primary-500 px-[1rem] lg:px-[3rem] py-6 rounded-[10rem] font-normal text-primary-500 flex-1 text-[1.5rem] leading-[20px] bg-primary-50 flex items-center justify-center gap-[5px]',
+        'border-2  px-[1rem] lg:px-[3rem] py-6 rounded-[10rem] font-normal  flex-1 text-[1.5rem] leading-[20px] flex items-center justify-center gap-[5px] border-primary-500 text-primary-500 bg-primary-100',
         className
       )}
     >
