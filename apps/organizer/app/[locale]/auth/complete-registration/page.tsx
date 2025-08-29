@@ -2,7 +2,6 @@
 import UseCountries from '@/hooks/UseCountries'
 import { useRouter } from '@/i18n/navigation'
 import Currency from '@/types/Currency'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import { Input } from '@workspace/ui/components/Inputs'
@@ -19,7 +18,7 @@ import { useSearchParams } from "next/navigation";
 export default function CompleteRegistrationPage() {
   const t = useTranslations('Auth.complete')
   const searchParams = useSearchParams();
-  const accessToken = searchParams.get("accessToken"); 
+  const accessToken = searchParams.get("accessToken");
 
   const [currencies, setCurrencies] = useState<Currency[] | undefined>()
 
@@ -79,8 +78,6 @@ export default function CompleteRegistrationPage() {
     if (response.status === 'success') {
       router.push('/auth/login')
     } else {
-      console.log(response);
-      
       toast(response.message)
     }
   }
