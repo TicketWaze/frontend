@@ -157,6 +157,8 @@
   "Analytics": {
     "title": "Event Overview",
     "description": "Track your event success with detailed analytics and trends",
+    "revenue": "Total Revenue",
+    "sold": "Tickets Sold",
     "filters": {
       "first": {
         "all": "All events",

@@ -1,31 +1,365 @@
 import OrganizerLayout from "@/components/Layouts/OrganizerLayout";
-export default function Page() {
+import AnalyticsPageTopbar from "./AnalyticsPageTopbar";
+import { auth } from "@/lib/auth";
+import { getTranslations } from "next-intl/server";
+import DailyTicketSalesChart from "./DailyTicketSalesChart";
+import DoughnutChart from "./DoughnutChart";
+import BarChart from "./BarChart";
 
-  return <OrganizerLayout title={"Analytics"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse viverra quam ut nisl luctus, vitae pulvinar risus ullamcorper. Praesent id scelerisque odio. Nunc at ligula eu sapien posuere aliquet quis ac leo. Fusce vehicula velit libero. Cras bibendum odio sed ante condimentum feugiat. Etiam ac condimentum dolor, in luctus elit. Cras at condimentum ex. Morbi vel tortor dapibus, fringilla mi sit amet, volutpat tortor.
+export default async function AnalyticsPage() {
+  const session = await auth()
+  const currentOrganisation = session?.activeOrganisation
+  const t = await getTranslations('Analytics')
+  return (
+    <OrganizerLayout title="Analytics">
+      <AnalyticsPageTopbar
+        isVerified={currentOrganisation?.isVerified ?? false}
+        title={currentOrganisation?.organisationName ?? ''}
+        description={t('description')}
+      >
+        {/*filters*/}
+        {/*<div className={'flex gap-[1.5rem]'}>*/}
+        {/*  <Select>*/}
+        {/*    <SelectTrigger className="bg-neutral-100 rounded-[3rem] px-[1.5rem] py-[1.8rem] text-[1.4rem] text-neutral-700 leading-[20px]">*/}
+        {/*      <SelectValue placeholder={analytics.filters.first.all} />*/}
+        {/*    </SelectTrigger>*/}
+        {/*    <SelectContent className={'bg-neutral-100 text-[1.4rem]'}>*/}
+        {/*      <SelectGroup className={'divide-y'}>*/}
+        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="apple">*/}
+        {/*          Apple*/}
+        {/*        </SelectItem>*/}
+        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="test">*/}
+        {/*          test*/}
+        {/*        </SelectItem>*/}
+        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="ok">*/}
+        {/*          ok*/}
+        {/*        </SelectItem>*/}
+        {/*      </SelectGroup>*/}
+        {/*    </SelectContent>*/}
+        {/*  </Select>*/}
 
-    Aenean lobortis velit eget nisl cursus porta. Etiam eu felis ullamcorper, porttitor est in, hendrerit nibh. Ut facilisis nulla in nunc lacinia lobortis. Donec posuere felis ac ornare placerat. Ut imperdiet quam ac turpis aliquet, non lobortis dolor cursus. Etiam urna magna, aliquet in quam eu, mattis aliquam velit. Nunc magna eros, efficitur eu fermentum nec, tristique et nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer at viverra tellus, at blandit risus. Ut vitae fermentum justo. Nunc sodales turpis id elementum blandit. Mauris nisl nibh, condimentum vitae odio a, tristique aliquam quam.
+        {/*  <Select>*/}
+        {/*    <SelectTrigger className="bg-neutral-100 rounded-[3rem] px-[1.5rem] py-[1.8rem] text-[1.4rem] text-neutral-700 leading-[20px]">*/}
+        {/*      <SelectValue placeholder={analytics.filters.first.date} />*/}
+        {/*    </SelectTrigger>*/}
+        {/*    <SelectContent className={'bg-neutral-100 text-[1.4rem]'}>*/}
+        {/*      <SelectGroup className={'divide-y'}>*/}
+        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="apple">*/}
+        {/*          Apple*/}
+        {/*        </SelectItem>*/}
+        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="test">*/}
+        {/*          test*/}
+        {/*        </SelectItem>*/}
+        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="ok">*/}
+        {/*          ok*/}
+        {/*        </SelectItem>*/}
+        {/*      </SelectGroup>*/}
+        {/*    </SelectContent>*/}
+        {/*  </Select>*/}
+        {/*</div>*/}
+      </AnalyticsPageTopbar>
+      {/* main */}
+      <div className={'flex flex-col gap-[30px] overflow-y-scroll lg:gap-[40px]'}>
+        <div
+          className={
+            'grid grid-cols-2 lg:divide-x divide-neutral-100 border-neutral-100 lg:border-b lg:grid-cols-4'
+          }
+        >
+          <div className={' border-b lg:border-b-0'}>
+            <div
+              className={
+                'mb-[20px] border-r border-neutral-100 pr-[25px] lg:pb-[30px] lg:mb-0 lg:border-r-0'
+              }
+            >
+              <div className={'flex justify-between'}>
+                <span
+                  className={
+                    'text-start text-[14px] text-neutral-600 font-sans leading-tight pb-[5px]'
+                  }
+                >
+                  {t('revenue')}
+                </span>
+              </div>
+              <p
+                className={
+                  'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
+                }
+              >
+                {'N/A'} <span className={'font-normal text-neutral-500'}>HTG</span>
+              </p>
+            </div>
+          </div>
 
-    In sapien sem, molestie vitae congue in, porta vestibulum neque. In hac habitasse platea dictumst. Etiam diam odio, ultricies quis pulvinar nec, lacinia quis eros. Duis mauris nunc, condimentum varius enim in, pellentesque tincidunt lectus. Cras nec gravida tortor. Mauris convallis, metus sed pellentesque auctor, sem quam tempor arcu, laoreet eleifend ligula turpis nec nisi. Mauris venenatis lectus turpis, a pharetra purus condimentum vel. Integer mattis urna rhoncus imperdiet porta. Vivamus quis turpis eu nibh laoreet maximus ut ac arcu. Mauris convallis, ex id hendrerit dictum, neque nibh porta arcu, eu porta diam nunc in felis. Mauris metus mi, gravida sit amet cursus nec, convallis eget mi.
+          <div className={' border-b lg:border-b-0'}>
+            <div className={'pl-[25px] mb-[20px] lg:px-[25px] lg:pb-[30px] lg:mb-0'}>
+              <div className={'flex justify-between'}>
+                <span
+                  className={
+                    'text-start text-[14px] text-neutral-600 font-sans leading-tight pb-[5px]'
+                  }
+                >
+                  {t('sold')}
+                </span>
+              </div>
+              <p
+                className={
+                  'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
+                }
+              >
+                {'N/A'}
+              </p>
+            </div>
+          </div>
 
-    Sed rhoncus tincidunt augue, vitae aliquam dui auctor a. Donec rhoncus nisi vitae augue sollicitudin tempor. Phasellus gravida quis quam feugiat aliquam. Nunc blandit euismod pretium. Phasellus at magna id dolor mattis imperdiet. Integer dictum ullamcorper dolor, vitae tincidunt nulla pellentesque sed. Maecenas nec viverra mauris. Morbi vitae maximus mauris. Sed nec augue purus.
+          <div>
+            <div
+              className={
+                'mt-[20px] pr-[25px] border-r border-neutral-100 lg:px-[25px] lg:pb-[30px] lg:mt-0 lg:border-r-0'
+              }
+            >
+              <div className={'flex justify-between'}>
+                <span
+                  className={
+                    'text-start text-[14px] text-neutral-600 font-sans leading-tight pb-[5px]'
+                  }
+                >
+                  {t('content.upcomingTitle')}
+                </span>
+              </div>
+              <p
+                className={
+                  'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
+                }
+              >
+                {'N/A'}
+              </p>
+            </div>
+          </div>
 
-    Nullam in euismod leo. Suspendisse porta tristique convallis. Pellentesque nunc magna, bibendum non elit ut, blandit pellentesque sapien. Aenean porta felis accumsan nisl vehicula, eget eleifend dui molestie. Nunc vel libero posuere, rutrum leo non, dignissim nunc. Fusce sodales mollis placerat. Morbi id orci eu nisl porttitor dictum ut et risus. In sed neque ut lorem ultrices pulvinar ut in libero. Duis volutpat, quam ut convallis hendrerit, orci sapien consequat leo, vel ornare dolor ipsum eget nisl. Nam pulvinar et dolor in ultrices. Maecenas nec odio tincidunt, tempor odio nec, pharetra urna. Nunc purus nunc, efficitur in tellus non, egestas accumsan leo.
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse viverra quam ut nisl luctus, vitae pulvinar risus ullamcorper. Praesent id scelerisque odio. Nunc at ligula eu sapien posuere aliquet quis ac leo. Fusce vehicula velit libero. Cras bibendum odio sed ante condimentum feugiat. Etiam ac condimentum dolor, in luctus elit. Cras at condimentum ex. Morbi vel tortor dapibus, fringilla mi sit amet, volutpat tortor.
+          <div>
+            <div className={'mt-[20px] pl-[25px] lg:pb-[30px] lg:mt-0'}>
+              <div className={'flex justify-between'}>
+                <span
+                  className={
+                    'text-start text-[14px] text-neutral-600 font-sans leading-tight pb-[5px]'
+                  }
+                >
+                  {t('content.view')}
+                </span>
+              </div>
+              <p
+                className={
+                  'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
+                }
+              >
+                {'N/A'}
+              </p>
+            </div>
+          </div>
+        </div>
 
-    Aenean lobortis velit eget nisl cursus porta. Etiam eu felis ullamcorper, porttitor est in, hendrerit nibh. Ut facilisis nulla in nunc lacinia lobortis. Donec posuere felis ac ornare placerat. Ut imperdiet quam ac turpis aliquet, non lobortis dolor cursus. Etiam urna magna, aliquet in quam eu, mattis aliquam velit. Nunc magna eros, efficitur eu fermentum nec, tristique et nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer at viverra tellus, at blandit risus. Ut vitae fermentum justo. Nunc sodales turpis id elementum blandit. Mauris nisl nibh, condimentum vitae odio a, tristique aliquam quam.
+        {/* tickets analytic stat */}
+        <div className={'flex flex-col gap-[20px] lg:gap-[25px]'}>
+          <h3
+            className={
+              'self-stretch justify-start font-medium font-primary text-[18px] leading-loose text-black lg:text-[22px]'
+            }
+          >
+            {t('tickets.title')}
+          </h3>
+          <div
+            className={
+              'grid-cols-1 grid  lg:grid-cols-21 lg:divide-x divide-neutral-100 border-neutral-100 lg:border-b'
+            }
+          >
+            <div
+              className={'w-full pt-[15px] pb-[20px] lg:pr-[30px] lg:pb-[30px] lg:col-span-11 '}
+            >
+              <div className={'flex flex-col gap-[20px] lg:gap-[25px]'}>
+                <span
+                  className={
+                    'text-[14px] font-sans justify-start text-gray-800 text-base font-medium leading-tight lg:text-[15px]'
+                  }
+                >
+                  {t('tickets.daily')}
+                </span>
+                <DailyTicketSalesChart />
+              </div>
+            </div>
+            <div
+              className={
+                'flex flex-col gap-[20px] w-full lg:flex-row col-span-10 lg:pt-[15px] lg:pb-[30px] lg:pl-[30px]'
+              }
+            >
+              <div className={'w-full flex flex-col gap-[20px] lg:gap-[25px]'}>
+                <span
+                  className={
+                    'text-[14px] font-sans justify-start text-gray-800 text-base font-medium leading-tight lg:text-[15px]'
+                  }
+                >
+                  {t('tickets.classes')}
+                </span>
+                <div
+                  className={
+                    'flex justify-between items-start lg:grid lg:grid-cols-2 gap-x-[50px] lg:gap-y-[35px]'
+                  }
+                >
+                  <div className={'grid grid-cols justify-start items-start'}>
+                    <div className={'justify-start items-center gap-[5px] inline-flex'}>
+                      <div className={'w-[15px] h-[15px] bg-[#FFEFE2] rounded-[5px]'}></div>
+                      <div className={'text-[#8F96A1] text-[14px] font-sans font-medium'}>
+                        General
+                      </div>
+                    </div>
+                    <div
+                      className={
+                        'justify-start font-medium text-black text-[25px] font-primary capitalize leading-none'
+                      }
+                    >N/A
+                      {/* {ticketsGeneral ?? 0}% */}
+                    </div>
+                  </div>
 
-    In sapien sem, molestie vitae congue in, porta vestibulum neque. In hac habitasse platea dictumst. Etiam diam odio, ultricies quis pulvinar nec, lacinia quis eros. Duis mauris nunc, condimentum varius enim in, pellentesque tincidunt lectus. Cras nec gravida tortor. Mauris convallis, metus sed pellentesque auctor, sem quam tempor arcu, laoreet eleifend ligula turpis nec nisi. Mauris venenatis lectus turpis, a pharetra purus condimentum vel. Integer mattis urna rhoncus imperdiet porta. Vivamus quis turpis eu nibh laoreet maximus ut ac arcu. Mauris convallis, ex id hendrerit dictum, neque nibh porta arcu, eu porta diam nunc in felis. Mauris metus mi, gravida sit amet cursus nec, convallis eget mi.
+                  <div className={'flex flex-col justify-start items-start'}>
+                    <div className={'justify-start items-center gap-[5px] inline-flex'}>
+                      <div className={'w-[15px] h-[15px] bg-[#FF8A9F] rounded-[5px]'}></div>
+                      <div className={'text-[#8F96A1] text-[14px] font-sans font-medium'}>
+                        VIP
+                      </div>
+                    </div>
+                    <div
+                      className={
+                        'justify-start font-medium text-black text-[25px] font-primary capitalize leading-none'
+                      }
+                    >N/A
+                      {/* {ticketsVIP ?? 0}% */}
+                    </div>
+                  </div>
 
-    Sed rhoncus tincidunt augue, vitae aliquam dui auctor a. Donec rhoncus nisi vitae augue sollicitudin tempor. Phasellus gravida quis quam feugiat aliquam. Nunc blandit euismod pretium. Phasellus at magna id dolor mattis imperdiet. Integer dictum ullamcorper dolor, vitae tincidunt nulla pellentesque sed. Maecenas nec viverra mauris. Morbi vitae maximus mauris. Sed nec augue purus.
+                  <div className={'flex flex-col justify-start items-start'}>
+                    <div className={'justify-start items-center gap-[5px] inline-flex'}>
+                      <div className={'w-[15px] h-[15px] bg-[#E752AE] rounded-[5px]'}></div>
+                      <div className={'text-[#8F96A1] text-[14px] font-sans font-medium'}>
+                        Premium VIP
+                      </div>
+                    </div>
+                    <div
+                      className={
+                        'justify-start font-medium text-black text-[25px] font-primary capitalize leading-none'
+                      }
+                    >
+                      N/A
+                      {/* {ticketPremiumVip ?? 0}% */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={'h-[175px] justify-center items-center flex'}>
+                <DoughnutChart />
+              </div>
+            </div>
+          </div>
+        </div>
 
-    Nullam in euismod leo. Suspendisse porta tristique convallis. Pellentesque nunc magna, bibendum non elit ut, blandit pellentesque sapien. Aenean porta felis accumsan nisl vehicula, eget eleifend dui molestie. Nunc vel libero posuere, rutrum leo non, dignissim nunc. Fusce sodales mollis placerat. Morbi id orci eu nisl porttitor dictum ut et risus. In sed neque ut lorem ultrices pulvinar ut in libero. Duis volutpat, quam ut convallis hendrerit, orci sapien consequat leo, vel ornare dolor ipsum eget nisl. Nam pulvinar et dolor in ultrices. Maecenas nec odio tincidunt, tempor odio nec, pharetra urna. Nunc purus nunc, efficitur in tellus non, egestas accumsan leo.
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse viverra quam ut nisl luctus, vitae pulvinar risus ullamcorper. Praesent id scelerisque odio. Nunc at ligula eu sapien posuere aliquet quis ac leo. Fusce vehicula velit libero. Cras bibendum odio sed ante condimentum feugiat. Etiam ac condimentum dolor, in luctus elit. Cras at condimentum ex. Morbi vel tortor dapibus, fringilla mi sit amet, volutpat tortor.
+        {/* event analytic stat */}
+        <div className={'flex flex-col gap-[20px] lg:gap-[25px]'}>
+          <h3
+            className={
+              'font-medium font-primary text-[18px] leading-[30px] text-black lg:text-[22px]'
+            }
+          >
+            {t('event.event_demographics.title')}
+          </h3>
+          <div
+            className={
+              'grid grid-cols-1 divide-y lg:grid-cols-2 lg:divide-x lg:divide-y-0 divide-neutral-100 border-neutral-100 lg:border-b'
+            }
+          >
+            <div className={'flex flex-col gap-[20px] pb-[15px] lg:pr-[25px] lg:pb-[20px]'}>
+              <span className={'text-[14px] text-black-100 font-sans font-medium lg:text-[15px]'}>
+                {t('event.event_demographics.gender_distribution.title')}
+              </span>
+              <div className={'w-full'}>
+                <BarChart
+                  category1={t('event.event_demographics.gender_distribution.gender.male')}
+                  category2={t('event.event_demographics.gender_distribution.gender.female')}
+                  category3={t('event.event_demographics.gender_distribution.gender.others')}
+                  percent1="87%"
+                  percent2="25%"
+                  percent3="50%"
+                ></BarChart>
+              </div>
+            </div>
+            <div
+              className={'flex flex-col pt-[15px] gap-[20px] lg:pl-[25px] lg:pb-[20px] lg:pt-[0]'}
+            >
+              <span className={'text-[14px] text-black-100 font-medium lg:text-[15px]'}>
+                {t('event.event_demographics.events_top.title')}
+              </span>
+              <div className={'w-full'}>
+                <BarChart
+                  category1="sdsa"
+                  category2="sdfdsf"
+                  category3="dfas"
+                  percent1="18%"
+                  percent2="59%"
+                  percent3="78%"
+                ></BarChart>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* feedback analytic */}
+        <div className={'flex flex-col gap-[25px] mb-6'}>
+          <h3 className={'font-medium font-primary text-[18px] text-black lg:text-[22px]'}>
+            {t('feedback.title')}
+          </h3>
+          <div className={'flex flex-col gap-[15px] lg:flex-row lg:justify-between'}>
+            <div className={'flex flex-col gap-[10px]'}>
+              <span className={'text-[14px] text-neutral-500 font-sm'}>
+                {t('feedback.action.click_on_event')}
+              </span>
+              <p className={'font-medium text-[25px] text-black capitalize font-primary'}>{'N/A'}</p>
+            </div>
 
-    Aenean lobortis velit eget nisl cursus porta. Etiam eu felis ullamcorper, porttitor est in, hendrerit nibh. Ut facilisis nulla in nunc lacinia lobortis. Donec posuere felis ac ornare placerat. Ut imperdiet quam ac turpis aliquet, non lobortis dolor cursus. Etiam urna magna, aliquet in quam eu, mattis aliquam velit. Nunc magna eros, efficitur eu fermentum nec, tristique et nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer at viverra tellus, at blandit risus. Ut vitae fermentum justo. Nunc sodales turpis id elementum blandit. Mauris nisl nibh, condimentum vitae odio a, tristique aliquam quam.
+            <div className={'flex flex-col gap-[10px]'}>
+              <span className={'text-[14px] text-neutral-500 font-sm'}>
+                {t('feedback.action.social_media_shares')}
+              </span>
+              <p className={'font-medium text-[25px] text-black capitalize font-primary'}>
+                {'N/A'}
+              </p>
+            </div>
 
-    In sapien sem, molestie vitae congue in, porta vestibulum neque. In hac habitasse platea dictumst. Etiam diam odio, ultricies quis pulvinar nec, lacinia quis eros. Duis mauris nunc, condimentum varius enim in, pellentesque tincidunt lectus. Cras nec gravida tortor. Mauris convallis, metus sed pellentesque auctor, sem quam tempor arcu, laoreet eleifend ligula turpis nec nisi. Mauris venenatis lectus turpis, a pharetra purus condimentum vel. Integer mattis urna rhoncus imperdiet porta. Vivamus quis turpis eu nibh laoreet maximus ut ac arcu. Mauris convallis, ex id hendrerit dictum, neque nibh porta arcu, eu porta diam nunc in felis. Mauris metus mi, gravida sit amet cursus nec, convallis eget mi.
+            <div className={'flex flex-col gap-[10px]'}>
+              <span className={'text-[14px] text-neutral-500 font-sm'}>
+                {t('feedback.action.add_favorite')}
+              </span>
+              <p className={'font-medium text-[25px] text-black capitalize font-primary'}>
+                {'N/A'}
+              </p>
+            </div>
 
-    Sed rhoncus tincidunt augue, vitae aliquam dui auctor a. Donec rhoncus nisi vitae augue sollicitudin tempor. Phasellus gravida quis quam feugiat aliquam. Nunc blandit euismod pretium. Phasellus at magna id dolor mattis imperdiet. Integer dictum ullamcorper dolor, vitae tincidunt nulla pellentesque sed. Maecenas nec viverra mauris. Morbi vitae maximus mauris. Sed nec augue purus.
-
-    Nullam in euismod leo. Suspendisse porta tristique convallis. Pellentesque nunc magna, bibendum non elit ut, blandit pellentesque sapien. Aenean porta felis accumsan nisl vehicula, eget eleifend dui molestie. Nunc vel libero posuere, rutrum leo non, dignissim nunc. Fusce sodales mollis placerat. Morbi id orci eu nisl porttitor dictum ut et risus. In sed neque ut lorem ultrices pulvinar ut in libero. Duis volutpat, quam ut convallis hendrerit, orci sapien consequat leo, vel ornare dolor ipsum eget nisl. Nam pulvinar et dolor in ultrices. Maecenas nec odio tincidunt, tempor odio nec, pharetra urna. Nunc purus nunc, efficitur in tellus non, egestas accumsan leo.</OrganizerLayout>;
+            <div className={'flex flex-col gap-[10px]'}>
+              <span className={'text-[14px] text-neutral-500 font-sm'}>
+                {t('feedback.action.rated')}
+              </span>
+              <div className={'flex font-medium text-[25px] capitalize font-primary'}>
+                <p className={' text-black '}>{'N/A'}</p>
+                <span className={'text-neutral-500'}>/5</span>
+              </div>
+            </div>
+            <div className={'flex flex-col gap-[10px]'}>
+              <span className={'text-[14px] text-neutral-500  font-sm'}>
+                {t('feedback.action.reviews')}
+              </span>
+              <p className={'font-medium text-[25px] text-black capitalize font-primary'}>
+                {'N/A'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </OrganizerLayout>
+  )
 }

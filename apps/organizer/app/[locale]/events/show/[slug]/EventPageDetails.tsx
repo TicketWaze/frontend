@@ -42,7 +42,7 @@ export default function EventPageDetails({ event, tickets, slug }: { event: Even
       <TopBar title={event.eventName}>
         <div className='flex items-center gap-4'>
           {/* Share Event */}
-          <Dialog>
+          {daysLeft !== null && daysLeft > 0 && <Dialog>
             <DialogTrigger>
               <span className='px-[15px] py-[7.5px] border-2 border-transparent rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center gap-4 bg-neutral-100 text-neutral-700'>
                 <Send2 variant={'Bulk'} color={'#737C8A'} size={20} />
@@ -102,8 +102,9 @@ export default function EventPageDetails({ event, tickets, slug }: { event: Even
                 </div>
               </div>
             </DialogContent>
-          </Dialog>
-          <TicketClasses event={event} />
+          </Dialog>}
+
+          {daysLeft !== null && daysLeft > 0 && <TicketClasses event={event} />}
           {/* more */}
           <Popover>
             <PopoverTrigger>
@@ -130,7 +131,7 @@ export default function EventPageDetails({ event, tickets, slug }: { event: Even
                 </span>
                 <div className={'flex flex-col gap-4'}>
                   {/* {!event.isFree && ( */}
-                  <li>
+                  {daysLeft !== null && daysLeft > 0 && <li>
                     <Link
                       href={`${slug}/discount-codes`}
                       className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
@@ -140,7 +141,8 @@ export default function EventPageDetails({ event, tickets, slug }: { event: Even
                       </span>
                       <TicketDiscount size="20" variant="Bulk" color={'#E45B00'} />
                     </Link>
-                  </li>
+                  </li>}
+
                   {/* )} */}
 
                   <li className={''}>
