@@ -7,17 +7,18 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 interface DoughnutChartProps {
   data?: ChartData<'doughnut'>
   options?: ChartOptions<'doughnut'>
+  analytics : any
 }
 
 
-export default function DoughnutChart({  options }: DoughnutChartProps) {
+export default function DoughnutChart({  options, analytics }: DoughnutChartProps) {
 
   const isEmpty = false
 
   const defaultData: ChartData<'doughnut'> = {
     datasets: [
       {
-        data: [20, 10, 25],
+        data: [analytics.ticketsVIP, analytics.ticketPremiumVip, analytics.ticketsGeneral ?? 100],
         backgroundColor: [
           '#FF8A9F', // VIP
           '#E752AE', // Premium VIP

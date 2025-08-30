@@ -30,7 +30,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
             {t('amounts.revenue')}
           </span>
           <p className={'font-medium text-[1.6rem] lg:text-[25px] leading-[30px] font-primary'}>
-            {'N/A'}{' '}
+            {Object.values(orders).reduce((acc, order)=> acc + order.amount, 0)}{' '}
             <span className={'font-normal text-[1.6rem] lg:text-[20px] text-neutral-500'}>
               HTG
             </span>

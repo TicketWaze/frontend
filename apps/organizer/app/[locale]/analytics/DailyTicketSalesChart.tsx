@@ -55,7 +55,8 @@ const DailyTicketSalesChart = () => {
     i === currentHour ? `Now` : label
   );
 
-  const allData = [100, 85, 92, 105, 110, 100, 115, 120, 130, 140, 150, 160, 175, 190, 180, 170, 165, 160, 150, 145, 140, 135, 130, 125];
+  const allData = [];
+  // const allData = [100, 85, 92, 105, 110, 100, 115, 120, 130, 140, 150, 160, 175, 190, 180, 170, 165, 160, 150, 145, 140, 135, 130, 125];
 
   // Fonction pour sélectionner 13 heures en mobile (incluant l'heure actuelle)
   const getMobileLabels = () => {

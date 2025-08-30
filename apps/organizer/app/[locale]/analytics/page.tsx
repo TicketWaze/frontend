@@ -5,11 +5,14 @@ import { getTranslations } from "next-intl/server";
 import DailyTicketSalesChart from "./DailyTicketSalesChart";
 import DoughnutChart from "./DoughnutChart";
 import BarChart from "./BarChart";
+import { api } from "@/lib/Api";
 
 export default async function AnalyticsPage() {
   const session = await auth()
   const currentOrganisation = session?.activeOrganisation
   const t = await getTranslations('Analytics')
+  const analytics = await api(`/organisations/${session?.activeOrganisation.organisationId}/analytics`, session?.user.accessToken ?? '')
+  
   return (
     <OrganizerLayout title="Analytics">
       <AnalyticsPageTopbar
@@ -17,46 +20,6 @@ export default async function AnalyticsPage() {
         title={currentOrganisation?.organisationName ?? ''}
         description={t('description')}
       >
-        {/*filters*/}
-        {/*<div className={'flex gap-[1.5rem]'}>*/}
-        {/*  <Select>*/}
-        {/*    <SelectTrigger className="bg-neutral-100 rounded-[3rem] px-[1.5rem] py-[1.8rem] text-[1.4rem] text-neutral-700 leading-[20px]">*/}
-        {/*      <SelectValue placeholder={analytics.filters.first.all} />*/}
-        {/*    </SelectTrigger>*/}
-        {/*    <SelectContent className={'bg-neutral-100 text-[1.4rem]'}>*/}
-        {/*      <SelectGroup className={'divide-y'}>*/}
-        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="apple">*/}
-        {/*          Apple*/}
-        {/*        </SelectItem>*/}
-        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="test">*/}
-        {/*          test*/}
-        {/*        </SelectItem>*/}
-        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="ok">*/}
-        {/*          ok*/}
-        {/*        </SelectItem>*/}
-        {/*      </SelectGroup>*/}
-        {/*    </SelectContent>*/}
-        {/*  </Select>*/}
-
-        {/*  <Select>*/}
-        {/*    <SelectTrigger className="bg-neutral-100 rounded-[3rem] px-[1.5rem] py-[1.8rem] text-[1.4rem] text-neutral-700 leading-[20px]">*/}
-        {/*      <SelectValue placeholder={analytics.filters.first.date} />*/}
-        {/*    </SelectTrigger>*/}
-        {/*    <SelectContent className={'bg-neutral-100 text-[1.4rem]'}>*/}
-        {/*      <SelectGroup className={'divide-y'}>*/}
-        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="apple">*/}
-        {/*          Apple*/}
-        {/*        </SelectItem>*/}
-        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="test">*/}
-        {/*          test*/}
-        {/*        </SelectItem>*/}
-        {/*        <SelectItem className={'text-[1.4rem] text-deep-100'} value="ok">*/}
-        {/*          ok*/}
-        {/*        </SelectItem>*/}
-        {/*      </SelectGroup>*/}
-        {/*    </SelectContent>*/}
-        {/*  </Select>*/}
-        {/*</div>*/}
       </AnalyticsPageTopbar>
       {/* main */}
       <div className={'flex flex-col gap-[30px] overflow-y-scroll lg:gap-[40px]'}>
@@ -85,7 +48,7 @@ export default async function AnalyticsPage() {
                   'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
                 }
               >
-                {'N/A'} <span className={'font-normal text-neutral-500'}>HTG</span>
+                {analytics.totalRevenue} <span className={'font-normal text-neutral-500'}>HTG</span>
               </p>
             </div>
           </div>
@@ -106,7 +69,7 @@ export default async function AnalyticsPage() {
                   'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
                 }
               >
-                {'N/A'}
+                {analytics.ticketsSold}
               </p>
             </div>
           </div>
@@ -131,7 +94,7 @@ export default async function AnalyticsPage() {
                   'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
                 }
               >
-                {'N/A'}
+                {analytics.upcomingEvents}
               </p>
             </div>
           </div>
@@ -152,7 +115,7 @@ export default async function AnalyticsPage() {
                   'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
                 }
               >
-                {'N/A'}
+                {analytics.eventViews}
               </p>
             </div>
           </div>
@@ -215,8 +178,8 @@ export default async function AnalyticsPage() {
                       className={
                         'justify-start font-medium text-black text-[25px] font-primary capitalize leading-none'
                       }
-                    >N/A
-                      {/* {ticketsGeneral ?? 0}% */}
+                    >
+                      {analytics.ticketsGeneral ?? 0}%
                     </div>
                   </div>
 
@@ -231,8 +194,8 @@ export default async function AnalyticsPage() {
                       className={
                         'justify-start font-medium text-black text-[25px] font-primary capitalize leading-none'
                       }
-                    >N/A
-                      {/* {ticketsVIP ?? 0}% */}
+                    >
+                      {analytics.ticketsVIP ?? 0}%
                     </div>
                   </div>
 
@@ -248,14 +211,13 @@ export default async function AnalyticsPage() {
                         'justify-start font-medium text-black text-[25px] font-primary capitalize leading-none'
                       }
                     >
-                      N/A
-                      {/* {ticketPremiumVip ?? 0}% */}
+                      {analytics.ticketPremiumVip ?? 0}%
                     </div>
                   </div>
                 </div>
               </div>
               <div className={'h-[175px] justify-center items-center flex'}>
-                <DoughnutChart />
+                <DoughnutChart analytics={analytics} />
               </div>
             </div>
           </div>
@@ -284,9 +246,9 @@ export default async function AnalyticsPage() {
                   category1={t('event.event_demographics.gender_distribution.gender.male')}
                   category2={t('event.event_demographics.gender_distribution.gender.female')}
                   category3={t('event.event_demographics.gender_distribution.gender.others')}
-                  percent1="87%"
-                  percent2="25%"
-                  percent3="50%"
+                  percent1="0%"
+                  percent2="0%"
+                  percent3="0%"
                 ></BarChart>
               </div>
             </div>
@@ -327,7 +289,7 @@ export default async function AnalyticsPage() {
                 {t('feedback.action.social_media_shares')}
               </span>
               <p className={'font-medium text-[25px] text-black capitalize font-primary'}>
-                {'N/A'}
+                {analytics.socialShares}
               </p>
             </div>
 
@@ -336,7 +298,7 @@ export default async function AnalyticsPage() {
                 {t('feedback.action.add_favorite')}
               </span>
               <p className={'font-medium text-[25px] text-black capitalize font-primary'}>
-                {'N/A'}
+                {analytics.favorites}
               </p>
             </div>
 
@@ -345,7 +307,7 @@ export default async function AnalyticsPage() {
                 {t('feedback.action.rated')}
               </span>
               <div className={'flex font-medium text-[25px] capitalize font-primary'}>
-                <p className={' text-black '}>{'N/A'}</p>
+                <p className={' text-black '}>{analytics.average}</p>
                 <span className={'text-neutral-500'}>/5</span>
               </div>
             </div>
@@ -354,7 +316,7 @@ export default async function AnalyticsPage() {
                 {t('feedback.action.reviews')}
               </span>
               <p className={'font-medium text-[25px] text-black capitalize font-primary'}>
-                {'N/A'}
+                {analytics.totalReviews}
               </p>
             </div>
           </div>

@@ -24,24 +24,24 @@ export default function EventTypeList() {
             image: InPerson,
             value: 'in-person',
         },
-        {
-            title: 'Online',
-            description: 'Virtual events you can attend from anywhere.',
-            image: Online,
-            value: 'online',
-        },
-        {
-            title: 'Cinema',
-            description: 'Watch the latest movies on the big screen.',
-            image: cinema,
-            value: 'cinema',
-        },
-        {
-            title: 'Match',
-            description: 'Live sports events and thrilling matches.',
-            image: match,
-            value: 'match',
-        },
+        // {
+        //     title: 'Online',
+        //     description: 'Virtual events you can attend from anywhere.',
+        //     image: Online,
+        //     value: 'online',
+        // },
+        // {
+        //     title: 'Cinema',
+        //     description: 'Watch the latest movies on the big screen.',
+        //     image: cinema,
+        //     value: 'cinema',
+        // },
+        // {
+        //     title: 'Match',
+        //     description: 'Live sports events and thrilling matches.',
+        //     image: match,
+        //     value: 'match',
+        // },
 
     ]
     const router = useRouter()
