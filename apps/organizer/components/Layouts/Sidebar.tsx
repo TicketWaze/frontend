@@ -21,7 +21,6 @@ function Sidebar({ className }: { className: string }) {
   const pathname = usePathname();
 
   const { data: session, update } = useSession()
-  console.log(session?.activeOrganisation);
   
   const organisation = session?.activeOrganisation
   const [allOrganisations, setAllOrganisations] = useState<Organisation[]>([])
@@ -130,7 +129,6 @@ function Sidebar({ className }: { className: string }) {
               <Dialog>
                 <DialogTrigger>
                   <div
-                    // onClick={() => setOrganizerListOpen(true)}
                     className={'flex gap-4 items-center p-4 cursor-pointer'}
                   >
                     <ArrowSwapHorizontal size="20" color="#737c8a" variant="Bulk" />

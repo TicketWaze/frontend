@@ -58,10 +58,11 @@ export default function RegisterPage() {
     }
   }
   return (
-    <div
+    <form
+    onSubmit={handleSubmit(submitHandler)}
       className='flex flex-col items-center justify-between gap-20 w-full h-full pb-4 '
     >
-      <form onSubmit={handleSubmit(submitHandler)} className={'flex flex-col gap-16 w-full'}>
+      <div  className={'flex flex-col gap-16 w-full'}>
         <div className='flex-1 flex lg:justify-center flex-col w-full pt-[4.5rem]'>
           <div className='flex flex-col gap-16 items-center'>
             <div className='flex flex-col gap-8 items-center'>
@@ -93,26 +94,31 @@ export default function RegisterPage() {
             </div>
           </div>
         </div>
-      </form>
-      <div
-        className={
-          'flex items-center justify-between gap-[1.8rem] border border-neutral-100  p-4 rounded-[10rem] mb-8'
-        }
-      >
-        <span
-          className={'font-normal text-[1.8rem] leading-[25px] text-center text-neutral-700'}
-        >
-          {t('choice.footer.text')}
-        </span>
-        <Link
-          href={`/auth/login`}
+      </div>
+      <div className='flex flex-col gap-6 w-full'>
+        <ButtonPrimary type='submit' disabled={isSubmitting} className='w-full lg:hidden disabled:opacity-50 disabled:cursor-not-allowed'>
+          {isSubmitting ? <LoadingCircleSmall /> : t('cta.submit')}
+        </ButtonPrimary>
+        <div
           className={
-            'border-2 border-primary-500 px-[3rem] py-6 rounded-[10rem] font-normal text-primary-500 text-[1.5rem] leading-[20px] bg-primary-100'
+            'flex items-center justify-between gap-[1.8rem] border border-neutral-100  p-4 rounded-[10rem] mb-8'
           }
         >
-          {t('choice.footer.cta')}
-        </Link>
+          <span
+            className={'font-normal text-[1.8rem] leading-[25px] text-center text-neutral-700'}
+          >
+            {t('choice.footer.text')}
+          </span>
+          <Link
+            href={`/auth/login`}
+            className={
+              'border-2 border-primary-500 px-[3rem] py-6 rounded-[10rem] font-normal text-primary-500 text-[1.5rem] leading-[20px] bg-primary-100'
+            }
+          >
+            {t('choice.footer.cta')}
+          </Link>
+        </div>
       </div>
-    </div>
+    </form>
   )
 }

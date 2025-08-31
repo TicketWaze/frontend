@@ -134,7 +134,7 @@
         "google": "Continue with Google"
       },
       "footer": {
-        "text": "Don’t own an account?",
+        "text": "Don’t own an account ?",
         "cta": "Sign up"
       }
     },
@@ -511,7 +511,8 @@
     "title": "Settings",
     "help": "Help",
     "logout": "Log out",
-    "switch": "Switch Organisations",
+    "switch": "Organisations",
+    "switching": "Switch Organisations",
     "new": "New organisation",
     "account": {
       "title": "Account",

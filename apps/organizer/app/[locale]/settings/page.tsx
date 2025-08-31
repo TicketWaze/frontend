@@ -1,10 +1,11 @@
 import OrganizerLayout from '@/components/Layouts/OrganizerLayout'
 import { SimpleTopbar } from '@/components/Layouts/Topbars'
 import { Link } from '@/i18n/navigation'
-import { Add, ArrowRight2, ArrowSwapHorizontal, CardPos, I24Support, Icon, Notification, Profile2User, SecuritySafe, Setting5, User } from 'iconsax-react'
+import { Add, ArrowRight2, CardPos, I24Support, Icon, Notification, Profile2User, SecuritySafe, Setting5, User } from 'iconsax-react'
 import { getTranslations } from 'next-intl/server'
 import React from 'react'
 import Signout from './Signout'
+import SwitchOrganisationMobile from './SwitchOrganisationMobile'
 
 export default async function Settings() {
     const t = await getTranslations('Settings')
@@ -55,11 +56,9 @@ export default async function Settings() {
                 <li className='lg:hidden'>
                     <SettingsCardLink Icon={I24Support} href={''} label={t('help')} />
                 </li>
+                <SwitchOrganisationMobile/>
                 <li className='lg:hidden'>
-                    <SettingsCardLink Icon={ArrowSwapHorizontal} href={''} label={t('switch')} />
-                </li>
-                <li className='lg:hidden'>
-                    <SettingsCardLink Icon={Add} href={''} label={t('new')} />
+                    <SettingsCardLink Icon={Add} href={'/auth/create-organisation'} label={t('new')} />
                 </li>
                 <Signout />
             </ul>

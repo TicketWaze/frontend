@@ -63,7 +63,7 @@ export default function NewOrganisationPage() {
       body: JSON.stringify(data)
     })
     const response = await request.json()
-    
+
     if (response.status === 'success') {
       router.push('/analytics')
     } else {
@@ -71,10 +71,10 @@ export default function NewOrganisationPage() {
     }
   }
   return (
-    <div
+    <form onSubmit={handleSubmit(submitHandler)}
       className='flex flex-col items-center justify-between gap-20 w-full h-full pb-4 '
     >
-      <form onSubmit={handleSubmit(submitHandler)} className={'flex flex-col gap-16 w-full'}>
+      <div className={'flex flex-col gap-16 w-full'}>
         <div className='flex-1 flex lg:justify-center flex-col w-full pt-[4.5rem]'>
           <div className='flex flex-col gap-16 items-center'>
             <div className='flex flex-col gap-8 items-center'>
@@ -167,21 +167,30 @@ export default function NewOrganisationPage() {
             </div>
           </div>
         </div>
-      </form>
-      <div
-        className={
-          'flex items-center justify-between gap-[1.8rem] border border-neutral-100  p-4 rounded-[10rem] mb-8'
-        }
-      >
-        <ButtonAccent
-          onClick={() => router.back()}
+      </div>
+      <div className='flex flex-col gap-6 w-full'>
+        <ButtonPrimary
+          disabled={isSubmitting}
+          type={'submit'}
+          className={'w-full disabled:opacity-50 disabled:cursor-not-allowed lg:hidden '}
+        >
+          {isSubmitting ? <LoadingCircleSmall /> : t('submit')}
+        </ButtonPrimary>
+        <div
           className={
-            'border-2 border-primary-500 px-[3rem] py-6 rounded-[10rem] font-normal text-primary-500 text-[1.5rem] leading-[20px] bg-primary-100'
+            'flex items-center self-center justify-between gap-[1.8rem] border border-neutral-100  p-4 rounded-[10rem] mb-8'
           }
         >
-          {t('back')}
-        </ButtonAccent>
+          <ButtonAccent
+            onClick={() => router.back()}
+            className={
+              'border-2 border-primary-500 px-[3rem] py-6 rounded-[10rem] font-normal text-primary-500 text-[1.5rem] leading-[20px] bg-primary-100'
+            }
+          >
+            {t('back')}
+          </ButtonAccent>
+        </div>
       </div>
-    </div>
+    </form>
   )
 }
