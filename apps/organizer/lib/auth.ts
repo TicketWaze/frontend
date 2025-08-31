@@ -41,13 +41,25 @@ const nextAuthResult = NextAuth({
     error: `/auth/login`
   },
   callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, ...user };
+    async jwt({ token, user, trigger, session }) {
+      // Initial sign-in
+      if (user) {
+        const customUser = user as unknown as import("@/types/User").default;
+        token = { ...token, ...customUser };
+        token.activeOrganisation = customUser.organisations?.[0] ?? null;
+      }
+
+      // Manual update (client calls `update()`)
+      if (trigger === "update" && session?.activeOrganisation) {
+        token.activeOrganisation = session.activeOrganisation;
+      }
+
+      return token;
     },
-    async session({ session, token, user }) {
-      // @ts-ignore
-      session.user = token;
-      session.activeOrganisation = session.user.organisations[0] as Organisation
+    async session({ session, token }) {
+      // copy token into session
+      session.user = token as any;
+      session.activeOrganisation = (token as any).activeOrganisation ?? null;
       return session;
     },
   },

@@ -1,24 +1,46 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 import Logo from "@workspace/ui/assets/images/logo-horizontal-orange.svg";
 import Image from "next/image";
 import { Add, ArrowSwapHorizontal, Chart1, I24Support, Logout, Moneys, Setting2, Ticket } from "iconsax-react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import VerifierOrganisationCheckMark from "@/components/VerifiedOrganisationCheckMark"
 import { signOut, useSession } from "next-auth/react";
-import { useStore } from "@tanstack/react-store";
-import organisationStore from "@/store/OrganisationStore";
+import Organisation from "@/types/Organisation";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@workspace/ui/components/dialog";
+import { RadioGroup, RadioGroupItem } from "@workspace/ui/components/radio-group"
+import { ButtonPrimary } from "@workspace/ui/components/buttons";
+import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");
   const pathname = usePathname();
 
-  // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
-  const {data: session} = useSession()  
+  const { data: session, update } = useSession()
+  console.log(session?.activeOrganisation);
+  
   const organisation = session?.activeOrganisation
+  const [allOrganisations, setAllOrganisations] = useState<Organisation[]>([])
+  const [selectedOrganisation, setSelectedOrganisation] = useState<Organisation>()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    if (!session?.user?.accessToken) return
+    setIsLoading(true)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/organisations/me`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${session?.user.accessToken}`
+      },
+    }).then(res => res.json()).then(res => setAllOrganisations(res.organisations)).finally(() => setIsLoading(false))
+  }, [session?.user?.accessToken])
+
   const links = [
     {
       label: t("analytics"),
@@ -44,6 +66,17 @@ function Sidebar({ className }: { className: string }) {
 
   function isActive(path: string) {
     return pathname.startsWith(path);
+  }
+
+  const router = useRouter()
+  const CloseRef = useRef<HTMLButtonElement>(null)
+
+  async function switchOrganisation(organisation: Organisation) {    
+    setLoading(true)
+    await update({activeOrganisation : organisation })
+    setLoading(false)
+    CloseRef.current?.click()
+    router.refresh()
   }
 
   return (
@@ -92,29 +125,70 @@ function Sidebar({ className }: { className: string }) {
             </Link>
           </li>
           {/* switch organisation */}
-          <li className="hidden">
-            <button
-              // onClick={() => setOrganizerListOpen(true)}
-              className={'flex gap-4 items-center p-4 cursor-pointer'}
-            >
-              <ArrowSwapHorizontal size="20" color="#737c8a" variant="Bulk" />
-              <span className={'text-neutral-700 text-[1.5rem] leading-[20px]'}>
-                {t('switch')}
-              </span>
-            </button>
-          </li>
+          {isLoading ? null : allOrganisations && allOrganisations?.length > 0 ?
+            <li className="">
+              <Dialog>
+                <DialogTrigger>
+                  <div
+                    // onClick={() => setOrganizerListOpen(true)}
+                    className={'flex gap-4 items-center p-4 cursor-pointer'}
+                  >
+                    <ArrowSwapHorizontal size="20" color="#737c8a" variant="Bulk" />
+                    <span className={'text-neutral-700 text-[1.5rem] leading-[20px]'}>
+                      {t('switch')}
+                    </span>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className={'w-[360px] lg:w-[520px] flex flex-col gap-16 '}>
+                  <DialogHeader>
+                    <DialogTitle
+                      className={
+                        'font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary'
+                      }
+                    >
+                      {t('switch')}
+                    </DialogTitle>
+                    <DialogDescription className={'sr-only'}>
+                      <span>Share event</span>
+                    </DialogDescription>
+                  </DialogHeader>
+                  <RadioGroup className="flex flex-col gap-8" defaultValue={session?.activeOrganisation.organisationId}>
+                    {allOrganisations.map(organisation => {
+                      return (
+                        <div key={organisation.organisationId} className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-4">
+                            {organisation?.profileImageUrl ? <Image src={organisation.profileImageUrl} width={35} height={35} alt={organisation.organisationName} className="rounded-full" /> : <span
+                              className="w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary"
+                            >
+                              {organisation?.organisationName.slice()[0]?.toUpperCase()}
+                            </span>}
+                            <span className="text-[1.6rem]">{organisation.organisationName}</span>
+                          </div>
+                          <RadioGroupItem onClick={() => setSelectedOrganisation(organisation)} value={organisation.organisationId} />
+                        </div>
+                      )
+                    })}
+                  </RadioGroup>
+                  <DialogFooter>
+                    <DialogClose ref={CloseRef}></DialogClose>
+                    <ButtonPrimary onClick={() => switchOrganisation(selectedOrganisation as Organisation)} disabled={isLoading} className="w-full">{loading ? <LoadingCircleSmall /> : t('switching')}</ButtonPrimary>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </li> : <li>
+              <Link
+                href={'/auth/create-organisation'}
+                className={'flex gap-4 items-center p-4 cursor-pointer'}
+              >
+                <Add size="20" color="#737c8a" variant="Bulk" />
+                <span className={'text-neutral-700 text-[1.5rem] leading-[20px]'}>
+                  {t('new')}
+                </span>
+              </Link>
+            </li>}
+
           {/* new organisation */}
-          <li>
-            <Link
-              href={'#'}
-              className={'flex gap-4 items-center p-4 cursor-pointer'}
-            >
-              <Add size="20" color="#737c8a" variant="Bulk" />
-              <span className={'text-neutral-700 text-[1.5rem] leading-[20px]'}>
-                {t('new')}
-              </span>
-            </Link>
-          </li>
+
           {/* logout */}
           <li className={'flex gap-4 items-center'}>
             <button
@@ -152,11 +226,11 @@ function Sidebar({ className }: { className: string }) {
               href={'/settings/profile'}
               className={'flex items-center gap-4 bg-neutral-100 p-4 mx-2 mb-2 rounded-[10px]'}
             >
-              {organisation?.profileImageUrl ? <Image src={organisation.profileImageUrl} width={35} height={35} alt={organisation.organisationName} className="rounded-full"/> : <span
-                  className="w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary"
-                >
-                  {organisation?.organisationName.slice()[0]?.toUpperCase()}
-                </span>}
+              {organisation?.profileImageUrl ? <Image src={organisation.profileImageUrl} width={35} height={35} alt={organisation.organisationName} className="rounded-full" /> : <span
+                className="w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary"
+              >
+                {organisation?.organisationName.slice()[0]?.toUpperCase()}
+              </span>}
 
               <div className={'text-neutral-700 text-[1.5rem] flex-1 leading-[20px]'}>
                 <span>{organisation?.organisationName} {organisation?.isVerified ? <VerifierOrganisationCheckMark /> : null}</span>

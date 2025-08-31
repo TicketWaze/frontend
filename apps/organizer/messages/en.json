@@ -62,15 +62,32 @@
       "description": "Please fill the form below to complete your account set-up.",
       "becoming": {
         "subtitle": "Create An Organisation",
+        "description": "Please fill the form below create a new organisation.",
         "name": "Organisation's name",
         "country": "Country",
-        "state": "State",
+        "state": "State / Region / Province",
         "city": "City",
-        "description": "Description",
+        "organisationDescription": "Share details about your organisation, what you do, and the events you host...",
         "email": "Organisation Email",
         "phone": "Phone number",
         "website": "Website",
-        "currency": "Currency"
+        "currency": "Currency",
+        "back" : "Back",
+        "submit" : "Create organisation",
+        "errors" : {
+          "name" : {
+            "min" : "Organisation name cannot be blank",
+            "max" : "Name cannot exceed 30 characters"
+          },
+          "description" : {
+            "min" : "Description cannot be less than 150 characters",
+            "max" : "Description cannot exceed 350 characters"
+          },
+          "country" : "Select a country",
+          "state" :"This field Cannot be blank",
+          "city" :"City field cannot be blank",
+          "currency" : "Please select a currency"
+        }
       },
       "placeholders": {
         "username": "User Name",
@@ -164,6 +181,7 @@
       "settings": "Settings",
       "help": "Help",
       "switch": "Organisations",
+      "switching" : "Swtich Organisation",
       "new": "New organisation",
       "login": "Log in",
       "logout": "Log out",
