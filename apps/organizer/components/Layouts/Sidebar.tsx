@@ -124,7 +124,7 @@ function Sidebar({ className }: { className: string }) {
             </Link>
           </li>
           {/* switch organisation */}
-          {isLoading ? null : allOrganisations && allOrganisations?.length > 0 ?
+          {isLoading ? null : allOrganisations && allOrganisations?.length > 1 ?
             <li className="">
               <Dialog>
                 <DialogTrigger>

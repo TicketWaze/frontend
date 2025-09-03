@@ -6,8 +6,6 @@ import { Input } from '@workspace/ui/components/Inputs'
 import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import { AddCircle, ArrowLeft2, DocumentUpload, Trash } from 'iconsax-react'
 import { Select as UISelect, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@workspace/ui/components/select'
-import { useStore } from '@tanstack/react-store'
-import organisationStore from '@/store/OrganisationStore'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@workspace/ui/components/dialog'
 import Cropper from 'react-easy-crop'
 import getCroppedImg from '@/lib/GetCroppedImage'
@@ -32,15 +30,15 @@ import { redirect } from 'next/navigation'
 
 export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) {
   const t = useTranslations('Events.create_event')
-  // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
-  const {data : session} = useSession()
+  const { data: session } = useSession()
   const organisation = session?.activeOrganisation
   const countries = UseCountries()
+  const [isFree, setIsfree] = useState(false)
 
   const FormDataSchema = z.object({
     eventName: z.string().min(10, t('errors.basicDetails.name')).max(50).regex(/^[a-zA-Z0-9 ]+$/, {
-    message: t('errors.basicDetails.no_special'),
-  }),
+      message: t('errors.basicDetails.no_special'),
+    }),
     eventDescription: z.string()
       .min(150, t('errors.basicDetails.description.min'))
       .max(350, t('errors.basicDetails.description.max')),
@@ -66,7 +64,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
     ticketTypes: z.array(z.object({
       ticketTypeName: z.string().min(1, t('errors.ticketClass.name')),
       ticketTypeDescription: z.string().min(20, t('errors.ticketClass.description')).max(100),
-      ticketTypePrice: z.string().min(1, t('errors.ticketClass.price')),
+      ticketTypePrice: isFree ? z.string() : z.string().min(1, t('errors.ticketClass.price')),
       ticketTypeQuantity: z.string().min(1, t('errors.ticketClass.quantity.empty')).refine((val) => /^[1-9]\d*$/.test(val), {
         message: t('errors.ticketClass.quantity.decimal'),
       }),
@@ -88,6 +86,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
 
   const [previousStep, setPreviousStep] = useState(0)
   const [currentStep, setCurrentStep] = useState(0)
+
   const delta = currentStep - previousStep
 
   const [wordCount, setWordCount] = useState(0)
@@ -122,6 +121,8 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
       ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
     }
   })
+  console.log(errors);
+
 
   const processForm: SubmitHandler<TInpuFormDataSchema> = async data => {
     const formData = new FormData()
@@ -134,7 +135,21 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
     formData.append('eventTags', JSON.stringify(data.eventTags))
     formData.append('eventImage', data.eventImage)
     formData.append('eventDays', JSON.stringify(data.eventDays))
-    formData.append('ticketTypes', JSON.stringify(data.ticketTypes))
+
+    if (isFree) {
+      formData.append('ticketTypes', JSON.stringify([
+        {
+          ticketTypeName: 'general',
+          ticketTypeDescription: t('general_default'),
+          ticketTypePrice: '',
+          ticketTypeQuantity: '100'
+        }
+      ]
+      ))
+    } else {
+      formData.append('ticketTypes', JSON.stringify(data.ticketTypes))
+    }
+
     formData.append('currencyId', session?.user.currency.currencyId ?? '')
 
     const result = await CreateInPersonEvent(organisation?.organisationId ?? '', session?.user.accessToken ?? '', formData)
@@ -244,7 +259,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
           className=' w-full max-w-[530px] mx-auto  '
           disabled={isSubmitting}
         >
-          {isSubmitting ? <LoadingCircleSmall/> : t('proceed')}
+          {isSubmitting ? <LoadingCircleSmall /> : t('proceed')}
         </ButtonPrimary>
       </div>
       <div className='fixed lg:hidden bottom-36 w-full px-8 z-50 left-0'>
@@ -645,13 +660,50 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
                     className="peer sr-only"
                     id="free-event"
                     type="checkbox"
+                    onChange={() => setIsfree(prev => {
+                      if (prev === true) {
+                        setValue('ticketTypes', [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }])
+                      } else {
+                        setValue('ticketTypes', [{
+                          ticketTypeName: 'general',
+                          ticketTypeDescription: t('general_default'),
+                          ticketTypePrice: '',
+                          ticketTypeQuantity: '100'
+                        }])
+                      }
+                      return !prev
+                    })}
                   />
                   <ToggleIcon />
                 </label>
               </div>
             </div>
+            {isFree &&
+              <div
+                className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100"
+              >
+                <div className={'flex items-center justify-between'}>
+                  <span className="font-semibold text-[16px] leading-[22px] text-deep-100">
+                    {t('ticket_class')}
+                  </span>
+                </div>
+                <Input defaultValue={'General'} disabled readOnly>{t('class_name')}</Input>
+                <textarea
+                  className={
+                    'h-[150px] resize-none bg-neutral-100 w-full rounded-[2rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500 '
+                  }
+                  placeholder={t('general_default')}
+                  disabled
+                  readOnly
+                />
+                <div className={'flex flex-col lg:flex-row gap-4'}>
+                  <Input defaultValue={'Free'} disabled readOnly>{t('price')}</Input>
+                  <Input defaultValue='100' readOnly disabled>{t('quantity')}</Input>
+                </div>
+              </div>
+            }
 
-            {ticketClasses.map((_, index) => {
+            {!isFree && ticketClasses.map((_, index) => {
               return (
                 <div
                   key={index}
@@ -764,7 +816,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
                 </div>
               )
             })}
-            <div className='w-full max-w-[540px] mx-auto flex justify-between '>
+            {!isFree && <div className='w-full max-w-[540px] mx-auto flex justify-between '>
               <div></div>
               <button
                 onClick={() => setTicketClasses(prev => [...prev, { ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }])}
@@ -773,7 +825,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
                 <AddCircle color={'#E45B00'} variant={'Bulk'} size={'20'} />
                 <span className="text-[1.5rem] leading-8 text-primary-500">{t('add_class')}</span>
               </button>
-            </div>
+            </div>}
           </motion.div>
         )}
         <div></div>

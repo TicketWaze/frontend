@@ -25,9 +25,10 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "TicketWaze - Create and manage events",
+  title: "TicketWaze - Discover Events, Connect with Culture.",
   description:
-    "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place",
+    "Easily explore, share, and enjoy the best events your country has to offer. Join us today and start your journey!",
+    // "Empowering events across your country and reaching beyond borders to connect people, ideas, and experiences.",
 };
 
 export default async function RootLayout({

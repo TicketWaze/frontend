@@ -1,0 +1,363 @@
+{
+  "Auth": {
+    "layout": {
+      "title": "Discover Events, Connect with Culture, Experience Haiti.",
+      "description": "Easily explore, share, and enjoy the best events Haiti has to offer. Join us today and start your journey!"
+    },
+    "register": {
+      "choice": {
+        "title": "Create Account",
+        "description": "Choose an option to continue and set up your account.",
+        "first": {
+          "title": "Attendee",
+          "description": "Easily browse, discover, and purchase tickets for a wide variety of events."
+        },
+        "second": {
+          "title": "Organizer",
+          "description": "Create and manage events effortlessly. Track ticket sales & monitor attendee data."
+        },
+        "cta": "Continue",
+        "footer": {
+          "text": "Already own an account?",
+          "cta": "Log in"
+        }
+      },
+      "form": {
+        "title": "Attendee Account",
+        "description": "Please complete the form below to continue.",
+        "placeholders": {
+          "firstname": "First Name",
+          "lastname": "Last Name",
+          "email": "Email Address",
+          "password": "Create Password",
+          "confirm": "Confirm Password"
+        },
+        "errors": {
+          "password_length": "Password must be at least 8 characters long",
+          "password_match": "Passwords don't match",
+          "firstname_length": "First name must be at least 2 characters",
+          "lastname_length": "Last name must be at least 2 characters",
+          "firstname_validation": "First name must contain only letters, spaces, or hyphens",
+          "lastname_validation": "Last name must contain only letters, spaces, or hyphens"
+        },
+        "cta": {
+          "submit": "Create account",
+          "google": "Continue with Google"
+        },
+        "footer": "Back"
+      }
+    },
+    "verify": {
+      "title": "Verify Account",
+      "description": "A verification mail has been sent to",
+      "footer": {
+        "text": "Didn't get a mail?",
+        "cta": "Resend"
+      }
+    },
+    "complete": {
+      "title": "Complete Account Set-up",
+      "description": "Please fill the form below to complete your account set-up.",
+      "placeholders": {
+        "username": "User Name",
+        "address": "Address",
+        "country": "Country",
+        "state": "State",
+        "city": "City",
+        "dob": "Date of Birth",
+        "gender": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "no": "Rather not say"
+      },
+      "cta": "Complete"
+    },
+    "login": {
+      "title": "Sign In",
+      "description": "Please enter you account details to continue",
+      "placeholders": {
+        "email": "Email Address",
+        "password": "Password"
+      },
+      "errors": {
+        "email": "Enter a valid email",
+        "password": "Password must be at least 8 characters"
+      },
+      "forgot": "Forgot password",
+      "cta": {
+        "submit": "Sign in",
+        "google": "Continue with Google"
+      },
+      "footer": {
+        "text": "Don’t own an account?",
+        "cta": "Sign up"
+      }
+    },
+    "forgot": {
+      "title": "Reset Password",
+      "description": "Please enter you account details to continue",
+      "errors": {
+        "email": "Enter a valid email address"
+      },
+      "placeholders": {
+        "email": "Email Address"
+      },
+      "cta": "Reset"
+    },
+    "email_sent": {
+      "title": "Reset Password",
+      "description": "A password reset mail has been sent to",
+      "footer": {
+        "text": "Didn't get a mail?",
+        "cta": "Resend"
+      }
+    },
+    "new_password": {
+      "title": "Create Password",
+      "description": "Choose a new password for your account",
+      "placeholders": {
+        "password": "Password",
+        "confirm": "Confirm password"
+      },
+      "errors": {
+        "password_length": "Password should be at least 8 Characters",
+        "password_match": "Password doesn't match"
+      },
+      "cta": "Create"
+    },
+    "footer": {
+      "text": "Didn't get a mail?",
+      "cta": "Resend"
+    }
+  },
+  "Layout": {
+    "sidebar": {
+      "more": "More",
+      "help": "Help",
+      "logout": "Logout",
+      "links": {
+        "title1": "Events",
+        "explore": "Explore",
+        "upcoming": "Upcoming",
+        "history": "History",
+        "organizers": "Organizers",
+        "title2": "User",
+        "more": "More",
+        "profile": "Profile",
+        "preferences": "Preferences",
+        "settings": "Settings"
+      }
+    },
+    "topbar": {
+      "welcome": "Welcome Back",
+      "back": "Back",
+      "notification": "Notifications",
+      "view": "View"
+    }
+  },
+  "explore": {
+    "title": "Explore Events",
+    "search": "Search for event",
+    "filters": {
+      "first": {
+        "1": "All",
+        "2": "Music",
+        "3": "Conference",
+        "4": "Sport"
+      },
+      "second": {
+        "1": "Category",
+        "2": "Location",
+        "3": {
+          "title": "Date",
+          "1": "This week",
+          "2": "This month",
+          "3": "Next month",
+          "4": "This Year"
+        }
+      }
+    }
+  },
+  "upcoming": {
+    "title": "Upcoming Events",
+    "search": "Search for upcoming event"
+  },
+  "history": {
+    "title": "Events history",
+    "search": "Search for upcoming event"
+  },
+  "event": {
+    "share": "Share event",
+    "buy": "Buy ticket",
+    "buy_more": "Buy more ticket",
+    "about": "About event",
+    "contact": "Contact Information",
+    "details": "Event details",
+    "followers": "Followers",
+    "follow": "Follow",
+    "sold": "Sold",
+    "direction": "Direction",
+    "open": "Open map",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "download": "Download ticket",
+    "rate": "Rate event",
+    "feedback": "Write feedback",
+    "send": "Send feedback",
+    "use": "Ticket used",
+    "not_used": "Ticket not used"
+  },
+  "checkout": {
+    "ticket": {
+      "title": "Buy Ticket",
+      "quantity": "Quantity",
+      "summary": "Summary",
+      "select": "Select a ticket type to continue",
+      "discount": "Apply discount code",
+      "discount_code": "Discount Code",
+      "apply": "Apply"
+    },
+    "recipient": {
+      "title": "Recipient",
+      "someone": "I’m purchasing this ticket for someone else",
+      "email": "Email Address",
+      "name": "Full Name"
+    },
+    "payment": {
+      "title": "Payment",
+      "payment": "Make payment",
+      "card": "Pay with card",
+      "paypal": "Pay with PayPal",
+      "moncash": "Pay with MonCash",
+      "placeholders": {
+        "name": "Card Name",
+        "expiry": "Expiry",
+        "number": "Card number"
+      }
+    },
+    "footer": {
+      "ticket": "Ticket",
+      "recipient": "Recipient",
+      "payment": "Payment",
+      "continue": "Continue"
+    }
+  },
+  "saved": {
+    "title": "Saved Events",
+    "filters": {
+      "saved": "Saved",
+      "liked": "Liked"
+    }
+  },
+  "Profile": {
+    "title": "Profile",
+    "edit": "Edit Profile",
+    "save": "Save changes",
+    "setProfile": "Set profile image",
+    "resize": "Resize Image",
+    "personal": "Personal Information",
+    "placeholders": {
+      "firstname": "Firstname",
+      "lastname": "Lastname",
+      "email": "Email Address",
+      "state" :"State / Region / Province",
+      "city" : "City",
+      "country" :"Country",
+      "dob" :"Date of Birth",
+      "phone" : "Phone number",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "no": "Rather not say",
+      "blood": "Blood group"
+    },
+    "event": {
+      "title": "Event",
+      "attended": "Number of events attended",
+      "tickets": "Number of tickets bought",
+      "missed": "Number of events missed"
+    },
+    "account": {
+      "title": "Account",
+      "created": "Date created",
+      "delete": "Delete Account"
+    },
+    "errors": {
+      "firstname_length": "First name must be at least 2 characters",
+      "lastname_length": "Last name must be at least 2 characters",
+      "firstname_validation": "First name must contain only letters, spaces, or hyphens",
+      "lastname_validation": "Last name must contain only letters, spaces, or hyphens",
+      "city": "City field cannot be blank",
+      "state": "This field Cannot be blank",
+      "gender": "This field is required",
+      "country": "Select a country",
+      "dob": "Please select a date",
+      "currency": "Please select a currency",
+      "phone": "Phone Number should be at least 8"
+    }
+  },
+  "Preferences": {
+    "title": "Preferences",
+    "categories": {
+      "title": "Preferred Categories"
+    },
+    "email": {
+      "title": "Email Notifications",
+      "upcoming": "Notify me about upcoming events I’ve purchased tickets for.",
+      "preferred": "Notify me about new events in my preferred categories.",
+      "follow": "Notify me when a followed organizer adds new events."
+    }
+  },
+  "Settings": {
+    "title": "Settings",
+    "password": {
+      "title": "Change Password",
+      "cta": "Change Password",
+      "errors": {
+        "blank": "Field cannot be blank",
+        "password": "Password must me at least 8 characters",
+        "confirm": "Password must be the same"
+      }
+    },
+    "placeholders": {
+      "password": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password"
+    },
+    "security": {
+      "title": "Security",
+      "2fa": "2FA"
+    },
+    "language": {
+      "title": "App language"
+    },
+    "others": {
+      "title": "Others",
+      "privacy": "Privacy policy",
+      "terms": "Terms of use"
+    }
+  },
+  "organizers": {
+    "title": "Organizers",
+    "search": "Search for organizers",
+    "filters": {
+      "all": "All",
+      "popular": "Popular",
+      "following": "Following"
+    },
+    "event": "events",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "profile": {
+      "upcoming": "Upcoming events",
+      "rating": "rating",
+      "followers": "followers",
+      "events": "Events",
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "about": "About organizer",
+      "contact": "Contact Information"
+    }
+  }
+}

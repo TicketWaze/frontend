@@ -1,0 +1,339 @@
+{
+    "Auth": {
+        "layout": {
+            "title": "Découvrez des événements, connectez-vous à la culture, vivez Haïti.",
+            "description": "Explorez, partagez et profitez facilement des meilleurs événements qu’Haïti a à offrir. Rejoignez-nous dès aujourd’hui et commencez votre aventure !"
+        },
+        "register": {
+            "choice": {
+                "title": "Créer un compte",
+                "description": "Choisissez une option pour continuer et configurer votre compte.",
+                "first": {
+                    "title": "Participant",
+                    "description": "Parcourez, découvrez et achetez facilement des billets pour une grande variété d’événements."
+                },
+                "second": {
+                    "title": "Organisateur",
+                    "description": "Créez et gérez des événements sans effort. Suivez les ventes de billets et surveillez les données des participants."
+                },
+                "cta": "Continuer",
+                "footer": {
+                    "text": "Vous avez déjà un compte ?",
+                    "cta": "Se connecter"
+                }
+            },
+            "form": {
+                "title": "Compte Participant",
+                "description": "Veuillez remplir le formulaire ci-dessous pour continuer.",
+                "placeholders": {
+                    "firstname": "Prénom",
+                    "lastname": "Nom",
+                    "email": "Adresse e-mail",
+                    "password": "Créer un mot de passe",
+                    "confirm": "Confirmer le mot de passe"
+                },
+                "errors": {
+                    "password_length": "Le mot de passe doit contenir au moins 8 caractères",
+                    "password_match": "Les mots de passe ne correspondent pas",
+                    "firstname_length": "Le prénom doit contenir au moins 2 caractères",
+                    "lastname_length": "Le nom doit contenir au moins 2 caractères",
+                    "firstname_validation": "Le prénom ne doit contenir que des lettres, des espaces ou des tirets",
+                    "lastname_validation": "Le nom ne doit contenir que des lettres, des espaces ou des tirets"
+                },
+                "cta": {
+                    "submit": "Créer un compte",
+                    "google": "Continuer avec Google"
+                },
+                "footer": "Retour"
+            }
+        },
+        "verify": {
+            "title": "Vérifier le compte",
+            "description": "Un e-mail de vérification a été envoyé à",
+            "footer": {
+                "text": "Vous n’avez pas reçu d’e-mail ?",
+                "cta": "Renvoyer"
+            }
+        },
+        "complete": {
+            "title": "Finaliser la configuration du compte",
+            "description": "Veuillez remplir le formulaire ci-dessous pour finaliser la configuration de votre compte.",
+            "placeholders": {
+                "username": "Nom d’utilisateur",
+                "address": "Adresse",
+                "country": "Pays",
+                "state": "État",
+                "city": "Ville",
+                "dob": "Date de naissance",
+                "gender": "Genre",
+                "male": "Homme",
+                "female": "Femme",
+                "no": "Préfère ne pas dire"
+            },
+            "cta": "Finaliser"
+        },
+        "login": {
+            "title": "Se connecter",
+            "description": "Veuillez entrer les détails de votre compte pour continuer",
+            "placeholders": {
+                "email": "Adresse e-mail",
+                "password": "Mot de passe"
+            },
+            "errors": {
+                "email": "Entrez une adresse e-mail valide",
+                "password": "Le mot de passe doit contenir au moins 8 caractères"
+            },
+            "forgot": "Mot de passe oublié",
+            "cta": {
+                "submit": "Se connecter",
+                "google": "Continuer avec Google"
+            },
+            "footer": {
+                "text": "Vous n’avez pas de compte ?",
+                "cta": "S’inscrire"
+            }
+        },
+        "forgot": {
+            "title": "Réinitialiser le mot de passe",
+            "description": "Veuillez entrer les détails de votre compte pour continuer",
+            "errors": {
+                "email": "Entrez une adresse e-mail valide"
+            },
+            "placeholders": {
+                "email": "Adresse e-mail"
+            },
+            "cta": "Réinitialiser"
+        },
+        "email_sent": {
+            "title": "Réinitialiser le mot de passe",
+            "description": "Un e-mail de réinitialisation du mot de passe a été envoyé à",
+            "footer": {
+                "text": "Vous n’avez pas reçu d’e-mail ?",
+                "cta": "Renvoyer"
+            }
+        },
+        "new_password": {
+            "title": "Créer un mot de passe",
+            "description": "Choisissez un nouveau mot de passe pour votre compte",
+            "placeholders": {
+                "password": "Mot de passe",
+                "confirm": "Confirmer le mot de passe"
+            },
+            "errors": {
+                "password_length": "Le mot de passe doit contenir au moins 8 caractères",
+                "password_match": "Les mots de passe ne correspondent pas"
+            },
+            "cta": "Créer"
+        },
+        "footer": {
+            "text": "Vous n’avez pas reçu d’e-mail ?",
+            "cta": "Renvoyer"
+        }
+    },
+    "Layout": {
+        "sidebar": {
+            "more" : "Plus",
+            "links": {
+                "title1": "Événements",
+                "explore": "Explorer",
+                "upcoming": "À venir",
+                "history": "Historique",
+                "organizers": "Organisateurs",
+                "title2": "Utilisateur",
+                "more": "Plus",
+                "profile": "Profil",
+                "preferences": "Préférences",
+                "settings": "Paramètres"
+            }
+        },
+        "topbar": {
+            "welcome": "Bon retour",
+            "back": "Retour",
+            "notification": "Notifications",
+            "view": "Voir"
+        }
+    },
+    "explore": {
+        "title": "Explorer les événements",
+        "search": "Rechercher un événement",
+        "filters": {
+            "first": {
+                "1": "Tous",
+                "2": "Musique",
+                "3": "Conférence",
+                "4": "Sport"
+            },
+            "second": {
+                "1": "Catégorie",
+                "2": "Lieu",
+                "3": {
+                    "title": "Date",
+                    "1": "Cette semaine",
+                    "2": "Ce mois-ci",
+                    "3": "Le mois prochain",
+                    "4": "Cette année"
+                }
+            }
+        }
+    },
+    "upcoming": {
+        "title": "Événements à venir",
+        "search": "Rechercher un événement à venir"
+    },
+    "history": {
+        "title": "Historique des événements",
+        "search": "Rechercher un événement passé"
+    },
+    "event": {
+        "share": "Partager l’événement",
+        "buy": "Acheter un billet",
+        "buy_more": "Acheter plus de billets",
+        "about": "À propos de l’événement",
+        "contact": "Informations de contact",
+        "details": "Détails de l’événement",
+        "followers": "Abonnés",
+        "follow": "Suivre",
+        "sold": "Vendus",
+        "direction": "Itinéraire",
+        "open": "Ouvrir la carte",
+        "date": "Date",
+        "time": "Heure",
+        "location": "Lieu",
+        "download": "Télécharger le billet",
+        "rate": "Évaluer l’événement",
+        "feedback": "Écrire un avis",
+        "send": "Envoyer l’avis",
+        "use": "Billet utilisé",
+        "not_used": "Billet non utilisé"
+    },
+    "checkout": {
+        "ticket": {
+            "title": "Acheter un billet",
+            "quantity": "Quantité",
+            "summary": "Résumé",
+            "select": "Sélectionnez un type de billet pour continuer",
+            "discount": "Appliquer un code de réduction",
+            "discount_code": "Code de réduction",
+            "apply": "Appliquer"
+        },
+        "recipient": {
+            "title": "Destinataire",
+            "someone": "J’achète ce billet pour quelqu’un d’autre",
+            "email": "Adresse e-mail",
+            "name": "Nom complet"
+        },
+        "payment": {
+            "title": "Paiement",
+            "payment": "Effectuer le paiement",
+            "card": "Payer par carte",
+            "paypal": "Payer avec PayPal",
+            "moncash": "Payer avec MonCash",
+            "placeholders": {
+                "name": "Nom sur la carte",
+                "expiry": "Expiration",
+                "number": "Numéro de carte"
+            }
+        },
+        "footer": {
+            "ticket": "Billet",
+            "recipient": "Destinataire",
+            "payment": "Paiement",
+            "continue": "Continuer"
+        }
+    },
+    "saved": {
+        "title": "Événements enregistrés",
+        "filters": {
+            "saved": "Enregistrés",
+            "liked": "Aimés"
+        }
+    },
+    "profile": {
+        "title": "Profil",
+        "edit": "Modifier le profil",
+        "save": "Enregistrer les modifications",
+        "setProfile": "Définir l’image de profil",
+        "personal": "Informations personnelles",
+        "placeholders": {
+            "gender": "Genre",
+            "male": "Homme",
+            "female": "Femme",
+            "no": "Préfère ne pas dire",
+            "blood": "Groupe sanguin"
+        },
+        "event": {
+            "title": "Événement",
+            "attended": "Nombre d’événements assistés",
+            "tickets": "Nombre de billets achetés",
+            "missed": "Nombre d’événements manqués"
+        },
+        "account": {
+            "title": "Compte",
+            "created": "Date de création",
+            "delete": "Supprimer le compte"
+        }
+    },
+    "preferences": {
+        "title": "Préférences",
+        "categories": {
+            "title": "Catégories préférées"
+        },
+        "email": {
+            "title": "Notifications par e-mail",
+            "upcoming": "Me notifier des événements à venir pour lesquels j’ai acheté des billets.",
+            "preferred": "Me notifier des nouveaux événements dans mes catégories préférées.",
+            "follow": "Me notifier lorsqu’un organisateur suivi ajoute de nouveaux événements."
+        }
+    },
+    "Settings": {
+        "title": "Paramètres",
+        "password": {
+            "title": "Changer le mot de passe",
+            "cta": "Changer le mot de passe",
+            "errors": {
+                "blank": "Le champ ne peut pas être vide",
+                "password": "Le mot de passe doit contenir au moins 8 caractères",
+                "confirm": "Le mot de passe doit être identique"
+            }
+        },
+        "placeholders": {
+            "password": "Mot de passe actuel",
+            "new": "Nouveau mot de passe",
+            "confirm": "Confirmer le nouveau mot de passe"
+        },
+        "security": {
+            "title": "Sécurité",
+            "2fa": "Authentification à deux facteurs"
+        },
+        "language": {
+            "title": "Langue de l’application"
+        },
+        "others": {
+            "title": "Autres",
+            "privacy": "Politique de confidentialité",
+            "terms": "Conditions d’utilisation"
+        }
+    },
+    "organizers": {
+        "title": "Organisateurs",
+        "search": "Rechercher des organisateurs",
+        "filters": {
+            "all": "Tous",
+            "popular": "Populaires",
+            "following": "Suivis"
+        },
+        "event": "événements",
+        "follow": "Suivre",
+        "unfollow": "Ne plus suivre",
+        "profile": {
+            "upcoming": "Événements à venir",
+            "rating": "note",
+            "followers": "abonnés",
+            "events": "Événements",
+            "follow": "Suivre",
+            "unfollow": "Ne plus suivre",
+            "about": "À propos de l’organisateur",
+            "contact": "Informations de contact"
+        }
+    }
+}
