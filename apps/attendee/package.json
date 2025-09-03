@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "^5.2.1",
     "framer-motion": "^12.23.5",
     "iconsax-react": "^0.0.8",
     "luxon": "^3.6.1",
