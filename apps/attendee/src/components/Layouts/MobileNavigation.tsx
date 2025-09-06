@@ -125,7 +125,7 @@ export default function MobileNavigation({ className }: { className?: string; })
                     )
                   })}
                   <div className='bg-neutral-200 h-[1px] w-full'></div>
-                  <Link href={`https://ticketwaze.com/${locale}/contact`} className='flex items-center gap-4 py-4'>
+                  <Link target='_blank'  href={`https://ticketwaze.com/${locale}/contact`} className='flex items-center gap-4 py-4'>
                     <I24Support
                       size="20"
                       color='#737C8A'
