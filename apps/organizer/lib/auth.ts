@@ -10,6 +10,7 @@ const nextAuthResult = NextAuth({
   jwt: {
     maxAge: 2 * 60 * 60,
   },
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {

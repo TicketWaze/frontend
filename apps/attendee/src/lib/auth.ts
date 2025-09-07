@@ -9,6 +9,7 @@ const nextAuthResult = NextAuth({
   jwt: {
     maxAge: 2 * 60 * 60,
   },
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
@@ -42,9 +43,9 @@ const nextAuthResult = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-      // first login
-      return { ...token, ...user }
-    }
+        // first login
+        return { ...token, ...user }
+      }
       return token;
     },
     async session({ session, token }) {
