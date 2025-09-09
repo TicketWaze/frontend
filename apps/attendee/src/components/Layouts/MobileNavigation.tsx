@@ -133,7 +133,7 @@ export default function MobileNavigation({ className }: { className?: string; })
                     />
                     <span className={`text-[1.5rem] leading-4 text-neutral-700`}>{t('help')}</span>
                   </Link>
-                  <button onClick={()=>signOut()} className='flex items-center gap-4 py-4'>
+                  <button onClick={()=>signOut({redirect: true, redirectTo : process.env.NEXT_PUBLIC_APP_URL})} className='flex items-center gap-4 py-4'>
                     <Logout size="20" color="#737c8a" variant="Bulk" />
                     <span className={`text-[1.5rem] leading-4 text-neutral-700`}>{t('logout')}</span>
                   </button>

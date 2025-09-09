@@ -53,6 +53,9 @@ const nextAuthResult = NextAuth({
       session.user = token as any;
       return session;
     },
+    redirect({url, baseUrl}){
+      return url
+    }
   },
 },);
 
