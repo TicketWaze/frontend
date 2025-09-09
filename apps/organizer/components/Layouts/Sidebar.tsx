@@ -190,7 +190,7 @@ function Sidebar({ className }: { className: string }) {
           {/* logout */}
           <li className={'flex gap-4 items-center'}>
             <button
-              onClick={() => signOut({redirectTo : 'https://organizer.ticketwaze.com', redirect : true})}
+              onClick={() => signOut({redirect: true, redirectTo : process.env.NEXT_PUBLIC_APP_URL})}
               className={'flex gap-4 items-center cursor-pointer p-4'}
             >
               <Logout size="20" color="#737c8a" variant="Bulk" />

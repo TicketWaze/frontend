@@ -8,7 +8,7 @@ export default function Signout() {
     const t = useTranslations('Settings')
     return (
         <li className='lg:hidden'>
-            <ButtonRed className='w-full' onClick={() => signOut()}>{t('logout')}</ButtonRed>
+            <ButtonRed className='w-full' onClick={() => signOut({redirect: true, redirectTo : process.env.NEXT_PUBLIC_APP_URL})}>{t('logout')}</ButtonRed>
         </li>
     )
 }

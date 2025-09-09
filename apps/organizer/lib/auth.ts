@@ -63,6 +63,9 @@ const nextAuthResult = NextAuth({
       session.activeOrganisation = (token as any).activeOrganisation ?? null;
       return session;
     },
+    redirect({url, baseUrl}){
+      return url
+    }
   },
 },);
 
