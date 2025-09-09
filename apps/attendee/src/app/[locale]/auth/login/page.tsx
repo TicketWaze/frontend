@@ -36,7 +36,7 @@ export default function LoginPage() {
       email: data.email,
       password: data.password,
       redirect: false,
-      callbackUrl: '/',
+      callbackUrl: process.env.NEXT_PUBLIC_APP_URL,
     });
 
     if (result?.error) {
