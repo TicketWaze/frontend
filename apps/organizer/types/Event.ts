@@ -17,6 +17,7 @@ export default interface Event {
     eventType: string
     isPublished: boolean
     isActive: boolean
+    currency : string
     eventDays : EventDay[]
     eventTicketTypes : EventTicketType[]
     eventTags : EventTag[]

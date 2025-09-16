@@ -433,6 +433,7 @@
       "city": "City",
       "state": "State / Region / Province",
       "country": "Country",
+      "coordinates" : "Coordinates",
       "thumbnail": "Event Thumbnail",
       "thumbnail_text": "Drop your thumbnail here or ",
       "resize": "Resize your image",
@@ -471,6 +472,7 @@
           "state": "This field Cannot be blank",
           "city": "City field cannot be blank",
           "country": "Select a country",
+          "longitude" : "Select a place on the map",
           "tags": "Select at least one tag",
           "image": {
             "required": "Event should have a cover image",

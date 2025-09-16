@@ -5,6 +5,8 @@ export default interface Organisation {
     userId: string
     organisationName: string
     organisationDescription: string
+    organisationEmail : string
+    organisationWebsite : string
     country: string
     state: string
     city: string

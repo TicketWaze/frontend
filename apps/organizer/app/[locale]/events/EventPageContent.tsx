@@ -34,7 +34,7 @@ export default function EventPageContent({ events }: { events: Event[] }) {
                                     country={event.country ?? ''}
                                     city={event.city ?? ''}
                                     price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
-                                    currency={session?.user.currency.isoCode ?? ''}
+                                    currency={event.currency}
                                     tags={event.eventTags}
                                 />
                             </li>
@@ -100,7 +100,7 @@ function UpcomingContent({ events }: { events: Event[] }) {
                             country={event.country ?? ''}
                             city={event.city ?? ''}
                             price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
-                            currency={session?.user.currency.isoCode ?? ''}
+                            currency={event.currency}
                             tags={event.eventTags}
                         />
                     </li>
@@ -160,7 +160,7 @@ function HistoryContent({ events }: { events: Event[] }) {
                             country={event.country ?? ''}
                             city={event.city ?? ''}
                             price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
-                            currency={session?.user.currency.isoCode ?? ''}
+                            currency={event.currency}
                             tags={event.eventTags}
                         />
                     </li>

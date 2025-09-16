@@ -95,3 +95,63 @@ export async function UpdateUserProfile(accessToken: string, body: unknown) {
     }
 
 }
+
+export async function FollowOrganisationAction(accessToken: string, organisationId : string, pathname : string) {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/organisations/${organisationId}/follow`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        const data = await res.json()
+        
+        if (data.status === 'success') {
+            revalidatePath(pathname)
+            return {
+                status : 'success',
+            }
+        } else {
+            return {
+                status : 'failed',
+                message: data.message
+            }
+        }
+    } catch (err: any) {
+        return {
+            error: err?.message ?? 'An unknown error occurred'
+        }
+    }
+
+}
+
+export async function UnfollowOrganisationAction(accessToken: string, organisationId : string, pathname : string) {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/organisations/${organisationId}/follow`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        const data = await res.json()
+        
+        if (data.status === 'success') {
+            revalidatePath(pathname)
+            return {
+                status : 'success',
+            }
+        } else {
+            return {
+                status : 'failed',
+                message: data.message
+            }
+        }
+    } catch (err: any) {
+        return {
+            error: err?.message ?? 'An unknown error occurred'
+        }
+    }
+
+}

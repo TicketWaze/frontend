@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import BackButton from '@workspace/ui/components/BackButton'
 import { useTranslations } from 'next-intl'
 import { Input } from '@workspace/ui/components/Inputs'
@@ -18,7 +18,6 @@ import { motion } from 'framer-motion'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import EventTags from '@/lib/EventTags'
 import { CreateInPersonEvent } from '@/actions/EventActions'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
@@ -26,6 +25,8 @@ import EventTag from '@/types/EventTag'
 import Capitalize from '@workspace/ui/lib/Capitalize'
 import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
 import { redirect } from 'next/navigation'
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 
 export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) {
@@ -47,6 +48,8 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
     city: z.string().min(1, t('errors.basicDetails.city')),
     country: z.string({ error: issue => issue.input === undefined ? t('errors.basicDetails.country') : t('errors.basicDetails.country') })
       .min(1, t('errors.basicDetails.country')),
+    longitude : z.string().min(3, t('errors.basicDetails.longitude')),
+    latitude : z.string(),
     eventTags: z.array(z.object({ tagId: z.string(), tagName: z.string() }), { error: issue => issue.input === undefined ? t('errors.basicDetails.tags') : t('errors.basicDetails.tags') }).min(1, t('errors.basicDetails.tags')),
     eventImage: z
       .file({ error: issue => issue.input === undefined ? t('errors.basicDetails.image.required') : t('errors.basicDetails.image.required') })
@@ -75,7 +78,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
   const steps = [
     {
       name: t('basic'),
-      fields: ['eventName', 'eventDescription', 'address', 'state', 'city', 'country', 'eventTags', 'eventImage']
+      fields: ['eventName', 'eventDescription', 'address', 'state', 'city', 'country', 'longitude', 'latitude', 'eventTags', 'eventImage']
     },
     {
       name: t('date_time'),
@@ -103,6 +106,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
     register,
     handleSubmit,
     setValue,
+    getValues,
     control,
     trigger,
     formState: { errors, isSubmitting }
@@ -115,14 +119,14 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
       state: '',
       city: '',
       country: Capitalize(organisation?.country ?? ''),
-      eventTags: [],
+      longitude : '',
+      latitude: '',
+      eventTags : [],
       eventImage: undefined as unknown as File,
       eventDays: [{ startDate: '', startTime: '', endTime: '' }],
       ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
     }
   })
-  console.log(errors);
-
 
   const processForm: SubmitHandler<TInpuFormDataSchema> = async data => {
     const formData = new FormData()
@@ -132,9 +136,12 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
     formData.append('state', data.state)
     formData.append('city', data.city)
     formData.append('country', data.country)
+    formData.append('longitude', data.longitude)
+    formData.append('latitude', data.latitude)
     formData.append('eventTags', JSON.stringify(data.eventTags))
     formData.append('eventImage', data.eventImage)
     formData.append('eventDays', JSON.stringify(data.eventDays))
+    formData.append('currency', session?.user.currency.isoCode ?? '')
 
     if (isFree) {
       formData.append('ticketTypes', JSON.stringify([
@@ -248,6 +255,46 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
     setTicketClasses(updated)
     setValue('ticketTypes', updated, { shouldValidate: true })
   }
+
+  // MAP HANDLING
+
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+  const markerRef = useRef<mapboxgl.Marker | null>(null);
+
+  const position: [number, number] = [-72.2852, 18.9712];
+
+
+  useEffect(() => {
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_PUBLIC_TOKEN
+
+    mapRef.current = new mapboxgl.Map({
+      // @ts-ignore
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v11', // add style
+      center: position, // starting position [lng, lat]
+      zoom: 6, // starting zoom
+      attributionControl: false,
+    });
+    // listen for map click
+    mapRef.current.on('click', (e) => {
+      const { lng, lat } = e.lngLat;
+      setValue('longitude', String(lng))
+      setValue('latitude', String(lat))
+
+      // If a marker exists, update it; else create one
+      if (markerRef.current) {
+        markerRef.current.setLngLat([lng, lat]);
+      } else {
+        markerRef.current = new mapboxgl.Marker({ color: 'red' })
+          .setLngLat([lng, lat])
+          .addTo(mapRef.current!);
+      }
+
+      // console.log('Clicked coordinates:', lng, lat);
+    });
+
+  }, []);
 
   // handling ticketClasses ends
   return (
@@ -442,6 +489,14 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
                 <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
                   {errors.country?.message}
                 </span>
+              </div>
+              <Input defaultValue={`${getValues('longitude')} - ${getValues('latitude')}`} error={errors.longitude?.message} disabled readOnly>{t('coordinates')}</Input>
+              <div className='w-full h-[300px] relative'>
+                <div
+                  style={{ height: '100%' }}
+                  ref={mapContainerRef}
+                  className="map-container"
+                />
               </div>
             </div>
             {/* tags */}

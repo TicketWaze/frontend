@@ -7,6 +7,7 @@ import { Chart1, Clock, I24Support, Logout, Moneys, Setting, Setting2, Setting5,
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
+import { signOut } from "next-auth/react";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");
@@ -79,7 +80,7 @@ function Sidebar({ className }: { className: string }) {
       <div className={"flex-1 pt-12 flex flex-col gap-16"}>
         <Image src={Logo} alt={"Ticket Waze Logo"} width={140} height={40} />
         <nav>
-          <div className={`mb-4 uppercase font-medium text-[1.4rem] leading-8 ${isEventGroupActive() ? 'text-neutral-900' : 'text-neutral-600' }`}>{t('links.title1')}</div>
+          <div className={`mb-4 uppercase font-medium text-[1.4rem] leading-8 ${isEventGroupActive() ? 'text-neutral-900' : 'text-neutral-600'}`}>{t('links.title1')}</div>
           <ul className="flex flex-col gap-4">
             {eventsLinks.map(({ path, Icon, label }) => {
               return (
@@ -104,7 +105,7 @@ function Sidebar({ className }: { className: string }) {
           </ul>
         </nav>
         <nav>
-          <div className={`mb-4 uppercase font-medium text-[1.4rem] leading-8 ${isUserGroupActive() ? 'text-neutral-900' : 'text-neutral-600' }`}>{t('links.title2')}</div>
+          <div className={`mb-4 uppercase font-medium text-[1.4rem] leading-8 ${isUserGroupActive() ? 'text-neutral-900' : 'text-neutral-600'}`}>{t('links.title2')}</div>
           <ul className="flex flex-col gap-4">
             {userLinks.map(({ path, Icon, label }) => {
               return (
@@ -126,6 +127,10 @@ function Sidebar({ className }: { className: string }) {
                 </li>
               );
             })}
+            {/* <li onClick={() => signOut({ redirect: true, redirectTo: process.env.NEXT_PUBLIC_APP_URL })} className="flex items-center cursor-pointer gap-4 py-4 text-[1.5rem] leading-[20px] text-failure">
+              <Logout color="#737c8a" size={20} variant="Bulk" />
+              {t('logout')}
+            </li> */}
           </ul>
         </nav>
       </div>

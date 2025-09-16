@@ -13,10 +13,13 @@ export default interface Event {
     state: string
     city: string
     country: string
+    longitude: string
+    latitude: string
     eventImageUrl: string
     eventType: string
     isPublished: boolean
     isActive: boolean
+    currency : string
     eventDays : EventDay[]
     eventTicketTypes : EventTicketType[]
     eventTags : EventTag[]
