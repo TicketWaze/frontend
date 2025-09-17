@@ -1,9 +1,9 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import BackButton from '@workspace/ui/components/BackButton'
 import { useTranslations } from 'next-intl'
-import { AddCircle, ArrowLeft2, ArrowRight2, Card, MinusCirlce } from 'iconsax-react'
+import { AddCircle, ArrowLeft2, ArrowRight2, Card, InfoCircle, MinusCirlce } from 'iconsax-react'
 import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import Event from '@/types/Event'
 import Ticket from '@/types/Ticket'
@@ -21,9 +21,14 @@ import paypal from "./paypal.svg"
 import moncash from "./moncash.svg"
 import PageLoader from '@/components/Loaders/PageLoader'
 import User from '@/types/User'
+import { FreeEventTicket } from '@/actions/paymentActions'
+import { useRouter } from '@/i18n/navigation'
+import Slugify from '@/lib/Slugify'
 
 export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { event: Event, tickets: Ticket[]; ticketTypes: EventTicketType[]; user: User }) {
   const t = useTranslations('Checkout')
+  const isFree = event.eventTicketTypes[0].ticketTypePrice == 0
+
 
   const attendeeSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -90,6 +95,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
   const [previousStep, setPreviousStep] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
 
+
   const { control, handleSubmit, register, trigger, watch, formState, setValue, getValues } =
     useForm<any>({
       mode: 'onChange',
@@ -106,6 +112,13 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
     control,
     name: "tickets",
   });
+
+  useEffect(() => {
+    if (isFree) {
+      setValue(`tickets.0.quantity`, 1, { shouldValidate: true });
+    }
+  }, [])
+
 
   const steps = [
     {
@@ -125,6 +138,10 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
   const delta = currentStep - previousStep
 
   const prev = () => {
+    if (isFree && currentStep === 2) {
+      setCurrentStep(0)
+      return
+    }
     if (currentStep > 0) {
       setPreviousStep(currentStep)
       setCurrentStep(step => step - 1)
@@ -169,6 +186,16 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
     //   }
     // }
 
+    if (isFree && currentStep === 0) {
+      setCurrentStep(2)
+      setPreviousStep(0);
+      return
+    }
+    if (isFree && currentStep === 2) {
+      BuyFreeTicket()
+      return
+    }
+
     setPreviousStep(currentStep);
     if (currentStep < 2) {
       setCurrentStep((s) => s + 1);
@@ -199,10 +226,26 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
         "Authorization": `Bearer ${user.accessToken}`,
         'Content-Type': 'application/json',
       },
-      body : JSON.stringify(selectedTickets)
+      body: JSON.stringify(selectedTickets)
     })
     const response = await request.json()
 
+
+    setIsLoading(false)
+  }
+  const router = useRouter()
+
+  async function BuyFreeTicket() {
+    setIsLoading(true)
+    const values = getValues();
+    const selectedTickets = values.tickets.filter((t: any) => t.quantity > 0);
+    const result = await FreeEventTicket(user.accessToken, event.eventId, selectedTickets)
+    if(result.status === 'failed'){
+      setIsLoading(false)
+      toast.error(result.message)
+      return
+    }
+    router.push(`/upcoming/${Slugify(event.eventName)}`)
 
     setIsLoading(false)
   }
@@ -269,9 +312,11 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                           {ticketType.ticketTypeDescription}
                         </p>
                       </div>
-                      <span className="font-primary font-bold text-[1.8rem] leading-12 text-primary-500">
+                      {isFree ? <span className="font-primary font-bold text-[1.8rem] leading-12 text-primary-500">
+                        {t('free')}
+                      </span> : <span className="font-primary font-bold text-[1.8rem] leading-12 text-primary-500">
                         {ticketType.ticketTypePrice} {event.currency}
-                      </span>
+                      </span>}
                       <div className="flex bg-neutral-100 items-center justify-between py-4 px-[1.5rem] rounded-[10px]">
                         <span className="text-[1.5rem] text-neutral-900">
                           {t("ticket.quantity")}
@@ -279,6 +324,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
+                            disabled={isFree}
                             className="w-[35px] h-[35px] rounded-full bg-black flex items-center justify-center"
                             onClick={() => {
                               const currentValue = getValues(`tickets.${index}.quantity`) || 0;
@@ -301,6 +347,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
 
                           <button
                             type="button"
+                            disabled={isFree}
                             className="w-[35px] h-[35px] rounded-full bg-black flex items-center justify-center"
                             onClick={() => {
                               const currentValue = getValues(`tickets.${index}.quantity`) || 0;
@@ -404,7 +451,9 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className='flex flex-col gap-12 overflow-y-auto'>
-              <div className="flex flex-col gap-8">
+              {isFree ? <div className={
+                "flex flex-col items-start gap-4 p-[15px] rounded-[15px] border border-neutral-100 text-[1.5rem] leading-12 text-neutral-700"
+              }><InfoCircle size="20" color="#E45B00" />{t('payment.nopayment')}</div> : <div className="flex flex-col gap-8">
 
                 {/* MONCASH */}
                 <button
@@ -500,7 +549,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                 </div>
                 <ArrowRight2 size="20" color="#0d0d0d" variant="Bulk" />
               </div> */}
-              </div>
+              </div>}
               <div></div>
               <div></div>
               <div></div>
@@ -529,20 +578,20 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
           )}
 
           {/* TICKET SUMMARY VIEW */}
-          <div className='lg:overflow-y-auto min-h-0'>
-            <div className=' flex flex-col gap-8 h-[500px] lg:h-[681px] relative'>
-              <Image src={ticketBG} alt={'ticket bg'} />
+          <div className='lg:overflow-y-auto min-h-0 flex flex-col gap-20 p-4 pt-0 '>
+            <div className=' flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]'>
+              <Image src={ticketBG} alt={'ticket bg'} className='h-full'  />
               <div
                 className={
-                  'absolute top-0 mt-[20px] left-[50%] -translate-x-[50%] flex flex-col items-center gap-8'
+                  'absolute top-0 w-full px-4 left-[50%] -translate-x-[50%] flex flex-col items-center gap-8'
                 }
               >
-                <span className={'font-primary font-medium text-[2.2rem] leading-[30px] text-black'}>
+                <span className={'font-primary font-medium pt-4 text-[2.2rem] leading-[30px] text-black'}>
                   {t('ticket.summary')}
                 </span>
                 <div
                   className={
-                    'w-[300px] lg:w-[420px] h-[296px] lg:h-[389px] bg-neutral-100 p-[15px] text-center flex flex-col justify-between items-center '
+                    'w-full h-[250px] lg:h-[296px]  bg-neutral-100 p-[15px] text-center flex flex-col justify-between items-center '
                   }
                 >
                   <div className={'flex flex-col gap-8 w-full'}>
@@ -558,9 +607,11 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                               <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-600'}>
                                 x{ticket.quantity} {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
                               </span>
-                              <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
+                              {isFree ? <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
+                                {t('free')}
+                              </span> : <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
                                 {ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0} {event.currency}
-                              </span>
+                              </span>}
                             </div>
                           );
                         })
@@ -577,7 +628,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
               </div>
               <div
                 className={
-                  'absolute -bottom-[1%] lg:bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8'
+                  'absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8'
                 }
               >
                 {selectedWithIndex.length > 0 && (
@@ -597,13 +648,18 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                         );
                       })}
                     </div>
-                    <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
+                    {isFree ? <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
+                      {t('free')}
+                    </span> : <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
                       {totalPrice} {event.currency}
-                    </span>
+                    </span>}
                   </>
                 )}
               </div>
             </div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
         </main>
 
@@ -618,7 +674,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
           <div className='text-[2.2rem] lg:hidden leading-12 text-neutral-600'>
             <span className='text-primary-500'>{currentStep + 1}</span>/3
           </div>
-          <ButtonPrimary onClick={next}>
+          <ButtonPrimary disabled={isLoading} onClick={next}>
             {t('footer.continue')}
           </ButtonPrimary>
         </div>

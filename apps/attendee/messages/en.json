@@ -180,9 +180,10 @@
       }
     }
   },
-  "upcoming": {
+  "Upcoming": {
     "title": "Upcoming Events",
-    "search": "Search for upcoming event"
+    "search": "Search for upcoming event",
+    "description" : "There are no upcoming events right now. Stay tuned to discover and book the next ones!"
   },
   "history": {
     "title": "Events history",
@@ -190,6 +191,7 @@
   },
   "Event": {
     "from" : "From",
+    "free" : "Free",
     "back" : "Back",
     "share": "Share event",
     "share_text": "Spread the word and invite your friends! Share this event on social media or via direct message.",
@@ -202,6 +204,7 @@
     "followers": "Followers",
     "follow": "Follow",
     "unfollow" : "Unfollow",
+    "viewProfile" : "View profile",
     "more" : "More",
     "reportEvent" : "Report Event",
     "reportEventDescription" : "Help us keep the platform safe. Share details about any issues with this event.",
@@ -226,6 +229,7 @@
   },
   "Checkout": {
     "back" : "Back",
+    "free" : "Free",
     "ticket": {
       "title": "Buy Ticket",
       "quantity": "Quantity",
@@ -248,6 +252,7 @@
       "card": "Pay with card",
       "paypal": "Pay with PayPal",
       "moncash": "Pay with MonCash",
+      "nopayment" :"This event is completely free of charge. No payment is required to complete your registration. Just continue to confirm your ticket and you’re all set.",
       "placeholders": {
         "name": "Card Name",
         "expiry": "Expiry",
