@@ -4,74 +4,6 @@
       "title": "Discover Events, Connect with Culture, Experience Haiti.",
       "description": "Easily explore, share, and enjoy the best events Haiti has to offer. Join us today and start your journey!"
     },
-    "register": {
-      "choice": {
-        "title": "Create Account",
-        "description": "Choose an option to continue and set up your account.",
-        "first": {
-          "title": "Attendee",
-          "description": "Easily browse, discover, and purchase tickets for a wide variety of events."
-        },
-        "second": {
-          "title": "Organizer",
-          "description": "Create and manage events effortlessly. Track ticket sales & monitor attendee data."
-        },
-        "cta": "Continue",
-        "footer": {
-          "text": "Already own an account?",
-          "cta": "Log in"
-        }
-      },
-      "form": {
-        "title": "Attendee Account",
-        "description": "Please complete the form below to continue.",
-        "placeholders": {
-          "firstname": "First Name",
-          "lastname": "Last Name",
-          "email": "Email Address",
-          "password": "Create Password",
-          "confirm": "Confirm Password"
-        },
-        "errors": {
-          "password_length": "Password must be at least 8 characters long",
-          "password_match": "Passwords don't match",
-          "firstname_length": "First name must be at least 2 characters",
-          "lastname_length": "Last name must be at least 2 characters",
-          "firstname_validation": "First name must contain only letters, spaces, or hyphens",
-          "lastname_validation": "Last name must contain only letters, spaces, or hyphens"
-        },
-        "cta": {
-          "submit": "Create account",
-          "google": "Continue with Google"
-        },
-        "footer": "Back"
-      }
-    },
-    "verify": {
-      "title": "Verify Account",
-      "description": "A verification mail has been sent to",
-      "footer": {
-        "text": "Didn't get a mail?",
-        "cta": "Resend"
-      }
-    },
-    "complete": {
-      "title": "Complete Account Set-up",
-      "description": "Please fill the form below to complete your account set-up.",
-      "placeholders": {
-        "username": "User Name",
-        "address": "Address",
-        "country": "Country",
-        "state": "State",
-        "city": "City",
-        "dob": "Date of Birth",
-        "gender": "Gender",
-        "male": "Male",
-        "female": "Female",
-        "no": "Rather not say"
-      },
-      "cta": "Complete"
-    },
     "login": {
       "title": "Sign In",
       "description": "Please enter you account details to continue",
@@ -93,9 +25,123 @@
         "cta": "Sign up"
       }
     },
+    "register": {
+      "title": "Create an Account",
+      "organizer": "Create an Account",
+      "description": "Please complete the form below to continue.",
+      "choice": {
+        "title": "Create Account",
+        "description": "Choose an option to continue and set up your account.",
+        "first": {
+          "title": "Attendee",
+          "description": "Easily browse, discover, and purchase tickets for a wide variety of events."
+        },
+        "second": {
+          "title": "Organizer",
+          "description": "Create and manage events effortlessly. Track ticket sales & monitor attendee data."
+        },
+        "cta": "Continue",
+        "footer": {
+          "text": "Already own an account?",
+          "cta": "Log in"
+        }
+      },
+      "placeholders": {
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "email": "Email Address",
+        "organisation_name": "Organisation Name",
+        "organisation_email": "Organisation Email",
+        "password": "Create Password",
+        "confirm": "Confirm Password"
+      },
+      "errors": {
+        "password_length": "Password must be at least 8 characters long",
+        "password_match": "Passwords don't match",
+        "firstname_length": "First name must be at least 2 characters",
+        "lastname_length": "Last name must be at least 2 characters",
+        "firstname_validation": "First name must contain only letters, spaces, or hyphens",
+        "lastname_validation": "Last name must contain only letters, spaces, or hyphens",
+        "email": "Email field cannot be blank"
+      },
+      "cta": {
+        "submit": "Create account",
+        "google": "Continue with Google"
+      },
+      "footer": "Back"
+    },
+    "verify": {
+      "title": "Verify Account",
+      "description": "A verification mail has been sent to",
+      "footer": {
+        "text": "Didn't get a mail?",
+        "cta": "Resend"
+      }
+    },
+    "complete": {
+      "title": "Complete Account Set-up",
+      "description": "Please fill the form below to complete your account set-up.",
+      "becoming": {
+        "subtitle": "Create An Organisation",
+        "description": "Please fill the form below create a new organisation.",
+        "name": "Organisation's name",
+        "country": "Country",
+        "state": "State / Region / Province",
+        "city": "City",
+        "organisationDescription": "Share details about your organisation, what you do, and the events you host...",
+        "email": "Organisation Email",
+        "phone": "Phone number",
+        "website": "Website",
+        "currency": "Currency",
+        "back" : "Back",
+        "submit" : "Create organisation",
+        "errors" : {
+          "name" : {
+            "min" : "Organisation name cannot be blank",
+            "max" : "Name cannot exceed 30 characters"
+          },
+          "description" : {
+            "min" : "Description cannot be less than 150 characters",
+            "max" : "Description cannot exceed 350 characters"
+          },
+          "country" : "Select a country",
+          "state" :"This field Cannot be blank",
+          "city" :"City field cannot be blank",
+          "currency" : "Please select a currency"
+        }
+      },
+      "placeholders": {
+        "username": "User Name",
+        "address": "Address",
+        "country": "Country",
+        "state": "State / Region / Province",
+        "city": "City",
+        "dob": "Date of Birth",
+        "gender": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "no": "Rather not say",
+        "about": "About Organizer",
+        "email": "Contact Email Address",
+        "phone": "Phone Number",
+        "website": "Organisation Website Url",
+        "currency" : "Currency",
+        "errors" : {
+          "city" : "City field cannot be blank",
+          "state" : "This field Cannot be blank",
+          "gender" : "This field is required",
+          "country" : "Select a country",
+          "dob" : "Please select a date",
+          "currency" : "Please select a currency",
+          "phone" :"Phone Number should be at least 8"
+        }
+      },
+      "cta": "Complete"
+    },
     "forgot": {
       "title": "Reset Password",
       "description": "Please enter you account details to continue",
+      "back" : "Back",
       "errors": {
         "email": "Enter a valid email address"
       },

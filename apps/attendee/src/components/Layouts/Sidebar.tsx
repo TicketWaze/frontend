@@ -5,7 +5,7 @@ import Logo from "@workspace/ui/assets/images/logo-horizontal-orange.svg";
 import Image from "next/image";
 import { Chart1, Clock, I24Support, Logout, Moneys, Setting, Setting2, Setting5, Star, Ticket, User, UserSquare } from "iconsax-react";
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { signOut } from "next-auth/react";
 
@@ -73,11 +73,11 @@ function Sidebar({ className }: { className: string }) {
       pathname.startsWith(`/settings`)
     );
   }
-
+  const locale = useLocale()
 
   return (
-    <aside className={cn("flex-col hidden lg:flex", className)}>
-      <div className={"flex-1 pt-12 flex flex-col gap-16"}>
+    <aside className={cn("flex-col hidden lg:flex overflow-y-auto min-h-0", className)}>
+      <div className={"flex-1 pt-12 flex flex-col gap-16 "}>
         <Image src={Logo} alt={"Ticket Waze Logo"} width={140} height={40} />
         <nav>
           <div className={`mb-4 uppercase font-medium text-[1.4rem] leading-8 ${isEventGroupActive() ? 'text-neutral-900' : 'text-neutral-600'}`}>{t('links.title1')}</div>
@@ -127,10 +127,20 @@ function Sidebar({ className }: { className: string }) {
                 </li>
               );
             })}
-            {/* <li onClick={() => signOut({ redirect: true, redirectTo: process.env.NEXT_PUBLIC_APP_URL })} className="flex items-center cursor-pointer gap-4 py-4 text-[1.5rem] leading-[20px] text-failure">
-              <Logout color="#737c8a" size={20} variant="Bulk" />
-              {t('logout')}
-            </li> */}
+            <li>
+              <Link target='_blank' href={`https://ticketwaze.com/${locale}/contact`} className='flex items-center gap-4 py-4'>
+                <I24Support
+                  size="20"
+                  color='#737C8A'
+                  variant="Bulk"
+                />
+                <span className={`text-[1.5rem] leading-4 text-neutral-700`}>{t('help')}</span>
+              </Link>
+            </li>
+            <button onClick={() => signOut({ redirect: true, redirectTo: process.env.NEXT_PUBLIC_APP_URL })} className='flex items-center gap-4 py-2'>
+              <Logout size="20" color="#737c8a" variant="Bulk" />
+              <span className={`text-[1.5rem] leading-4 text-neutral-700 cursor-pointer`}>{t('logout')}</span>
+            </button>
           </ul>
         </nav>
       </div>
