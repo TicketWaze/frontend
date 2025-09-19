@@ -160,6 +160,7 @@
     "title": "Explore Events",
     "subtitle" : "Welcome Back ",
     "search": "Search for event",
+    "noResult": "There's no result for ",
     "filters": {
       "first": {
         "1": "All",
@@ -225,7 +226,9 @@
     "feedback": "Write feedback",
     "send": "Send feedback",
     "use": "Ticket used",
-    "not_used": "Ticket not used"
+    "not_used": "Ticket not used",
+    "ticket" : "Ticket",
+    "ticketId" : "Ticket ID"
   },
   "Checkout": {
     "back" : "Back",
@@ -361,8 +364,9 @@
       "terms": "Terms of use"
     }
   },
-  "organizers": {
+  "Organizers": {
     "title": "Organizers",
+    "back" : "Back",
     "search": "Search for organizers",
     "filters": {
       "all": "All",
@@ -374,13 +378,15 @@
     "unfollow": "Unfollow",
     "profile": {
       "upcoming": "Upcoming events",
+      "noUpcoming" : "No upcoming events",
       "rating": "rating",
       "followers": "followers",
       "events": "Events",
       "follow": "Follow",
       "unfollow": "Unfollow",
       "about": "About organizer",
-      "contact": "Contact Information"
+      "contact": "Contact Information",
+      "noResult" : "There's no result for "
     }
   }
 }

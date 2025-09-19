@@ -23,7 +23,7 @@ export default function Unfollow({ user, organisationId }: { user: User, organis
     return (
         <>
             {isLoading && <PageLoader isLoading={isLoading} />}
-            <ButtonBlack onClick={FollowOrganisation} >{t("unfollow")}</ButtonBlack>
+            <button className='py-[7.5px] px-12 rounded-[100px] cursor-pointer border-2 border-black text-[1.4rem] leading-8 text-black ' onClick={FollowOrganisation} >{t("unfollow")}</button>
         </>
     )
 }

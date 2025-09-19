@@ -28,6 +28,15 @@ function EventCard({
   tags: EventTag[]
 }) {
   const t = useTranslations('Event')
+  
+  const newDate = new Date(date);
+
+const formatted = new Intl.DateTimeFormat('fr-FR', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+}).format(newDate);
+  
   return (
     <Link
       href={href}
@@ -56,11 +65,7 @@ function EventCard({
           <div className={'flex items-center gap-[5px]'}>
             <Calendar2 size="15" color="#2e3237" variant="Bulk" />
             <span className={'font-medium text-[1rem] text-deep-100 leading-[15px]'}>
-              {new Date(date).getDay()}
-              {'/'}
-              {new Date(date).getMonth()}
-              {'/'}
-              {new Date(date).getFullYear()}
+              {formatted}
             </span>
           </div>
           <div className={'flex items-center gap-[5px]'}>

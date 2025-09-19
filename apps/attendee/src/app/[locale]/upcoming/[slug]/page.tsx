@@ -11,6 +11,8 @@ import VerifiedOrganisationCheckMark from '@/components/VerifiedOrganisationChec
 import { Link } from '@/i18n/navigation'
 import MapComponent from './MapComponent'
 import { Call, Global, Sms } from 'iconsax-react'
+import UpcomingTicket from './UpcomingTicket'
+import Ticket from '@/types/Ticket'
 
 export default async function UpcomingEventPage({
     params,
@@ -30,6 +32,7 @@ export default async function UpcomingEventPage({
     const eventResponse = await eventRequest.json()
     const event = eventResponse.event
     const organisation = event.organisation
+    const tickets: Ticket[] = event.tickets
 
 
     const favoriteRequest = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/favorite`, {
@@ -65,7 +68,7 @@ export default async function UpcomingEventPage({
                             </span>
                         </div>
                     </div>
-                    <Link href={`#`} className='border-2 py-[7.5px] px-[15px] lg:px-12 rounded-[100px] border-black font-semibold text-[1.5rem] '>{t('viewProfile')}</Link>
+                    <Link href={`/organizers/${organisation.organisationId}`} className='border-2 py-[7.5px] px-[15px] lg:px-12 rounded-[100px] border-black font-semibold text-[1.5rem] '>{t('viewProfile')}</Link>
                 </div>
             </div>
             <main className='grid grid-cols-1 lg:grid-cols-[29fr_23fr] w-full gap-8 flex-1 min-h-0'>
@@ -132,6 +135,13 @@ export default async function UpcomingEventPage({
                     </div>
                     <div></div>
                 </div>
+
+                {tickets.map(ticket => {
+                    return (
+
+                        <UpcomingTicket key={ticket.ticketId} ticket={ticket} event={event} />
+                    )
+                })}
             </main>
         </AttendeeLayout>
     )
