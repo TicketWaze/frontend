@@ -65,13 +65,13 @@ export default function OrganizersContents({ organisations, followedOrganisation
                     </button>
                 )}
             </header>
-            <Tabs defaultValue="all" className="w-full h-full">
+            <Tabs defaultValue="all" className="w-full h-full min-h-0">
                 <TabsList className={'w-full lg:w-fit mx-auto lg:mx-0'}>
                     <TabsTrigger value="all">{t('filters.all')}</TabsTrigger>
                     <TabsTrigger value="following">{t('filters.following')}</TabsTrigger>
                     {/* <TabsTrigger value="popular">{t('filters.popular')}</TabsTrigger> */}
                 </TabsList>
-                <TabsContent value='all'>
+                <TabsContent value='all' className='min-h-0 overflow-y-scroll'>
                     <ul className='list pt-4'>
                         {filteredOrganisations.map(organisation => {
                             const events = organisation.events.length

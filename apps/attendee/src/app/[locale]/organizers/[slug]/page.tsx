@@ -31,7 +31,7 @@ export default async function OrganizerProfile({
     const organisationResponse = await organisationRequest.json()
     const organisation = organisationResponse.organisation
     const events: Event[] = organisation.events
-    const upcomingEvents : Event[] = organisation.upcomingEvents
+    const upcomingEvents: Event[] = organisation.upcomingEvents
 
     return (
         <AttendeeLayout title='OrganizerProfile'>
@@ -41,7 +41,7 @@ export default async function OrganizerProfile({
                     {organisation.organisationName}
                 </span>
             </div>
-            <main className='grid grid-cols-1 lg:grid-cols-[29fr_23fr] w-full gap-8 flex-1 min-h-0'>
+            <main className='w-full gap-8 flex flex-col lg:grid lg:grid-cols-[29fr_23fr] lg:min-h-0 overflow-y-auto h-full'>
                 <div className="flex flex-col gap-8 overflow-y-auto min-h-0">
 
                     <div className="w-full max-h-[298px] overflow-hidden rounded-[10px] flex-shrink-0">
@@ -95,9 +95,44 @@ export default async function OrganizerProfile({
                             </span>
                         </div>}
                     </div>
+                    <Separator />
+                    <div className="lg:hidden flex flex-col gap-8">
+                        <span className='font-semibold text-[1.6rem] leading-8 text-deep-100'>{t('profile.upcoming')}</span>
+                        <ul className='flex flex-col gap-8'>
+                            {upcomingEvents.map(event => {
+                                const date = new Date(event.eventDays[0]?.startDate ?? '').toUTCString()
+                                const UtcDAte = new Date(date)
+                                const slug = Slugify(event.eventName)
+                                return (
+                                    <li key={event.eventId} className='lg:pr-4'>
+                                        <EventCard
+                                            aside={true}
+                                            href={`/explore/${slug}`}
+                                            image={event.eventImageUrl}
+                                            name={event.eventName}
+                                            date={UtcDAte}
+                                            country={event.country ?? ''}
+                                            city={event.city ?? ''}
+                                            price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
+                                            currency={event.currency}
+                                            tags={event.eventTags}
+                                        />
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                        {events.length === 0 && <div className='flex flex-col items-center gap-[50px]'>
+                            <div className='h-[120px] w-[120px] bg-neutral-100 rounded-full flex items-center justify-center'>
+                                <div className='w-[90px] h-[90px] bg-neutral-200 flex items-center justify-center rounded-full'>
+                                    <Ticket size="50" color="#0D0D0D" variant="Bulk" />
+                                </div>
+                            </div>
+                            <span className='font-primary text-[1.8rem] leading-8 text-neutral-600'>{t('profile.noUpcoming')}</span>
+                        </div>}
+                    </div>
                     <div></div>
                 </div>
-                <div className='overflow-y-auto min-h-0 flex flex-col gap-8'>
+                <div className='hidden lg:flex lg:flex-col lg:overflow-y-auto min-h-0 flex-col gap-20 p-4 pt-0'>
                     <span className='font-semibold text-[1.6rem] leading-8 text-deep-100'>{t('profile.upcoming')}</span>
                     <ul className='flex flex-col gap-8'>
                         {upcomingEvents.map(event => {

@@ -52,7 +52,7 @@ export default async function EventPage({
         <span className='font-primary font-medium text-[2.6rem] leading-12 text-black mb-4'>
           {event.eventName}
         </span>
-        <main className='grid grid-cols-1 lg:grid-cols-[29fr_23fr] w-full gap-8 flex-1 min-h-0'>
+        <main className="w-full gap-8 flex flex-col lg:grid lg:grid-cols-[29fr_23fr] lg:min-h-0 overflow-y-auto h-full">
           <div className="flex flex-col gap-8 overflow-y-auto min-h-0">
             <div className="w-full max-h-[298px] overflow-hidden rounded-[10px] flex-shrink-0">
               <Image
@@ -105,10 +105,123 @@ export default async function EventPage({
                 </span>
               </div>}
             </div>
+            <Separator />
+            <div className="lg:hidden flex flex-col gap-8">
+              <div className={"flex flex-col gap-8"}>
+                <span
+                  className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}
+                >
+                  {t("details")}
+                </span>
+                {/*  organizer*/}
+                <div className={"flex items-center justify-between w-full"}>
+                  <div className={"flex items-center gap-4"}>
+                    {organisation?.profileImageUrl ? <Image src={organisation.profileImageUrl} width={35} height={35} alt={organisation.organisationName} className="rounded-full" /> : <span
+                      className="w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary"
+                    >
+                      {organisation?.organisationName.slice()[0]?.toUpperCase()}
+                    </span>}
+                    <div className={"flex flex-col"}>
+                      <span
+                        className={
+                          "font-normal text-[1.4rem] leading-8 text-deep-200"
+                        }
+                      >
+                        {organisation.organisationName} {organisation.isVerified && <VerifiedOrganisationCheckMark />}
+                      </span>
+                      <span
+                        className={
+                          "font-normal text-[1.3rem] leading-8 text-neutral-600"
+                        }
+                      >
+                        {organisation.followers.length} {t("followers")}
+                      </span>
+                    </div>
+                  </div>
+                  {isFollowing.length > 0 ? <Unfollow user={session?.user as User} organisationId={event.organisationId} /> : <Follow user={session?.user as User} organisationId={event.organisationId} />}
+
+
+                </div>
+                {/*  date*/}
+                <div className={"flex items-center gap-[5px]"}>
+                  <div
+                    className={
+                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                    }
+                  >
+                    <Calendar2 size="20" color="#737c8a" variant="Bulk" />
+                  </div>
+                  <span
+                    className={"font-normal text-[1.4rem] leading-8 text-deep-200"}
+                  >
+                    {FormatDate(event.eventDays[0].startDate)}
+                  </span>
+                </div>
+                {/*  time*/}
+                <div className={"flex items-center gap-[5px]"}>
+                  <div
+                    className={
+                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                    }
+                  >
+                    <Clock size="20" color="#737c8a" variant="Bulk" />
+                  </div>
+                  <span
+                    className={"font-normal text-[1.4rem] leading-8 text-deep-200"}
+                  >
+                    {event.eventDays[0].startTime} - {event.eventDays[0].endTime}
+                  </span>
+                </div>
+                {/*  address*/}
+                <div className={"flex items-center gap-[5px] "}>
+                  <div
+                    className={
+                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                    }
+                  >
+                    <Location size="20" color="#737c8a" variant="Bulk" />
+                  </div>
+                  <span
+                    className={
+                      "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                    }
+                  >
+                    {event.address}, {event.city}, {Capitalize(event.state)}, {event.country}
+                  </span>
+                </div>
+                {/*  sold*/}
+                {/* <div className={"flex items-center gap-[5px] "}>
+              <div
+                className={
+                  "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                }
+              >
+                <Ticket2 size="20" color="#737c8a" variant="Bulk" />
+              </div>
+              <span
+                className={
+                  "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                }
+              >
+                500+ {t("sold")}
+              </span>
+            </div> */}
+              </div>
+              <Separator />
+              <div className=' flex flex-col gap-8'>
+                <span
+                  className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}
+                >
+                  {t("direction")}
+                </span>
+                <Map event={event} />
+                <div></div>
+              </div>
+            </div>
             <div></div>
           </div>
 
-          <div className='overflow-y-auto min-h-0 flex flex-col gap-8'>
+          <div className="hidden lg:flex lg:flex-col lg:overflow-y-auto min-h-0 flex-col gap-8 p-4 pt-0">
             <div className={"flex flex-col gap-8"}>
               <span
                 className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}

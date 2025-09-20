@@ -71,9 +71,9 @@ export default async function UpcomingEventPage({
                     <Link href={`/organizers/${organisation.organisationId}`} className='border-2 py-[7.5px] px-[15px] lg:px-12 rounded-[100px] border-black font-semibold text-[1.5rem] '>{t('viewProfile')}</Link>
                 </div>
             </div>
-            <main className='grid grid-cols-1 lg:grid-cols-[29fr_23fr] w-full gap-8 flex-1 min-h-0'>
-                <div className="flex flex-col gap-8 overflow-y-auto min-h-0">
-
+            <main className="w-full gap-8 flex flex-col lg:grid lg:grid-cols-[29fr_23fr] lg:min-h-0 overflow-y-auto h-full">
+                {/* Left column content */}
+                <div className="flex flex-col gap-8 lg:overflow-y-auto min-h-0">
                     <div className="w-full max-h-[298px] overflow-hidden rounded-[10px] flex-shrink-0">
                         <Image
                             src={event.eventImageUrl}
@@ -83,66 +83,66 @@ export default async function UpcomingEventPage({
                             className="w-full"
                         />
                     </div>
+
                     <EventActions event={event} user={session?.user as User} isFavorite={favoriteResponse.isFavorite} />
                     <Separator />
-                    <div className=' flex flex-col gap-8'>
-                        <span
-                            className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}
-                        >
+
+                    <div className="flex flex-col gap-8">
+                        <span className="font-semibold text-[1.6rem] leading-8 text-deep-200">
                             {t("direction")}
                         </span>
                         <MapComponent event={event} />
                     </div>
-                    <div className='flex flex-col gap-4'>
-                        <span className='font-semibold text-[1.6rem] leading-8 text-deep-100'>{t('about')}</span>
-                        <p className='text-[1.5rem] leading-12 text-neutral-700'>{event.eventDescription}</p>
+
+                    <div className="flex flex-col gap-4">
+                        <span className="font-semibold text-[1.6rem] leading-8 text-deep-100">{t('about')}</span>
+                        <p className="text-[1.5rem] leading-12 text-neutral-700">{event.eventDescription}</p>
                     </div>
+
                     <Separator />
+
                     <div>
-                        <span className='font-semibold text-[1.6rem] leading-8 text-deep-100'>{t('contact')}</span>
+                        <span className="font-semibold text-[1.6rem] leading-8 text-deep-100">{t('contact')}</span>
                     </div>
-                    <div className={"flex flex-col gap-[5px]"}>
-                        <div className={"flex items-center gap-4"}>
+                    <div className="flex flex-col gap-[5px]">
+                        <div className="flex items-center gap-4">
                             <Sms size="20" color="#737c8a" variant="Bulk" />
-                            <span
-                                className={
-                                    "font-normal text-[1.5rem] leading-[30px] text-neutral-700"
-                                }
-                            >
+                            <span className="font-normal text-[1.5rem] leading-[30px] text-neutral-700">
                                 {organisation.organisationEmail}
                             </span>
                         </div>
-                        <div className={"flex items-center gap-4"}>
+                        <div className="flex items-center gap-4">
                             <Call size="20" color="#737c8a" variant="Bulk" />
-                            <span
-                                className={
-                                    "font-normal text-[1.5rem] leading-[30px] text-neutral-700"
-                                }
-                            >
+                            <span className="font-normal text-[1.5rem] leading-[30px] text-neutral-700">
                                 {organisation.organisationPhoneNumber}
                             </span>
                         </div>
-                        {organisation.organisationWebsite && <div className={"flex items-center gap-4"}>
-                            <Global size="20" color="#737c8a" variant="Bulk" />
-                            <span
-                                className={
-                                    "font-normal text-[1.5rem] leading-[30px] text-neutral-700"
-                                }
-                            >
-                                {organisation.organisationWebsite}
-                            </span>
-                        </div>}
+                        {organisation.organisationWebsite && (
+                            <div className="flex items-center gap-4">
+                                <Global size="20" color="#737c8a" variant="Bulk" />
+                                <span className="font-normal text-[1.5rem] leading-[30px] text-neutral-700">
+                                    {organisation.organisationWebsite}
+                                </span>
+                            </div>
+                        )}
                     </div>
-                    <div></div>
+
+                    {/* Tickets on mobile */}
+                    <div className="lg:hidden flex flex-col gap-4">
+                        {tickets.map(ticket => (
+                            <UpcomingTicket key={ticket.ticketId} ticket={ticket} event={event} />
+                        ))}
+                    </div>
                 </div>
 
-                {tickets.map(ticket => {
-                    return (
-
+                {/* Tickets on desktop (second column) */}
+                <div className="hidden lg:flex lg:flex-col lg:overflow-y-auto min-h-0 flex-col gap-20 p-4 pt-0">
+                    {tickets.map(ticket => (
                         <UpcomingTicket key={ticket.ticketId} ticket={ticket} event={event} />
-                    )
-                })}
+                    ))}
+                </div>
             </main>
+
         </AttendeeLayout>
     )
 }

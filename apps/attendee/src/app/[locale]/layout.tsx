@@ -1,5 +1,5 @@
 import { Bricolage_Grotesque, DM_Mono, DM_Sans } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@workspace/ui/styles/globals.css";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
@@ -29,7 +29,13 @@ export const metadata: Metadata = {
   description:
     "Easily explore, share, and enjoy the best events your country has to offer. Join us today and start your journey!",
     // "Empowering events across your country and reaching beyond borders to connect people, ideas, and experiences.",
+    
 };
+export const viewport : Viewport = {
+  width : 'device-width',
+  initialScale : 1,
+  maximumScale : 1
+}
 
 export default async function RootLayout({
   children,
