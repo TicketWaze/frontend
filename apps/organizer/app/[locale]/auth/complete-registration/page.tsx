@@ -19,6 +19,7 @@ export default function CompleteRegistrationPage() {
   const t = useTranslations('Auth.complete')
   const searchParams = useSearchParams();
   const accessToken = searchParams.get("accessToken");
+  const invite = searchParams.get('invite')
 
   const [currencies, setCurrencies] = useState<Currency[] | undefined>()
 
@@ -63,7 +64,7 @@ export default function CompleteRegistrationPage() {
   const router = useRouter()
 
   async function submitHandler(data: TCompleteRegistrationSchema) {
-    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/complete-registration`, {
+    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/complete-registration?invite=${invite}`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -73,10 +74,14 @@ export default function CompleteRegistrationPage() {
       },
       body: JSON.stringify(data)
     })
-    const response = await request.json()
+    const response = await request.json()    
 
     if (response.status === 'success') {
-      router.push('/auth/login')
+      if(response.invite){
+        router.push(`/auth/invite/${invite}?accessToken=${response.accessToken}`)
+      }else{
+        router.push('/auth/login')
+      }
     } else {
       toast(response.message)
     }

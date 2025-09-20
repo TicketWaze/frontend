@@ -8,6 +8,8 @@
       "title": "Create an Account",
       "organizer": "Create an Account",
       "description": "Please complete the form below to continue.",
+      "invalidToken" : "This invitation link is no longer valid. It may have expired or already been used. Please request a new invite from the event organizer to continue.",
+      "login" : "Log in",
       "choice": {
         "title": "Create Account",
         "description": "Choose an option to continue and set up your account.",

@@ -10,10 +10,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Drawer, DrawerTrigger } from '@workspace/ui/components/drawer'
 import UserInformation from './UserInformationsDrawerContent'
 import WaitlistMember from '@/types/WaitlistMember'
-import { ButtonRed } from '@workspace/ui/components/buttons'
 import UserWaitlistInformation from './UserWaitlistInformations'
 import GetRoleName from '@/lib/GetRoleName'
 import RemoveInvitationDialogContent from './RemoveInvitationDialogContent'
+import RemoveMember from './RemoveMember'
+import EditMemberDialogContent from './EditMemberDialogContent'
+import User from '@/types/User'
 
 export default function MemberList({ members, waitlistMembers }: { members: OrganisationMember[], waitlistMembers: WaitlistMember[] }) {
   const t = useTranslations('Settings.team')
@@ -106,7 +108,7 @@ export default function MemberList({ members, waitlistMembers }: { members: Orga
                   Active
                 </span>
               </TableCell>
-              <TableCell
+              {session?.user.userId !== member.userId && <TableCell
                 className={'text-[1.5rem] hidden lg:table-cell leading-8 text-neutral-900'}
               >
                 {/* {isAdmin && user.userId != member.user_id && ( */}
@@ -146,24 +148,47 @@ export default function MemberList({ members, waitlistMembers }: { members: Orga
                               <span className={''}>{t('edit')}</span>
                               <Edit2 size="20" variant="Bulk" color={'#E45B00'} />
                             </DialogTrigger>
-                            {/* <EditMemberDialogContent
-                                userId={member.user_id}
+                            <EditMemberDialogContent
+                                userId={member.userId}
                                 defaultRole={member.role}
-                              /> */}
+                                user={session?.user as User}
+                              />
                           </Dialog>
                         </li>
-                        <li
-                          className={`font-normal group text-[1.4rem] py-4 leading-[20px] text-failure flex items-center justify-between gap-4`}
-                        >
-                          <span className={''}>{t('remove')}</span>
-                          <Trash size="20" variant="Bulk" color={'#DE0028'} />
+                        <li>
+                          <Dialog>
+                            <DialogTrigger className={'w-full flex-1'}>
+                              <span
+                                className={`font-normal w-full cursor-pointer group text-[1.4rem] py-4 leading-[20px] text-failure flex items-center justify-between gap-4`}
+                              >
+                                <span className={''}>{t('remove')}</span>
+                                <Trash size="20" variant="Bulk" color={'#DE0028'} />
+                              </span>
+                            </DialogTrigger>
+                            <DialogContent className={'w-[360px] lg:w-[520px] '}>
+                              <DialogHeader>
+                                <DialogTitle
+                                  className={
+                                    'font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary'
+                                  }
+                                >
+                                  {t('remove')}
+                                </DialogTitle>
+                                <DialogDescription className={'sr-only'}>
+                                  <span>Remove member</span>
+                                </DialogDescription>
+                              </DialogHeader>
+                              <RemoveMember email={member.email}/>
+                            </DialogContent>
+                          </Dialog>
                         </li>
                       </ul>
                     </div>
                   </PopoverContent>
                 </Popover>
                 {/* ))} */}
-              </TableCell>
+              </TableCell> }
+              
             </TableRow>
           ))}
 

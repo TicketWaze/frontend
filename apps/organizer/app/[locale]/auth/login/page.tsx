@@ -5,8 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import { Input, PasswordInput } from '@workspace/ui/components/Inputs'
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall"
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -18,6 +19,8 @@ export default function LoginPage() {
     email: z.email(t("errors.email")),
     password: z.string().min(1, t("errors.password"))
   });
+  const searchParams = useSearchParams()
+  const invite = searchParams.get('invite')
 
   type TLoginSchema = z.infer<typeof LoginSchema>;
 
@@ -42,11 +45,14 @@ export default function LoginPage() {
     if (result?.error) {
       toast.error('Login failed')
     } else {
-      router.push('/analytics')
+      if (invite) {
+        const session = await getSession()
+        router.push(`/auth/invite/${invite}?accessToken=${session?.user.accessToken}`)
+      } else {
+        router.push('/analytics')
+      }
     }
-
     setIsloading(false)
-
   }
   return (
     <form onSubmit={handleSubmit(submitHandler)} className='flex flex-col items-center h-full pb-4'>

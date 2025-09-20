@@ -1,5 +1,5 @@
 'use client'
-import { RemoveInvitation } from '@/actions/organisationActions'
+import {  RemoveMemberQuery } from '@/actions/organisationActions'
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog'
 import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
 import { useSession } from 'next-auth/react'
@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
-export default function RemoveInvitationDialogContent({ email }: { email: string }) {
+export default function RemoveMember({ email }: { email: string }) {
     const t = useTranslations('Settings.team')
     const { data: session } = useSession()
     const organisation = session?.activeOrganisation
@@ -27,7 +27,7 @@ export default function RemoveInvitationDialogContent({ email }: { email: string
                         'font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary'
                     }
                 >
-                    {t('remove_invitation')}
+                    {t('remove')}
                 </DialogTitle>
                 <DialogDescription className={'sr-only'}>
                     <span>Remove Member</span>
@@ -38,7 +38,7 @@ export default function RemoveInvitationDialogContent({ email }: { email: string
                     'flex flex-col w-auto justify-center items-center pt-[25px] gap-[30px]'
                 }
             >
-                <p className={'text-[1.8rem] leading-[25px] text-gray-400'}>
+                <p className={'text-[1.8rem] text-center leading-[25px] text-gray-400'}>
                     {t('confirm_text')}
                 </p>
             </div>
@@ -46,9 +46,9 @@ export default function RemoveInvitationDialogContent({ email }: { email: string
             <DialogFooter>
                 <span onClick={async () => {
                     setIsLoading(true)
-                    const result = await RemoveInvitation(organisation?.organisationId ?? '', session?.user.accessToken ?? '', email, locale, origin)
+                    const result = await RemoveMemberQuery(organisation?.organisationId ?? '', session?.user.accessToken ?? '', email, locale, origin)
                     if (result.status === 'success') {
-                        toast.success('Invitation Revoked')
+                        toast.success('Member Revoked')
                     } else {
                         toast.error(result.error)
                     }

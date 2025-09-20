@@ -5,6 +5,7 @@ import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import { Input, PasswordInput } from '@workspace/ui/components/Inputs'
 import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
 import { useLocale, useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -12,6 +13,9 @@ import * as z from 'zod'
 
 export default function RegisterPage() {
   const t = useTranslations('Auth.register')
+  const searchParams = useSearchParams()
+  const invite = searchParams.get('invite')
+  
 
   const RegisterSchema = z.object({
     firstName: z.string().min(2, { error: t('errors.firstname_length') }),
@@ -41,7 +45,7 @@ export default function RegisterPage() {
   }, []);
 
   async function submitHandler(data: TRegisterSchema) {
-    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register?invite=${invite}`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -52,17 +56,21 @@ export default function RegisterPage() {
     })
     const response = await request.json()
     if (response.status === 'success') {
-      router.push(`/auth/verify-account/${encodeURIComponent(data.email)}`)
+      if (response.invite) {
+        router.push(`/auth/complete-registration?accessToken=${response.accessToken}&invite=${response.invite}`)
+      } else {
+        router.push(`/auth/verify-account/${encodeURIComponent(data.email)}`)
+      }
     } else {
       toast.error(response.message)
     }
   }
   return (
     <form
-    onSubmit={handleSubmit(submitHandler)}
+      onSubmit={handleSubmit(submitHandler)}
       className='flex flex-col items-center justify-between gap-20 w-full h-full pb-4 '
     >
-      <div  className={'flex flex-col gap-16 w-full'}>
+      <div className={'flex flex-col gap-16 w-full'}>
         <div className='flex-1 flex lg:justify-center flex-col w-full pt-[4.5rem]'>
           <div className='flex flex-col gap-16 items-center'>
             <div className='flex flex-col gap-8 items-center'>

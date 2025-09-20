@@ -8,8 +8,6 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import GetRoleName from "@/lib/GetRoleName"
 import { AddMemberAction } from "@/actions/organisationActions"
-import { useStore } from "@tanstack/react-store"
-import organisationStore from "@/store/OrganisationStore"
 import { useSession } from "next-auth/react"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
@@ -35,8 +33,8 @@ export default function AddMember() {
 		}
 	})
 
-	const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
 	const { data: session } = useSession()
+	const organisation = session?.activeOrganisation
 	const locale = useLocale()
 	const [origin, setOrigin] = useState('')
 	useEffect(function () {
@@ -108,7 +106,6 @@ export default function AddMember() {
 							{isLoading ? <LoadingCircleSmall /> : t('add')}
 						</span>
 					</DialogClose>
-
 				</form>
 			</DialogContent>
 		</Dialog>

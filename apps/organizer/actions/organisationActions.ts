@@ -113,9 +113,54 @@ export async function AddMemberAction(organisationId: string, body: unknown, acc
     }
 }
 
+export async function EditMemberAction(organisationId: string, userId: string, accessToken: string, role: string) {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/organisations/${organisationId}/update-role/${userId}/${role}`, {
+            method: 'PATCH',
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            },
+        })
+        const data = await res.json()
+        if (data.status === 'success') {
+            revalidatePath('/settings/team')
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(data.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
+
 export async function RemoveInvitation(organisationId: string, accessToken: string, email: string, locale: string, origin: string) {
     try {
         const data = await api(`/organisations/${organisationId}/remove-invite/${email}`, accessToken ?? '', locale, origin)
+
+        if (data.status === 'success') {
+            revalidatePath('/settings/team')
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(data.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
+
+export async function RemoveMemberQuery(organisationId: string, accessToken: string, email: string, locale: string, origin: string) {
+    try {
+        const data = await api(`/organisations/${organisationId}/remove-member/${email}`, accessToken ?? '', locale, origin)
 
         if (data.status === 'success') {
             revalidatePath('/settings/team')
