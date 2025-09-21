@@ -145,3 +145,32 @@ export async function MarkDiscountCodeAsActive(eventId: string, discountCodeId :
         }
     }
 }
+
+export async function UpdateCheckersListAction(eventId: string,  accessToken: string, pathname : string, body : unknown) {
+    try {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/checkers`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body : JSON.stringify(body)
+
+        })
+        const response = await request.json()
+
+        if (response.status === 'success') {
+            revalidatePath(pathname)
+            return {
+                status: "success",
+            }
+
+        } else {
+            throw new Error(response.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}

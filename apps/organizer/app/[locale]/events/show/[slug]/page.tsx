@@ -5,6 +5,8 @@ import { getTranslations } from 'next-intl/server'
 import React from 'react'
 import EventPageDetails from './EventPageDetails'
 import Ticket from '@/types/Ticket'
+import { auth } from '@/lib/auth'
+import User from '@/types/User'
 
 export default async function Page({
   params,
@@ -17,10 +19,15 @@ export default async function Page({
     const eventResponse = await eventRequest.json()
     const event:Event = eventResponse.event
     const tickets:Ticket[] = eventResponse.tickets   
+    const organisationCheckers = eventResponse.organisationCheckers
+    const session = await auth()
+    const eventCheckers = eventResponse.eventCheckers
+    
+    
   return (
     <OrganizerLayout title=''>
         <BackButton text={t('back')}/>
-        <EventPageDetails event={event} tickets={tickets} slug={slug}/>
+        <EventPageDetails eventCheckers={eventCheckers} user={session?.user as User} event={event} tickets={tickets} slug={slug} organisationCheckers={organisationCheckers}/>
     </OrganizerLayout>
   )
 }
