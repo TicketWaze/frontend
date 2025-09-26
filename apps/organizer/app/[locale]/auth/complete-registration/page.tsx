@@ -64,26 +64,42 @@ export default function CompleteRegistrationPage() {
   const router = useRouter()
 
   async function submitHandler(data: TCompleteRegistrationSchema) {
-    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/complete-registration?invite=${invite}`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        "Accept-Language": locale,
-        "Origin": host,
-        "Authorization": `Bearer ${accessToken}`
-      },
-      body: JSON.stringify(data)
-    })
-    const response = await request.json()    
+    if (invite) {
+      const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/complete-registration?invite=${invite}`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept-Language": locale,
+          "Origin": host,
+          "Authorization": `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(data)
+      })
+      const response = await request.json()
 
-    if (response.status === 'success') {
-      if(response.invite){
+      if (response.status === 'success') {
         router.push(`/auth/invite/${invite}?accessToken=${response.accessToken}`)
-      }else{
-        router.push('/auth/login')
+      } else {
+        toast(response.message)
       }
     } else {
-      toast(response.message)
+      const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/complete-registration`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept-Language": locale,
+          "Origin": host,
+          "Authorization": `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(data)
+      })
+      const response = await request.json()
+
+      if (response.status === 'success') {
+        router.push('/auth/login')
+      } else {
+        toast(response.message)
+      }
     }
   }
   return (

@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const t = useTranslations('Auth.register')
   const searchParams = useSearchParams()
   const invite = searchParams.get('invite')
-  
+
 
   const RegisterSchema = z.object({
     firstName: z.string().min(2, { error: t('errors.firstname_length') }),
@@ -45,25 +45,40 @@ export default function RegisterPage() {
   }, []);
 
   async function submitHandler(data: TRegisterSchema) {
-    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register?invite=${invite}`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        "Accept-Language": locale,
-        "Origin": host
-      },
-      body: JSON.stringify(data)
-    })
-    const response = await request.json()
-    if (response.status === 'success') {
-      if (response.invite) {
+    if (invite) {
+      const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register?invite=${invite}`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept-Language": locale,
+          "Origin": host
+        },
+        body: JSON.stringify(data)
+      })
+      const response = await request.json()
+      if (response.status === 'success') {
         router.push(`/auth/complete-registration?accessToken=${response.accessToken}&invite=${response.invite}`)
       } else {
-        router.push(`/auth/verify-account/${encodeURIComponent(data.email)}`)
+        toast.error(response.message)
       }
     } else {
-      toast.error(response.message)
+      const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept-Language": locale,
+          "Origin": host
+        },
+        body: JSON.stringify(data)
+      })
+      const response = await request.json()
+      if (response.status === 'success') {
+        router.push(`/auth/verify-account/${encodeURIComponent(data.email)}`)
+      } else {
+        toast.error(response.message)
+      }
     }
+
   }
   return (
     <form

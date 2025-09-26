@@ -13,6 +13,7 @@ import MapComponent from './MapComponent'
 import { Call, Global, Sms } from 'iconsax-react'
 import UpcomingTicket from './UpcomingTicket'
 import Ticket from '@/types/Ticket'
+import TicketViewer from './TicketViewer'
 
 export default async function UpcomingEventPage({
     params,
@@ -129,17 +130,13 @@ export default async function UpcomingEventPage({
 
                     {/* Tickets on mobile */}
                     <div className="lg:hidden flex flex-col gap-4">
-                        {tickets.map(ticket => (
-                            <UpcomingTicket key={ticket.ticketId} ticket={ticket} event={event} />
-                        ))}
+                        <TicketViewer tickets={tickets} event={event}/>
                     </div>
                 </div>
 
                 {/* Tickets on desktop (second column) */}
                 <div className="hidden lg:flex lg:flex-col lg:overflow-y-auto min-h-0 flex-col gap-20 p-4 pt-0">
-                    {tickets.map(ticket => (
-                        <UpcomingTicket key={ticket.ticketId} ticket={ticket} event={event} />
-                    ))}
+                    <TicketViewer tickets={tickets} event={event}/>
                 </div>
             </main>
 
