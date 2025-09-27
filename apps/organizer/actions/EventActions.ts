@@ -174,3 +174,84 @@ export async function UpdateCheckersListAction(eventId: string,  accessToken: st
         }
     }
 }
+
+export async function MarkAsActive(eventId: string,  accessToken: string, pathname : string) {
+    try {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/mark-as-active`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${accessToken}`
+            },
+        })
+        const response = await request.json()
+        
+
+        if (response.status === 'success') {
+            revalidatePath(pathname)
+            return {
+                status: "success",
+            }
+        } else {
+            throw new Error(response.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
+
+export async function MarkAsInactive(eventId: string,  accessToken: string, pathname : string) {
+    try {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/mark-as-inactive`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${accessToken}`
+            },
+        })
+        const response = await request.json()
+        
+
+        if (response.status === 'success') {
+            revalidatePath(pathname)
+            return {
+                status: "success",
+            }
+        } else {
+            throw new Error(response.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}
+
+export async function CheckInWithTicketID(eventId: string,  accessToken: string, pathname : string, ticketID: string) {
+    try {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/ticket-id/${ticketID}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${accessToken}`
+            },
+        })
+        const response = await request.json()
+        
+
+        if (response.status === 'success') {
+            // revalidatePath(pathname)
+            return {
+                status: "success",
+            }
+        } else {
+            throw new Error(response.message)
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message ?? 'An unknown error occurred'
+        }
+    }
+}

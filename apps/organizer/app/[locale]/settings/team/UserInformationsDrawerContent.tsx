@@ -95,7 +95,7 @@ export default function UserInformation({ member }: { member: OrganisationMember
             >
               {t('last_login')}
               <span className={'text-deep-100 font-medium leading-[20px] max-w-[399px] text-right'}>
-                {FormatDate(member.lastLogin)}
+                {member.lastLogin === null ? 'N/A' : FormatDate(member.lastLogin)}
               </span>
             </span>
           </span>

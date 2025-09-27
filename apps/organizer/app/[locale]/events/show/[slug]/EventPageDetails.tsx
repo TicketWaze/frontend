@@ -6,7 +6,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@workspace/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs'
 import TopBar from '@workspace/ui/components/TopBar'
 import Capitalize from '@workspace/ui/lib/Capitalize'
-import { Copy, HambergerMenu, Money3, MoreCircle, Scanner, SecurityUser, Send2, TicketDiscount } from 'iconsax-react'
+import { Copy, HambergerMenu, Money3, MoreCircle, ScanBarcode, Scanner, SecurityUser, Send2, TicketDiscount } from 'iconsax-react'
 import { useTranslations } from 'next-intl'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -23,12 +23,15 @@ import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
-import { UpdateCheckersListAction } from '@/actions/EventActions'
+import { MarkAsActive, MarkAsInactive, UpdateCheckersListAction } from '@/actions/EventActions'
 import User from '@/types/User'
+import PageLoader from '@/components/Loaders/PageLoader'
+import { Input } from '@workspace/ui/components/Inputs'
 
 export default function EventPageDetails({ event, tickets, slug, organisationCheckers, user, eventCheckers }: { event: Event, tickets: Ticket[], slug: string; organisationCheckers: any, user: User, eventCheckers: any }) {
   const t = useTranslations('Events.single_event')
   const isFree = event.eventTicketTypes[0]?.ticketTypePrice == 0
+  const [isLoading, setIsLoading] = useState(false)
   const pathname = usePathname()
   const desiredOrder = ['general', 'vip', 'vvip']
   const sortedTicketClasses = [...event.eventTicketTypes].sort((a, b) => {
@@ -64,14 +67,93 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
     }
     closeRef.current?.click()
   }
+  async function MarkEventAsActive() {
+    setIsLoading(true)
+    const result = await MarkAsActive(event.eventId, user.accessToken, pathname)
+    if (result.status !== 'success') {
+      toast.error(result.error)
+    }
+    setIsLoading(false)
+  }
+  async function MarkEventAsInactive() {
+    setIsLoading(true)
+    const result = await MarkAsInactive(event.eventId, user.accessToken, pathname)
+    if (result.status !== 'success') {
+      toast.error(result.error)
+    }
+    setIsLoading(false)
+  }
+  const [ticketID, setTicketID] = useState('')
+  const [ticketIdError, setTicketIdError] = useState('')
+  async function CheckTicketID() {
+    setIsLoading(true)
+    if (ticketID.trim()) {
+      const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checking/event/${event.eventId}/ticket-id/${ticketID}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${user.accessToken}`
+        },
+      })
+      const response = await request.json()
+      if(response.status === 'success'){
+        toast.success('success')
+        setTicketID('')
+      }else{
+        toast.error(response.message)
+      }
+    } else {
+      setTicketIdError('Enter TicketID')
+    }
+    setIsLoading(false)
+  }
   return (
     <div className={'flex flex-col gap-[3rem] overflow-y-scroll'}>
+      <PageLoader isLoading={isLoading} />
       <TopBar title={event.eventName}>
         <div className='flex items-center gap-4'>
-          <span className='px-[15px] py-[7.5px] border-2 border-transparent rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center gap-4 bg-neutral-100 text-neutral-700'>
-            <Scanner variant={'Bulk'} color={'#737C8A'} size={20} />
-            {t('check_in')}
-          </span>
+
+          <Dialog>
+            <DialogTrigger>
+              <span className='px-[15px] py-[7.5px] border-2 border-transparent rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center gap-4 bg-neutral-100 text-neutral-700'>
+                <Scanner variant={'Bulk'} color={'#737C8A'} size={20} />
+                {t('check_in')}
+              </span>
+            </DialogTrigger>
+            <DialogContent className={'w-[360px] lg:w-[520px] '}>
+              <DialogHeader>
+                <DialogTitle
+                  className={
+                    'font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary'
+                  }
+                >
+                  {t('check_in')}
+                </DialogTitle>
+                <DialogDescription className={'sr-only'}>
+                  <span>Share event</span>
+                </DialogDescription>
+              </DialogHeader>
+              <div className={'flex flex-col w-auto justify-center items-center gap-[30px]'}>
+                <p
+                  className={
+                    'font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full'
+                  }
+                >
+                  {t('check_in_description')}
+                </p>
+                <div className='w-full'>
+                  <Input value={ticketID} onChange={e => setTicketID(e.target.value)} error={ticketIdError}>{t('ticketID')}</Input>
+                  <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
+                    {errors.eventCheckers?.message}
+                  </span>
+                </div>
+              </div>
+              <DialogFooter>
+                <ButtonPrimary onClick={CheckTicketID} disabled={isLoading} className='w-full'>{isLoading ? <LoadingCircleSmall /> : t('check_in')}</ButtonPrimary>
+                <DialogClose ref={closeRef} className='sr-only'></DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           {/* Share Event */}
           {daysLeft !== null && daysLeft > 0 && <Dialog>
             <DialogTrigger>
@@ -178,7 +260,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
                       <DrawerTrigger
                         className={'w-full'}>
                         <div
-                          className={`font-normal cursor-pointer group text-[1.5rem]  border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                          className={`font-normal cursor-pointer group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
                         >
                           <span className={''}>{t('details')}</span>
                           <HambergerMenu size="20" variant="Bulk" color={'#2E3237'} />
@@ -191,7 +273,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
                     <Dialog>
                       <DialogTrigger className='w-full'>
                         <div
-                          className={`font-normal cursor-pointer group text-[1.5rem]  border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                          className={`font-normal cursor-pointer group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
                         >
                           <span className={''}>{t('checkers')}</span>
                           <SecurityUser size="20" variant="Bulk" color={'#2E3237'} />
@@ -250,6 +332,30 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
                       </DialogContent>
                     </Dialog>
                   </li>
+                  {event.isActive ?
+                    <li>
+                      <button
+                        onClick={MarkEventAsInactive}
+                        className={`cursor-pointer font-normal group text-[1.5rem]  py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                      >
+                        <span className={'text-failure'}>
+                          {t('stopChecking')}
+                        </span>
+                        <ScanBarcode size="20" variant="Bulk" color={'#DE0028'} />
+                      </button>
+                    </li> :
+                    <li>
+                      <button onClick={MarkEventAsActive}
+                        className={`cursor-pointer font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                      >
+                        <span className={'text-primary-500'}>
+                          {t('startChecking')}
+                        </span>
+                        <ScanBarcode size="20" variant="Bulk" color={'#E45B00'} />
+                      </button>
+                    </li>
+                  }
+
 
                   {/*<li className={''}>*/}
                   {/*  <button*/}
@@ -274,14 +380,14 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
             {t('revenue')}
           </span>
           <p className={'font-medium text-[25px] leading-[30px] font-primary'}>
-            {'N/A'}{' '}
+            {tickets.reduce((acc, curr) => acc + curr.ticketPrice, 0)}{' '}
             <span className={'font-normal text-[1.6rem] lg:text-[25px] text-neutral-500'}>
               HTG
             </span>
           </p>
         </li>
         {event.eventTicketTypes.map((t, index) => {
-          const quantity = tickets.filter(ticket => ticket.ticketType === t.ticketTypeName).length
+          const quantity = tickets.filter(ticket => ticket.ticketType.toLowerCase() === t.ticketTypeName.toLowerCase()).length
           return (
             <li
               key={t.ticketTypeName}
