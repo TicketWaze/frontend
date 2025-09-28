@@ -5,18 +5,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/componen
 import Organisation from '@/types/Organisation'
 import OrganizerCard from './OrganizerCard'
 import { SearchNormal, Ticket } from 'iconsax-react'
+import { useSession } from 'next-auth/react'
 
 export default function OrganizersContents({ organisations, followedOrganisations }: { organisations: Organisation[]; followedOrganisations: Organisation[] }) {
     const t = useTranslations('Organizers')
+    const {data:session} = useSession()
     const [query, setQuery] = useState('')
     const filteredOrganisations = organisations.filter((organisation) => {
         const search = query.toLowerCase()
         return organisation.organisationName.toLowerCase().includes(search)
     })
-    const filteredFollowedOrganisations = followedOrganisations.filter((organisation) => {
+    const filteredFollowedOrganisations = session?.user ?  followedOrganisations.filter((organisation) => {
         const search = query.toLowerCase()
         return organisation.organisationName.toLowerCase().includes(search)
-    })
+    }) : []
     const [mobileSearch, setMobileSearch] = useState(false)
     return (
         <>
@@ -68,7 +70,7 @@ export default function OrganizersContents({ organisations, followedOrganisation
             <Tabs defaultValue="all" className="w-full h-full min-h-0">
                 <TabsList className={'w-full lg:w-fit mx-auto lg:mx-0'}>
                     <TabsTrigger value="all">{t('filters.all')}</TabsTrigger>
-                    <TabsTrigger value="following">{t('filters.following')}</TabsTrigger>
+                    {session?.user && <TabsTrigger value="following">{t('filters.following')}</TabsTrigger>}
                     {/* <TabsTrigger value="popular">{t('filters.popular')}</TabsTrigger> */}
                 </TabsList>
                 <TabsContent value='all' className='min-h-0 overflow-y-scroll'>
@@ -98,7 +100,7 @@ export default function OrganizersContents({ organisations, followedOrganisation
                         <span className='font-primary text-[1.8rem] leading-8 text-neutral-600'>{t('profile.noResult')} <span className='text-deep-100'>{query}</span></span>
                     </div>}
                 </TabsContent>
-                <TabsContent value='following'>
+                {session?.user && <TabsContent value='following'>
                     <ul className='list pt-4'>
                         {filteredFollowedOrganisations.map(organisation => {
                             const events = organisation.events.length
@@ -124,7 +126,7 @@ export default function OrganizersContents({ organisations, followedOrganisation
                         </div>
                         <span className='font-primary text-[1.8rem] leading-8 text-neutral-600'>{t('profile.noResult')} <span className='text-deep-100'>{query}</span></span>
                     </div>}
-                </TabsContent>
+                </TabsContent>}
             </Tabs>
         </>
     )

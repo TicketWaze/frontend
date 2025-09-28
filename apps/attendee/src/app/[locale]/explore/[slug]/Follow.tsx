@@ -1,9 +1,12 @@
 'use client'
 import { FollowOrganisationAction } from '@/actions/userActions'
+import NoAuthDialog from '@/components/Layouts/NoAuthDialog'
 import PageLoader from '@/components/Loaders/PageLoader'
 import { usePathname } from '@/i18n/navigation'
 import User from '@/types/User'
 import { ButtonBlack } from '@workspace/ui/components/buttons'
+import { Dialog, DialogTrigger } from '@workspace/ui/components/dialog'
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
@@ -20,10 +23,21 @@ export default function Follow({ user, organisationId }: { user: User, organisat
         }
         setIsLoading(false)
     }
+    const { data: session } = useSession()
     return (
         <>
             {isLoading && <PageLoader isLoading={isLoading} />}
-            <ButtonBlack onClick={FollowOrganisation} >{t("follow")}</ButtonBlack>
+            {session?.user ?
+                <ButtonBlack onClick={FollowOrganisation} >{t("follow")}</ButtonBlack>
+                :
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <ButtonBlack>{t("follow")}</ButtonBlack>
+                    </DialogTrigger>
+                    <NoAuthDialog />
+                </Dialog>
+            }
+
         </>
     )
 }

@@ -1,5 +1,6 @@
 'use client'
 import { AddEventToFavorite, AddReportEvent, RemoveEventToFavorite } from '@/actions/eventActions'
+import NoAuthDialog from '@/components/Layouts/NoAuthDialog'
 import { LinkPrimary } from '@/components/Links'
 import PageLoader from '@/components/Loaders/PageLoader'
 import { usePathname } from '@/i18n/navigation'
@@ -13,6 +14,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
 import { Popover, PopoverContent, PopoverTrigger } from '@workspace/ui/components/popover'
 import { Copy, Heart, MoreCircle, Send2, Warning2 } from 'iconsax-react'
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -22,6 +24,7 @@ import z from 'zod'
 export default function EventActions({ event, user, isFavorite }: { event: Event; user: User; isFavorite: boolean }) {
   const t = useTranslations("Event")
   const [currentUrl, setCurrentUrl] = useState('')
+  const { data: session } = useSession()
   useEffect(() => {
     setCurrentUrl(window.location.href)
   }, [])
@@ -146,11 +149,20 @@ export default function EventActions({ event, user, isFavorite }: { event: Event
             </div>
           </DialogContent>
         </Dialog>
-        {isFavorite ? <button disabled={isLoading} onClick={RemoveToFavorite} className='w-[35px] h-[35px] group flex items-center justify-center rounded-[30px] cursor-pointer bg-primary-100'>
+        {session?.user && isFavorite && <button disabled={isLoading} onClick={RemoveToFavorite} className='w-[35px] h-[35px] group flex items-center justify-center rounded-[30px] cursor-pointer bg-primary-100'>
           <Heart size="20" color='#E45B00' variant="Bulk" />
-        </button> : <button disabled={isLoading} onClick={AddToFavorite} className='w-[35px] h-[35px] group flex items-center justify-center bg-neutral-100 rounded-[30px] cursor-pointer hover:bg-primary-100 transition-all ease-in-out duration-500'>
+        </button>}
+        {session?.user && !isFavorite && <button disabled={isLoading} onClick={AddToFavorite} className='w-[35px] h-[35px] group flex items-center justify-center bg-neutral-100 rounded-[30px] cursor-pointer hover:bg-primary-100 transition-all ease-in-out duration-500'>
           <Heart size="20" className='"stroke-neutral-700 fill-neutral-700 group-hover:stroke-primary-500 group-hover:fill-primary-500 transition-all ease-in-out duration-500' variant="Bulk" />
         </button>}
+        {!session?.user && <Dialog>
+          <DialogTrigger>
+            <span className='w-[35px] h-[35px] group flex items-center justify-center bg-neutral-100 rounded-[30px] cursor-pointer hover:bg-primary-100 transition-all ease-in-out duration-500'>
+              <Heart size="20" className='"stroke-neutral-700 fill-neutral-700 group-hover:stroke-primary-500 group-hover:fill-primary-500 transition-all ease-in-out duration-500' variant="Bulk" />
+            </span>
+          </DialogTrigger>
+          <NoAuthDialog />
+        </Dialog>}
 
         <Popover>
           <PopoverTrigger asChild>
@@ -169,101 +181,136 @@ export default function EventActions({ event, user, isFavorite }: { event: Event
               {t('more')}
             </span>
 
-            <Dialog>
-              <form>
-                <DialogTrigger asChild>
+            {session?.user ?
+              <Dialog>
+                <form>
+                  <DialogTrigger asChild>
+                    <div className='flex items-center gap-4 cursor-pointer'>
+                      <Warning2 size="20" color="#DE0028" variant="Bulk" />
+                      <span className='text-[1.4rem] leading-8 text-failure' >{t('reportEvent')}</span>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className='flex flex-col gap-8'>
+                    <DialogHeader>
+                      <DialogTitle>{t('reportEvent')}</DialogTitle>
+                      <DialogDescription className=' text-[1.8rem] leading-8 text-neutral-400 text-center'>
+                        {t('reportEventDescription')}
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className='flex flex-col gap-8'>
+                      <label
+                        htmlFor="inappropriateContent"
+                        // name="status"
+                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
+                      >
+                        {t('inappropriateContent')}
+                        <input
+                          type="radio"
+                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
+                          id="inappropriateContent"
+                          value={t('inappropriateContent')}
+                          {...register('status')}
+                        />
+                      </label>
+                      <label
+                        htmlFor="misleadingInformation"
+                        // name="status"
+                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
+                      >
+                        {t('misleadingInformation')}
+                        <input
+                          type="radio"
+                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
+                          id="misleadingInformation"
+                          value={t('misleadingInformation')}
+                          {...register('status')}
+                        />
+                      </label>
+                      <label
+                        htmlFor="fraud"
+                        // name="status"
+                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
+                      >
+                        {t('fraud')}
+                        <input
+                          type="radio"
+                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
+                          id="fraud"
+                          value={t('fraud')}
+                          {...register('status')}
+                        />
+                      </label>
+                      <label
+                        htmlFor="venue"
+                        // name="status"
+                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
+                      >
+                        {t('venue')}
+                        <input
+                          type="radio"
+                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
+                          id="venue"
+                          value={t('venue')}
+                          {...register('status')}
+                        />
+                      </label>
+                      <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
+                        {errors.status?.message}
+                      </span>
+                    </div>
+
+                    <DialogFooter className=''>
+                      <DialogClose ref={closeReportRef} asChild>
+                        <ButtonNeutral>{t('back')}</ButtonNeutral>
+                      </DialogClose>
+                      <ButtonPrimary type="submit" onClick={handleSubmit(ReportEvent)}>{isLoading ? <LoadingCircleSmall /> : t('reportEvent')}</ButtonPrimary>
+                    </DialogFooter>
+                  </DialogContent>
+                </form>
+              </Dialog>
+              :
+              <Dialog>
+                <DialogTrigger>
                   <div className='flex items-center gap-4 cursor-pointer'>
                     <Warning2 size="20" color="#DE0028" variant="Bulk" />
                     <span className='text-[1.4rem] leading-8 text-failure' >{t('reportEvent')}</span>
                   </div>
                 </DialogTrigger>
-                <DialogContent className='flex flex-col gap-8'>
-                  <DialogHeader>
-                    <DialogTitle>{t('reportEvent')}</DialogTitle>
-                    <DialogDescription className=' text-[1.8rem] leading-8 text-neutral-400 text-center'>
-                      {t('reportEventDescription')}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className='flex flex-col gap-8'>
-                    <label
-                      htmlFor="inappropriateContent"
-                      // name="status"
-                      className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                    >
-                      {t('inappropriateContent')}
-                      <input
-                        type="radio"
-                        className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                        id="inappropriateContent"
-                        value={t('inappropriateContent')}
-                        {...register('status')}
-                      />
-                    </label>
-                    <label
-                      htmlFor="misleadingInformation"
-                      // name="status"
-                      className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                    >
-                      {t('misleadingInformation')}
-                      <input
-                        type="radio"
-                        className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                        id="misleadingInformation"
-                        value={t('misleadingInformation')}
-                        {...register('status')}
-                      />
-                    </label>
-                    <label
-                      htmlFor="fraud"
-                      // name="status"
-                      className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                    >
-                      {t('fraud')}
-                      <input
-                        type="radio"
-                        className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                        id="fraud"
-                        value={t('fraud')}
-                        {...register('status')}
-                      />
-                    </label>
-                    <label
-                      htmlFor="venue"
-                      // name="status"
-                      className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                    >
-                      {t('venue')}
-                      <input
-                        type="radio"
-                        className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                        id="venue"
-                        value={t('venue')}
-                        {...register('status')}
-                      />
-                    </label>
-                    <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
-                      {errors.status?.message}
-                    </span>
-                  </div>
-
-                  <DialogFooter className=''>
-                    <DialogClose ref={closeReportRef} asChild>
-                      <ButtonNeutral>{t('back')}</ButtonNeutral>
-                    </DialogClose>
-                    <ButtonPrimary type="submit" onClick={handleSubmit(ReportEvent)}>{isLoading ? <LoadingCircleSmall /> : t('reportEvent')}</ButtonPrimary>
-                  </DialogFooter>
-                </DialogContent>
-              </form>
-            </Dialog>
+                <NoAuthDialog />
+              </Dialog>
+            }
             <div className='h-[1px] bg-neutral-200 w-full'></div>
-            <div className='flex items-center gap-4'>
-              <Warning2 size="20" color="#DE0028" variant="Bulk" />
-              <span className='text-[1.4rem] leading-8 text-failure' >{t('reportOrg')}</span>
-            </div>
+
+            {session?.user ?
+              <div className='flex items-center gap-4'>
+                <Warning2 size="20" color="#DE0028" variant="Bulk" />
+                <span className='text-[1.4rem] leading-8 text-failure' >{t('reportOrg')}</span>
+              </div>
+              :
+              <Dialog>
+                <DialogTrigger>
+                  <div className='flex items-center gap-4'>
+                    <Warning2 size="20" color="#DE0028" variant="Bulk" />
+                    <span className='text-[1.4rem] leading-8 text-failure' >{t('reportOrg')}</span>
+                  </div>
+                </DialogTrigger>
+                <NoAuthDialog />
+              </Dialog>
+            }
           </PopoverContent>
         </Popover>
+
       </div>
-      <LinkPrimary href={`/explore/${Slugify(event.eventName)}/checkout`}>{t('buy')}</LinkPrimary>
+      {session?.user ?
+        <LinkPrimary href={`/explore/${Slugify(event.eventName)}/checkout`}>{t('buy')}</LinkPrimary> :
+        <Dialog>
+          <DialogTrigger>
+            <span className='px-[3rem] py-[15px] border-2 border-transparent rounded-[100px] text-center text-white font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center bg-primary-500 disabled:bg-primary-500/50 hover:bg-primary-500/80 hover:border-primary-600'>{t('buy')}</span>
+          </DialogTrigger>
+          <NoAuthDialog />
+        </Dialog>
+      }
+
     </div>
   )
 }

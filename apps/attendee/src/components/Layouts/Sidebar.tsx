@@ -3,22 +3,24 @@ import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
 import Logo from "@workspace/ui/assets/images/logo-horizontal-orange.svg";
 import Image from "next/image";
-import { Chart1, Clock, I24Support, Logout, Moneys, Setting, Setting2, Setting5, Star, Ticket, User, UserSquare } from "iconsax-react";
+import { Clock, I24Support, Logout, Setting, Setting5, Star, Ticket, User, UserSquare } from "iconsax-react";
 import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog";
+import NoAuthDialog from "./NoAuthDialog";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");
   const pathname = usePathname();
 
   const eventsLinks = [
-    {
-      label: t("links.explore"),
-      path: `/explore`,
-      Icon: Ticket,
-    },
+    // {
+    //   label: t("links.explore"),
+    //   path: `/explore`,
+    //   Icon: Ticket,
+    // },
     {
       label: t("links.upcoming"),
       path: `/upcoming`,
@@ -29,11 +31,11 @@ function Sidebar({ className }: { className: string }) {
       path: `/history`,
       Icon: Clock,
     },
-    {
-      label: t("links.organizers"),
-      path: `/organizers`,
-      Icon: UserSquare,
-    },
+    // {
+    //   label: t("links.organizers"),
+    //   path: `/organizers`,
+    //   Icon: UserSquare,
+    // },
   ];
   const userLinks = [
     {
@@ -74,6 +76,7 @@ function Sidebar({ className }: { className: string }) {
     );
   }
   const locale = useLocale()
+  const { data: session } = useSession()
 
   return (
     <aside className={cn("flex-col hidden lg:flex overflow-y-auto min-h-0", className)}>
@@ -82,29 +85,82 @@ function Sidebar({ className }: { className: string }) {
         <nav>
           <div className={`mb-4 uppercase font-medium text-[1.4rem] leading-8 ${isEventGroupActive() ? 'text-neutral-900' : 'text-neutral-600'}`}>{t('links.title1')}</div>
           <ul className="flex flex-col gap-4">
+            <li>
+              <Link href={'/explore'} className={`group flex items-center gap-4 py-4 relative text-[1.5rem] leading-[20px] ${isActive('/explore') ? 'font-semibold text-primary-500 is-active' : 'text-neutral-700 hover:text-primary-500'}`}>
+                <Ticket
+                  size="20"
+                  className={`transition-all duration-500 ${isActive('/explore') ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
+                  // className={`${isActive(path) ? "fill-icon-active" : "fill-icon"} group-hover:fill-icon-active`}
+                  variant="Bulk"
+                />
+                <span>{t("links.explore")}</span>
+                <div
+                  className={
+                    'absolute right-0  opacity-0 group-[.is-active]:translate-x-0 group-[.is-active]:opacity-100 transition-all duration-500 bg-primary-500 w-[2px] h-full'
+                  }
+                ></div>
+              </Link>
+            </li>
             {eventsLinks.map(({ path, Icon, label }) => {
               return (
                 <li key={label}>
-                  <Link href={path} className={`group flex items-center gap-4 py-4 relative text-[1.5rem] leading-[20px] ${isActive(path) ? 'font-semibold text-primary-500 is-active' : 'text-neutral-700 hover:text-primary-500'}`}>
-                    <Icon
-                      size="20"
-                      className={`transition-all duration-500 ${isActive(path) ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
-                      // className={`${isActive(path) ? "fill-icon-active" : "fill-icon"} group-hover:fill-icon-active`}
-                      variant="Bulk"
-                    />
-                    <span>{label}</span>
-                    <div
-                      className={
-                        'absolute right-0  opacity-0 group-[.is-active]:translate-x-0 group-[.is-active]:opacity-100 transition-all duration-500 bg-primary-500 w-[2px] h-full'
-                      }
-                    ></div>
-                  </Link>
+                  {session?.user ?
+                    <Link href={path} className={`group flex items-center gap-4 py-4 relative text-[1.5rem] leading-[20px] ${isActive(path) ? 'font-semibold text-primary-500 is-active' : 'text-neutral-700 hover:text-primary-500'}`}>
+                      <Icon
+                        size="20"
+                        className={`transition-all duration-500 ${isActive(path) ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
+                        // className={`${isActive(path) ? "fill-icon-active" : "fill-icon"} group-hover:fill-icon-active`}
+                        variant="Bulk"
+                      />
+                      <span>{label}</span>
+                      <div
+                        className={
+                          'absolute right-0  opacity-0 group-[.is-active]:translate-x-0 group-[.is-active]:opacity-100 transition-all duration-500 bg-primary-500 w-[2px] h-full'
+                        }
+                      ></div>
+                    </Link> :
+                    <Dialog>
+                      <DialogTrigger>
+                        <div className={`group flex cursor-pointer items-center gap-4 py-4 relative text-[1.5rem] leading-[20px] ${isActive(path) ? 'font-semibold text-primary-500 is-active' : 'text-neutral-700 hover:text-primary-500'}`}>
+                          <Icon
+                            size="20"
+                            className={`transition-all duration-500 ${isActive(path) ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
+                            // className={`${isActive(path) ? "fill-icon-active" : "fill-icon"} group-hover:fill-icon-active`}
+                            variant="Bulk"
+                          />
+                          <span>{label}</span>
+                          <div
+                            className={
+                              'absolute right-0  opacity-0 group-[.is-active]:translate-x-0 group-[.is-active]:opacity-100 transition-all duration-500 bg-primary-500 w-[2px] h-full'
+                            }
+                          ></div>
+                        </div>
+                      </DialogTrigger>
+                      <NoAuthDialog />
+                    </Dialog>
+                  }
                 </li>
               );
             })}
+            <li>
+              <Link href={'/organizers'} className={`group flex items-center gap-4 py-4 relative text-[1.5rem] leading-[20px] ${isActive('/organizers') ? 'font-semibold text-primary-500 is-active' : 'text-neutral-700 hover:text-primary-500'}`}>
+                <UserSquare
+                  size="20"
+                  className={`transition-all duration-500 ${isActive('/organizers') ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
+                  // className={`${isActive(path) ? "fill-icon-active" : "fill-icon"} group-hover:fill-icon-active`}
+                  variant="Bulk"
+                />
+                <span>{t("links.organizers")}</span>
+                <div
+                  className={
+                    'absolute right-0  opacity-0 group-[.is-active]:translate-x-0 group-[.is-active]:opacity-100 transition-all duration-500 bg-primary-500 w-[2px] h-full'
+                  }
+                ></div>
+              </Link>
+            </li>
           </ul>
         </nav>
-        <nav>
+        {session?.user && <nav>
           <div className={`mb-4 uppercase font-medium text-[1.4rem] leading-8 ${isUserGroupActive() ? 'text-neutral-900' : 'text-neutral-600'}`}>{t('links.title2')}</div>
           <ul className="flex flex-col gap-4">
             {userLinks.map(({ path, Icon, label }) => {
@@ -142,7 +198,7 @@ function Sidebar({ className }: { className: string }) {
               <span className={`text-[1.5rem] leading-4 text-neutral-700 cursor-pointer`}>{t('logout')}</span>
             </button>
           </ul>
-        </nav>
+        </nav>}
       </div>
       {/* <div className="bg-neutral-300 rounded-[12.5px] p-[2.5px]">
         test

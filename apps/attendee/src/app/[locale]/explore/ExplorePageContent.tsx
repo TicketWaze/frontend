@@ -2,13 +2,11 @@
 import EventCard from '@/components/EventCard'
 import Slugify from '@/lib/Slugify'
 import Event from '@/types/Event'
-import User from '@/types/User'
 import { SearchNormal, Ticket } from 'iconsax-react'
-import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 
-export default function ExplorePageContent({ events, user }: { events: Event[]; user: User }) {
+export default function ExplorePageContent({ events }: { events: Event[] }) {
   const t = useTranslations("Explore")
   const [query, setQuery] = useState('')
   const filteredEvents = events.filter((event) => {
@@ -21,7 +19,7 @@ export default function ExplorePageContent({ events, user }: { events: Event[]; 
     <>
       <header className='w-full flex items-center justify-between'>
         <div className='flex flex-col gap-[5px]'>
-          <span className='text-[1.6rem] leading-8 text-neutral-600'>{t('subtitle')} <span className='text-deep-100'>{user.firstName}</span></span>
+          {/* <span className='text-[1.6rem] leading-8 text-neutral-600'>{t('subtitle')} <span className='text-deep-100'>{user.firstName}</span></span> */}
           <span className='font-primary font-medium text-[1.8rem] lg:text-[2.6rem] leading-[2.5rem] lg:leading-12 text-black'>{t('title')}</span>
         </div>
         <div className={'flex items-center gap-4 '}>

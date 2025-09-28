@@ -1,22 +1,25 @@
 'use client'
 import { Link, usePathname } from '@/i18n/navigation';
 import { cn } from '@workspace/ui/lib/utils'
-import { Chart1, Clock, Moneys, Setting2, Star, Ticket, User, UserSquare, HambergerMenu, Setting5, Setting, I24Support, Logout } from 'iconsax-react';
+import { Clock, Star, Ticket, User, UserSquare, HambergerMenu, Setting5, Setting, I24Support, Logout } from 'iconsax-react';
 import { useLocale, useTranslations } from 'next-intl';
 import React from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover"
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { Dialog, DialogTrigger } from '@workspace/ui/components/dialog';
+import NoAuthDialog from './NoAuthDialog';
 
 export default function MobileNavigation({ className }: { className?: string; }) {
   const t = useTranslations("Layout.sidebar");
   const pathname = usePathname();
   const locale = useLocale()
+  const { data: session } = useSession()
   const links = [
-    {
-      label: t("links.explore"),
-      path: `/explore`,
-      Icon: Ticket,
-    },
+    // {
+    //   label: t("links.explore"),
+    //   path: `/explore`,
+    //   Icon: Ticket,
+    // },
     {
       label: t("links.upcoming"),
       path: `/upcoming`,
@@ -28,7 +31,7 @@ export default function MobileNavigation({ className }: { className?: string; })
       Icon: User,
     },
   ];
-  const moreLinks = [
+  const moreLinks = session?.user ? [
     {
       label: t("links.history"),
       path: `/history`,
@@ -49,7 +52,14 @@ export default function MobileNavigation({ className }: { className?: string; })
       path: `/settings`,
       Icon: Setting,
     },
-  ];
+  ] : 
+  [
+    {
+      label: t("links.organizers"),
+      path: `/organizers`,
+      Icon: UserSquare,
+    },
+  ]
 
   function isMoreLinkActive(path: string) {
     return path.startsWith('/history') || path.startsWith('/organizers') || path.startsWith('/preferences') || path.startsWith('/settings')
@@ -61,10 +71,23 @@ export default function MobileNavigation({ className }: { className?: string; })
     <nav
       className={cn(`lg:hidden rounded-t-3xl px-[1.5rem]`, className)}>
       <ul className={' flex gap-4 justify-between w-full'}>
+        <li>
+          <Link
+            href={'/explore'}
+            className={` group font-normal group text-[1.5rem] leading-[20px] text-neutral-700 hover:text-primary-500 flex flex-col items-center  gap-4 ${isActive('/explore') && 'font-semibold text-primary-500 is-active'}`}
+          >
+            <Ticket
+              size="20"
+              className={`transition-all duration-500 ${isActive('/explore') ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
+              variant="Bulk"
+            />
+            <span className={''}>{t("links.explore")}</span>
+          </Link>
+        </li>
         {links.map(({ label, Icon, path }) => {
           return (
             <li key={path}>
-              <Link
+              {session?.user ? <Link
                 href={path}
                 className={` group font-normal group text-[1.5rem] leading-[20px] text-neutral-700 hover:text-primary-500 flex flex-col items-center  gap-4 ${isActive(path) && 'font-semibold text-primary-500 is-active'}`}
               >
@@ -74,7 +97,23 @@ export default function MobileNavigation({ className }: { className?: string; })
                   variant="Bulk"
                 />
                 <span className={''}>{label}</span>
-              </Link>
+              </Link> :
+                <Dialog>
+                  <DialogTrigger>
+                    <div
+                      className={` group font-normal group text-[1.5rem] leading-[20px] text-neutral-700 hover:text-primary-500 flex flex-col items-center  gap-4 ${isActive(path) && 'font-semibold text-primary-500 is-active'}`}
+                    >
+                      <Icon
+                        size="20"
+                        className={`transition-all duration-500 ${isActive(path) ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
+                        variant="Bulk"
+                      />
+                      <span className={''}>{label}</span>
+                    </div>
+                  </DialogTrigger>
+                  <NoAuthDialog />
+                </Dialog>
+              }
             </li>
           )
         })}
@@ -125,7 +164,7 @@ export default function MobileNavigation({ className }: { className?: string; })
                     )
                   })}
                   <div className='bg-neutral-200 h-[1px] w-full'></div>
-                  <Link target='_blank'  href={`https://ticketwaze.com/${locale}/contact`} className='flex items-center gap-4 py-4'>
+                  <Link target='_blank' href={`https://ticketwaze.com/${locale}/contact`} className='flex items-center gap-4 py-4'>
                     <I24Support
                       size="20"
                       color='#737C8A'
@@ -133,10 +172,10 @@ export default function MobileNavigation({ className }: { className?: string; })
                     />
                     <span className={`text-[1.5rem] leading-4 text-neutral-700`}>{t('help')}</span>
                   </Link>
-                  <button onClick={()=>signOut({redirect: true, redirectTo : process.env.NEXT_PUBLIC_APP_URL})} className='flex items-center gap-4 py-4'>
+                  {session?.user && <button onClick={() => signOut({ redirect: true, redirectTo: process.env.NEXT_PUBLIC_APP_URL })} className='flex items-center gap-4 py-4'>
                     <Logout size="20" color="#737c8a" variant="Bulk" />
                     <span className={`text-[1.5rem] leading-4 text-neutral-700`}>{t('logout')}</span>
-                  </button>
+                  </button>}
                 </ul>
               </div>
             </PopoverContent>

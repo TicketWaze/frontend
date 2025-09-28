@@ -7,11 +7,13 @@ import React, { useState } from 'react'
 import Unfollow from '../../explore/[slug]/Unfollow'
 import Follow from '../../explore/[slug]/Follow'
 import Event from '@/types/Event'
+import { useSession } from 'next-auth/react'
 
 export default function OrganizerActions({ user, organisation, events }: { user: User; organisation: any; events: Event[] }) {
     const t = useTranslations("Organizers")
+    const {data:session} = useSession()
     const [isLoading, setIsLoading] = useState(false)
-    const isFollowing = organisation.followers.filter((follower: any) => follower.userId === user.userId)
+    const isFollowing = session?.user ? organisation.followers.filter((follower: any) => follower.userId === user.userId) : false
     return (
         <div className='flex flex-col gap-8'>
             <div className='flex items-center justify-between'>

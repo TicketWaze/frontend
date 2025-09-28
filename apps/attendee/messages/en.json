@@ -200,6 +200,12 @@
       "back": "Back",
       "notification": "Notifications",
       "view": "View"
+    },
+    "noAuth" : {
+      "title" : "You are not Logged in",
+      "description" : "Access your account to securely manage tickets, complete actions, and enjoy a seamless event experience.",
+      "cancel" : "Cancel",
+      "proceed" : "Proceed"
     }
   },
   "Explore": {
