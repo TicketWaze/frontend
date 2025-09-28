@@ -200,6 +200,12 @@
             "back": "Retour",
             "notification": "Notifications",
             "view": "Voir"
+        },
+        "noAuth": {
+            "title": "Vous n'êtes pas connecté",
+            "description": "Accédez à votre compte pour gérer vos billets en toute sécurité, effectuer des actions et profiter d’une expérience événementielle fluide.",
+            "cancel": "Annuler",
+            "proceed": "Continuer"
         }
     },
     "Explore": {
