@@ -1,11 +1,8 @@
 'use client'
 import { UpdateOrganisationProfile } from '@/actions/organisationActions'
-import organisationStore from '@/store/OrganisationStore'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useStore } from '@tanstack/react-store'
 import { Input } from '@workspace/ui/components/Inputs'
 import Capitalize from '@workspace/ui/lib/Capitalize'
-import { Instagram } from 'iconsax-react'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import React from 'react'
@@ -16,7 +13,7 @@ import * as z from 'zod'
 export default function ProfileForm() {
   // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
   const t = useTranslations('Settings.profile')
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
   const organisation = session?.activeOrganisation
   // const organisation = session?.user.organisations[0]
 
@@ -40,14 +37,14 @@ export default function ProfileForm() {
       toast.error(result.error)
     } else {
       toast.success(Capitalize(result.status ?? ''))
-      organisationStore.setState(() => {
-        return {
-          state: {
-            organisation: result.organisation
-          }
-        }
-
-      })
+      if (result.organisation) {
+                    await update({
+                        ...session,
+                        activeOrganisation: {
+                            ...result.organisation
+                        }
+                    })
+                }
     }
   }
   return (

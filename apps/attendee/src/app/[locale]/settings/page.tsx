@@ -7,11 +7,16 @@ import AppLanguage from './AppLanguage'
 import SendIcon from './send-sqaure-2.svg'
 import Image from 'next/image'
 import Separator from '@/components/Separator'
-import { Link } from '@/i18n/navigation'
+import { Link, redirect } from '@/i18n/navigation'
+import { auth } from '@/lib/auth'
 
 export default async function Settings() {
     const t = await getTranslations('Settings')
     const locale = await getLocale()
+    const session = await auth()
+    if (!session) {
+        redirect({ href: '/auth/login', locale })
+    }
     return (
         <AttendeeLayout title={t('title')}>
             <SimpleTopbar title={t('title')} />

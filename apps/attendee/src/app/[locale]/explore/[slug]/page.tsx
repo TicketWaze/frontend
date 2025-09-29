@@ -16,6 +16,7 @@ import { auth } from '@/lib/auth'
 import User from '@/types/User'
 import Unfollow from './Unfollow'
 import Map from './MapComponent'
+import { Link } from '@/i18n/navigation'
 
 export default async function EventPage({
   params,
@@ -230,7 +231,7 @@ export default async function EventPage({
               </span>
               {/*  organizer*/}
               <div className={"flex items-center justify-between w-full"}>
-                <div className={"flex items-center gap-4"}>
+                <Link href={`/organizers/${organisation.organisationId}`} className={"flex items-center gap-4"}>
                   {organisation?.profileImageUrl ? <Image src={organisation.profileImageUrl} width={35} height={35} alt={organisation.organisationName} className="rounded-full" /> : <span
                     className="w-[35px] h-[35px] flex items-center justify-center bg-black rounded-full text-white uppercase font-medium text-[2.2rem] leading-[30px] font-primary"
                   >
@@ -252,10 +253,8 @@ export default async function EventPage({
                       {organisation.followers.length} {t("followers")}
                     </span>
                   </div>
-                </div>
+                </Link>
                 {isFollowing.length > 0 ? <Unfollow user={session?.user as User} organisationId={event.organisationId} /> : <Follow user={session?.user as User} organisationId={event.organisationId} />}
-
-
               </div>
               {/*  date*/}
               <div className={"flex items-center gap-[5px]"}>

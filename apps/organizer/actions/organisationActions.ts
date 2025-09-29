@@ -38,7 +38,8 @@ export async function UpdateOrganisationProfileImage(organisationId: string, acc
             revalidatePath('/settings/profile')
             return {
                 status: 'success',
-                message: "Image Uploaded"
+                message: "Image Uploaded",
+                profileImageUrl : data.profileImageUrl
             }
         } else {
             return {
@@ -85,6 +86,7 @@ export async function UpdateOrganisationNotificationPreferences(organisationId: 
             }
 
         } else {
+            revalidatePath('/settings/notification')
             throw new Error(data.message)
         }
     } catch (error: any) {

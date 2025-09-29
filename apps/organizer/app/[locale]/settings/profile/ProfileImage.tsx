@@ -1,9 +1,4 @@
 'use client'
-import { UpdateUserProfileImage } from '@/actions/userActions'
-import organisationStore from '@/store/OrganisationStore'
-import Organisation from '@/types/Organisation'
-import User from '@/types/User'
-import { useStore } from '@tanstack/react-store'
 import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
 import { Image as ImageIcon, UserCirlceAdd } from 'iconsax-react'
 import { useSession } from 'next-auth/react'
@@ -21,7 +16,7 @@ import { UpdateOrganisationProfileImage } from '@/actions/organisationActions'
 
 function ProfileImage() {
     const t = useTranslations('Settings.profile')
-    const { data: session } = useSession()
+    const { data: session, update } = useSession()
     const [isUploading, setIsUploading] = useState(false)
     // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
     const organisation = session?.activeOrganisation
@@ -62,14 +57,35 @@ function ProfileImage() {
             const response = await UpdateOrganisationProfileImage(organisation?.organisationId ?? '', session?.user.accessToken ?? '', formData)
             if (response.status === 'success') {
                 toast.success(response.message)
+                
+                // Update the session with new profile image URL
+                if (response.profileImageUrl) {
+                    await update({
+                        ...session,
+                        activeOrganisation: {
+                            ...session?.activeOrganisation,
+                            profileImageUrl: response.profileImageUrl
+                        }
+                    })
+                }
+                
+                // Alternative: Force session refresh if the response doesn't include the new URL
+                // await update()
+                
             } else {
                 toast.error(response.message)
             }
         } catch (err) {
             toast.error(err instanceof Error ? err.message : String(err))
+        } finally {
+            CloseRef.current?.click()
+            setIsUploading(false)
+            // Reset cropper state
+            setImageSrc(null)
+            setCrop({ x: 0, y: 0 })
+            setZoom(1)
+            setCroppedAreaPixels(null)
         }
-        CloseRef.current?.click()
-        setIsUploading(false)
     }
 
 
@@ -116,6 +132,7 @@ function ProfileImage() {
                         className={'w-full h-full object-cover object-top'}
                         src={organisation.profileImageUrl}
                         loading={'eager'}
+                        key={organisation.profileImageUrl} // Force re-render when URL changes
                     />
                 </div>
             ) : (

@@ -3,15 +3,15 @@ import AttendeeLayout from '@/components/Layouts/AttendeeLayout'
 import Separator from '@/components/Separator'
 import { auth } from '@/lib/auth'
 import Event from '@/types/Event'
-import Organisation from '@/types/Organisation'
 import BackButton from '@workspace/ui/components/BackButton'
 import { Call, Global, Sms, Ticket } from 'iconsax-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import React from 'react'
 import OrganizerActions from './OrganizerActions'
 import User from '@/types/User'
 import Slugify from '@/lib/Slugify'
+import { redirect } from '@/i18n/navigation'
 
 export default async function OrganizerProfile({
     params,
@@ -32,6 +32,11 @@ export default async function OrganizerProfile({
     const organisation = organisationResponse.organisation
     const events: Event[] = organisation.events
     const upcomingEvents: Event[] = organisation.upcomingEvents
+
+     const locale = await getLocale()
+    if (!session) {
+        redirect({ href: '/auth/login', locale })
+    }
 
     return (
         <AttendeeLayout title='OrganizerProfile'>
