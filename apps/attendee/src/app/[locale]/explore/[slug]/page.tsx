@@ -17,6 +17,7 @@ import User from '@/types/User'
 import Unfollow from './Unfollow'
 import Map from './MapComponent'
 import { Link } from '@/i18n/navigation'
+import AddToCalendar from './AddToCalendar'
 
 export default async function EventPage({
   params,
@@ -157,6 +158,7 @@ export default async function EventPage({
                   >
                     {FormatDate(event.eventDays[0].startDate)}
                   </span>
+                  <AddToCalendar event={event}/>
                 </div>
                 {/*  time*/}
                 <div className={"flex items-center gap-[5px]"}>
@@ -270,6 +272,7 @@ export default async function EventPage({
                 >
                   {FormatDate(event.eventDays[0].startDate)}
                 </span>
+                <AddToCalendar event={event}/>
               </div>
               {/*  time*/}
               <div className={"flex items-center gap-[5px]"}>
