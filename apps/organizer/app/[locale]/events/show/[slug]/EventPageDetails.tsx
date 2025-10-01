@@ -96,10 +96,10 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
         },
       })
       const response = await request.json()
-      if(response.status === 'success'){
+      if (response.status === 'success') {
         toast.success('success')
         setTicketID('')
-      }else{
+      } else {
         toast.error(response.message)
       }
     } else {
@@ -111,7 +111,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
     <div className={'flex flex-col gap-[3rem] overflow-y-scroll'}>
       <PageLoader isLoading={isLoading} />
       <TopBar title={event.eventName}>
-        <div className='flex items-center gap-4'>
+        <div className='hidden lg:flex items-center gap-4'>
 
           <Dialog>
             <DialogTrigger>
@@ -406,7 +406,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
           )
         })}
         <li
-          className={`${event.eventTicketTypes.length > 2 ? 'py-[20px]' : 'pl-[25px]'} `}
+          className={`${event.eventTicketTypes.length == 1 && 'py-[20px] lg:pl-[25px] lg:py-0'} `}
         >
           <span className={'text-[14px] text-neutral-600 leading-[20px] pb-[5px]'}>
             {t('count_down')}
@@ -420,6 +420,201 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
           </p>
         </li>
       </ul>
+
+      <div className='flex lg:hidden items-center justify-between'>
+        {daysLeft !== null && daysLeft > 0 && !isFree && <TicketClasses event={event} />}
+        <Dialog>
+          <DialogTrigger>
+            <span className='px-[15px] py-[7.5px] border-2 border-transparent rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center gap-4 bg-neutral-100 text-neutral-700'>
+              <Scanner variant={'Bulk'} color={'#737C8A'} size={20} />
+              {t('check_in')}
+            </span>
+          </DialogTrigger>
+          <DialogContent className={'w-[360px] lg:w-[520px] '}>
+            <DialogHeader>
+              <DialogTitle
+                className={
+                  'font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary'
+                }
+              >
+                {t('check_in')}
+              </DialogTitle>
+              <DialogDescription className={'sr-only'}>
+                <span>Share event</span>
+              </DialogDescription>
+            </DialogHeader>
+            <div className={'flex flex-col w-auto justify-center items-center gap-[30px]'}>
+              <p
+                className={
+                  'font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full'
+                }
+              >
+                {t('check_in_description')}
+              </p>
+              <div className='w-full'>
+                <Input value={ticketID} onChange={e => setTicketID(e.target.value)} error={ticketIdError}>{t('ticketID')}</Input>
+                <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
+                  {errors.eventCheckers?.message}
+                </span>
+              </div>
+            </div>
+            <DialogFooter>
+              <ButtonPrimary onClick={CheckTicketID} disabled={isLoading} className='w-full'>{isLoading ? <LoadingCircleSmall /> : t('check_in')}</ButtonPrimary>
+              <DialogClose ref={closeRef} className='sr-only'></DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Popover>
+          <PopoverTrigger>
+            <div
+              className={
+                'w-[35px] h-[35px] cursor-pointer rounded-full bg-neutral-100 flex items-center justify-center'
+              }
+            >
+              <MoreCircle variant={'Bulk'} size={20} color={'#737C8A'} />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className={'w-[250px] p-0 m-0 bg-none shadow-none border-none mx-4'}>
+            <ul
+              className={
+                'bg-neutral-100 border border-neutral-200 right-8 p-4  mb-8 rounded-[1rem] shadow-xl bottom-full flex flex-col gap-4'
+              }
+            >
+              <span
+                className={
+                  'font-medium py-[5px] border-b-[1px] border-neutral-200 text-[1.4rem] text-deep-100 leading-[20px]'
+                }
+              >
+                {t('more')}
+              </span>
+              <div className={'flex flex-col gap-4'}>
+                {/* {!event.isFree && ( */}
+                {daysLeft !== null && daysLeft > 0 && !isFree && <li>
+                  <Link
+                    href={`${slug}/discount-codes`}
+                    className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                  >
+                    <span className={'text-primary-500'}>
+                      {t('discount.subtitle')}
+                    </span>
+                    <TicketDiscount size="20" variant="Bulk" color={'#E45B00'} />
+                  </Link>
+                </li>}
+                <li className={''}>
+                  <Drawer direction={'right'}>
+                    <DrawerTrigger
+                      className={'w-full'}>
+                      <div
+                        className={`font-normal cursor-pointer group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                      >
+                        <span className={''}>{t('details')}</span>
+                        <HambergerMenu size="20" variant="Bulk" color={'#2E3237'} />
+                      </div>
+                    </DrawerTrigger>
+                    <EventDrawerContent event={event} />
+                  </Drawer>
+                </li>
+                <li>
+                  <Dialog>
+                    <DialogTrigger className='w-full'>
+                      <div
+                        className={`font-normal cursor-pointer group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                      >
+                        <span className={''}>{t('checkers')}</span>
+                        <SecurityUser size="20" variant="Bulk" color={'#2E3237'} />
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className={'w-[360px] lg:w-[520px] '}>
+                      <DialogHeader>
+                        <DialogTitle
+                          className={
+                            'font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary'
+                          }
+                        >
+                          {t('checkers')}
+                        </DialogTitle>
+                        <DialogDescription className={'sr-only'}>
+                          <span>Share event</span>
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className={'flex flex-col w-auto justify-center items-center gap-[30px]'}>
+                        <p
+                          className={
+                            'font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full'
+                          }
+                        >
+                          {t('checkers_description')}
+                        </p>
+                        <div className='w-full'>
+                          <Controller
+                            control={control}
+                            name="eventCheckers"
+                            defaultValue={eventCheckers}
+                            render={({ field }) => (
+                              <Select
+                                {...field}
+                                isMulti
+                                options={organisationCheckers}
+                                placeholder={t('select_checkers')}
+                                styles={{ control: () => ({ borderColor: 'transparent', display: 'flex' }) }}
+                                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                                getOptionValue={(option) => option.userId}
+                                className={
+                                  'bg-neutral-100 w-full rounded-[5rem] p-4 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500'
+                                }
+                              />
+                            )}
+                          />
+                          <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
+                            {errors.eventCheckers?.message}
+                          </span>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <ButtonPrimary onClick={handleSubmit(UpdateCheckers)} disabled={isSubmitting} className='w-full'>{isSubmitting ? <LoadingCircleSmall /> : t('update_checker')}</ButtonPrimary>
+                        <DialogClose ref={closeRef} className='sr-only'></DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </li>
+                {event.isActive ?
+                  <li>
+                    <button
+                      onClick={MarkEventAsInactive}
+                      className={`cursor-pointer font-normal group text-[1.5rem]  py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                    >
+                      <span className={'text-failure'}>
+                        {t('stopChecking')}
+                      </span>
+                      <ScanBarcode size="20" variant="Bulk" color={'#DE0028'} />
+                    </button>
+                  </li> :
+                  <li>
+                    <button onClick={MarkEventAsActive}
+                      className={`cursor-pointer font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                    >
+                      <span className={'text-primary-500'}>
+                        {t('startChecking')}
+                      </span>
+                      <ScanBarcode size="20" variant="Bulk" color={'#E45B00'} />
+                    </button>
+                  </li>
+                }
+
+
+                {/*<li className={''}>*/}
+                {/*  <button*/}
+                {/*    className={`font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}*/}
+                {/*  >*/}
+                {/*    <span className={''}>{single_event.export}</span>*/}
+                {/*    <DocumentDownload size="20" variant="Bulk" color={'#2E3237'} />*/}
+                {/*  </button>*/}
+                {/*</li>*/}
+              </div>
+            </ul>
+          </PopoverContent>
+        </Popover>
+      </div>
 
       {/* ticket tabs details */}
       <Tabs defaultValue="all" className="w-full h-full ">

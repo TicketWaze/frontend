@@ -20,13 +20,13 @@ function OrganizerLayout({
     <Head>
       <title>{title} - TicketWaze</title>
     </Head>
-      <div className={"bg-neutral-200 p-[1.5rem] pt-8 lg:p-8 lg:h-dvh  grid lg:grid-cols-10"}>
+      <div className={"bg-neutral-200 p-[1.5rem] pt-8 lg:p-8 h-dvh grid lg:grid-cols-10 overflow-hidden"}>
         <Sidebar className={"col-start-1 col-end-3 pr-8"} />
-        <main className="flex flex-col h-full gap-4 lg:col-start-3 lg:col-end-11 overflow-y-scroll lg:overflow-hidden">
-          <div className={cn("bg-white h-full flex flex-col gap-8 main rounded-[3rem] p-[1.5rem] lg:p-16 pb-32 lg:pb-0  overflow-y-scroll lg:overflow-y-hidden", className)}>
+        <main className="flex flex-col flex-1 overflow-y-auto justify-between lg:col-start-3 lg:col-end-11">
+          <div className={cn("bg-white h-full flex flex-col gap-8 main rounded-[3rem] overflow-y-hidden p-[1.5rem] lg:p-16 pb-0 lg:pb-0", className)}>
             {children}
           </div>
-          <MobileNavigation className="fixed w-full left-0 bottom-0 bg-neutral-200 p-[1.5rem]" />
+          <MobileNavigation className="w-full h-auto bg-neutral-200 p-[1.5rem]" />
         </main>
       </div>
     </>

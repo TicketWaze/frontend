@@ -23,13 +23,10 @@ export default async function EventPage() {
                 {authorized &&
                     <>
                         <LinkPrimary className='hidden lg:block' href='/events/create'>{t('create')}</LinkPrimary>
-                        <LinkPrimary className='lg:hidden absolute bottom-36 right-8 ' href='/events/create'>{t('create')}</LinkPrimary>
+                        <LinkPrimary className='lg:hidden absolute bottom-40 right-8 ' href='/events/create'>{t('create')}</LinkPrimary>
                     </>}
             </TopBar>
-
-            <Suspense fallback={<EventPageLoader />}>
-                <EventPageContent events={events.events} />
-            </Suspense>
+            <EventPageContent events={events.events} />
         </OrganizerLayout>
     )
 }

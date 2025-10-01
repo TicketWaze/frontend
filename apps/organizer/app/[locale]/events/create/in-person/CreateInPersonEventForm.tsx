@@ -34,7 +34,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
   const { data: session } = useSession()
   const organisation = session?.activeOrganisation
   const countries = UseCountries()
-  const [isFree, setIsfree] = useState(false)
+  const [isFree, setIsfree] = useState(true)
 
   const FormDataSchema = z.object({
     eventName: z.string().min(10, t('errors.basicDetails.name')).max(50).regex(/^[a-zA-Z0-9 ]+$/, {

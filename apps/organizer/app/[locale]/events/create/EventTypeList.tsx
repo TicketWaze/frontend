@@ -82,7 +82,7 @@ export default function EventTypeList() {
                         <SearchNormal size="20" color="#737c8a" variant="Bulk" />
                     </div>
                     <ButtonPrimary className='hidden lg:block' onClick={()=>router.push(`/events/create/${selected}`)} disabled={!selected}>{t('proceed')}</ButtonPrimary>
-                    <ButtonPrimary className='lg:hidden fixed bottom-36 right-8 z-50 ' onClick={()=>router.push(`/events/create/${selected}`)} disabled={!selected}>{t('proceed')}</ButtonPrimary>
+                    <ButtonPrimary className='lg:hidden fixed bottom-40 right-8 z-50 ' onClick={()=>router.push(`/events/create/${selected}`)} disabled={!selected}>{t('proceed')}</ButtonPrimary>
                     {/* <ButtonPrimary className='fixed bottom-36 left-0 w-[90vw] mx-auto z-50 lg:hidden' disabled={!selected}>{t('proceed')}</ButtonPrimary> */}
                 </TopBar>
             </div>

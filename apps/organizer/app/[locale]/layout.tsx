@@ -1,5 +1,5 @@
 import { Bricolage_Grotesque, DM_Mono, DM_Sans } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@workspace/ui/styles/globals.css";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
@@ -30,6 +30,12 @@ export const metadata: Metadata = {
   description:
     "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place",
 };
+
+export const viewport : Viewport = {
+  width : 'device-width',
+  initialScale : 1,
+  maximumScale : 1
+}
 
 export default async function RootLayout({
   children,

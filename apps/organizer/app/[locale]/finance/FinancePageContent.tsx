@@ -1,5 +1,4 @@
 'use client'
-import { LinkPrimary } from '@/components/Links'
 import { Link } from '@/i18n/navigation'
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerTitle, DrawerTrigger } from '@workspace/ui/components/drawer'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table'
@@ -10,10 +9,14 @@ import React from 'react'
 import Ticket from '@/types/Ticket'
 import Order from '@/types/Order'
 import { ButtonAccent, ButtonPrimary } from '@workspace/ui/components/buttons'
+import FormatDate from '@/lib/FormatDate'
+import Event from '@/types/Event'
 
+interface OrganisationTicket extends Ticket {
+  event: Event
+}
 
-
-export default function FinancePageContent({ transactions }: { transactions: { tickets: Ticket[], orders: Order[] } }) {
+export default function FinancePageContent({ transactions }: { transactions: { tickets: OrganisationTicket[], orders: Order[] } }) {
   const t = useTranslations('Finance')
   const { data: session } = useSession()
   const currentOrganisation = session?.activeOrganisation
@@ -30,7 +33,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
             {t('amounts.revenue')}
           </span>
           <p className={'font-medium text-[1.6rem] lg:text-[25px] leading-[30px] font-primary'}>
-            {Object.values(orders).reduce((acc, order)=> acc + order.amount, 0)}{' '}
+            {Object.values(orders).reduce((acc, order) => acc + order.amount, 0)}{' '}
             <span className={'font-normal text-[1.6rem] lg:text-[20px] text-neutral-500'}>
               HTG
             </span>
@@ -45,7 +48,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
         {/*    <span className={'font-normal text-[1.6rem] lg:text-[20px] text-neutral-500'}>HTG</span>*/}
         {/*  </p>*/}
         {/*</div>*/}
-        <div className={'pl-0 lg:pl-[25px]'}>
+        <div className={'pl-[25px]'}>
           <span className={'text-[14px] text-neutral-600 leading-[20px] pb-[5px]'}>
             {t('amounts.balance')}
           </span>
@@ -137,28 +140,29 @@ export default function FinancePageContent({ transactions }: { transactions: { t
           </TableHeader>
           <TableBody>
             {tickets.map(
-              ({ ticketId, ticketName, ticketType, ticketPrice, orderId, createdAt }) => {
-                const [order] = orders.filter((order) => orderId === order.orderId)
+              (ticket) => {
+                console.log(ticket);
+                const [order] = orders.filter((order) => ticket.orderId === order.orderId)
                 return (
-                  <TableRow key={ticketId}>
+                  <TableRow key={ticket.ticketId}>
                     <TableCell className={'text-[1.5rem] py-[15px] leading-8 text-neutral-900'}>
                       <Drawer direction={'right'}>
                         <DrawerTrigger>
-                          <span className={'cursor-pointer'}>{ticketName}</span>
+                          <span className={'cursor-pointer'}>{ticket.ticketName}</span>
                         </DrawerTrigger>
-                        <Informations />
+                        <Informations ticket={ticket} order={order as Order} />
                       </Drawer>
                     </TableCell>
                     <TableCell className={'text-[1.5rem] leading-8 text-neutral-900'}>
                       <Drawer direction={'right'}>
                         <DrawerTrigger>
-                          <span className={'cursor-pointer'}>EventName</span>
+                          <span className={'cursor-pointer'}>{ticket.event.eventName}</span>
                         </DrawerTrigger>
-                        <Informations />
+                        <Informations ticket={ticket} order={order as Order} />
                       </Drawer>
                     </TableCell>
                     <TableCell className={'hidden lg:table-cell'}>
-                      {ticketType === 'general' && (
+                      {ticket.ticketType === 'GENERAL' && (
                         <span
                           className={
                             'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#EF1870]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
@@ -167,7 +171,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
                           general
                         </span>
                       )}
-                      {ticketType === 'vip' && (
+                      {ticket.ticketType === 'VIP' && (
                         <span
                           className={
                             'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#7A19C7]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
@@ -176,7 +180,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
                           vip
                         </span>
                       )}
-                      {ticketType === 'vvip' && (
+                      {ticket.ticketType === 'VVIP' && (
                         <span
                           className={
                             'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-deep-100  px-[5px] rounded-[30px] bg-[#f5f5f5]'
@@ -191,7 +195,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
                         'text-[1.5rem] hidden lg:table-cell font-medium leading-8 text-neutral-900'
                       }
                     >
-                      {ticketPrice} HTG
+                      {ticket.ticketPrice} HTG
                     </TableCell>
                     <TableCell className={'hidden lg:table-cell'}>
                       {order?.status === 'SUCCESSFUL' && (
@@ -216,7 +220,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
                     <TableCell
                       className={'text-[1.5rem] hidden lg:table-cell leading-8 text-neutral-900'}
                     >
-                      {createdAt.toLocaleString()}
+                      {FormatDate(ticket.createdAt)}
                     </TableCell>
                   </TableRow>
                 )
@@ -373,10 +377,11 @@ export default function FinancePageContent({ transactions }: { transactions: { t
   )
 }
 
-function Informations() {
+function Informations({ ticket, order }: { ticket: OrganisationTicket; order: Order }) {  
   const t = useTranslations('Finance')
+  const checkingTime = new Date(ticket.updatedAt.toString())
   return (
-    <DrawerContent className={'my-6 p-[30px] rounded-[30px]'}>
+    <DrawerContent className={'my-6 p-[30px] rounded-[30px] w-full'}>
       <div className={'w-full flex flex-col items-center overflow-y-scroll'}>
         <DrawerTitle className={'pb-[40px]'}>
           <span
@@ -387,8 +392,8 @@ function Informations() {
             Transaction Details
           </span>
         </DrawerTitle>
-        <DrawerDescription>
-          <div className={'w-full flex flex-col gap-8'}>
+        <DrawerDescription className='w-full'>
+          {/* <div className={'w-full flex flex-col gap-8'}>
             <p
               className={
                 'flex justify-between items-center text-[1.4rem] leading-[20px] text-neutral-600'
@@ -408,7 +413,7 @@ function Informations() {
               </span>
             </p>
           </div>
-          <Separator />
+          <Separator /> */}
           <div className={'w-full flex flex-col gap-8'}>
             <p
               className={
@@ -417,7 +422,7 @@ function Informations() {
             >
               {t('transactions.details.event_name')}{' '}
               <span className={'text-deep-100 font-medium leading-[20px]'}>
-                Cap-Haïtien Jazz Festival
+                {ticket.event.eventName}
               </span>
             </p>
             <p
@@ -426,7 +431,7 @@ function Informations() {
               }
             >
               {t('transactions.details.date')}{' '}
-              <span className={'text-deep-100 font-medium leading-[20px]'}>11 August 2024</span>
+              <span className={'text-deep-100 font-medium leading-[20px]'}>{FormatDate(ticket.event.eventDays[0]?.startDate ?? '')}</span>
             </p>
             <p
               className={
@@ -435,7 +440,7 @@ function Informations() {
             >
               {t('transactions.details.time')}{' '}
               <span className={'text-deep-100 font-medium leading-[20px]'}>
-                11:00 AM - 17:00 PM
+                {ticket.event.eventDays[0]?.startTime} - {ticket.event.eventDays[0]?.endTime}
               </span>
             </p>
             <p
@@ -445,7 +450,7 @@ function Informations() {
             >
               {t('transactions.details.location')}{' '}
               <span className={'text-deep-100 font-medium leading-[20px] max-w-[399px] text-right'}>
-                Cap-Haïtien Cultural Center, Rue 20 Avenue, Cap-Haïtien, Haiti
+                {ticket.event.address}
               </span>
             </p>
           </div>
@@ -459,8 +464,8 @@ function Informations() {
               {t('transactions.details.ticket_class')}{' '}
               <span className={'text-deep-100 font-medium leading-[20px]'}>
                 1X{' '}
-                <span className={'py-[3px] px-[5px] bg-[#f5f5f5] text-[#7A19C7] rounded-[30px]'}>
-                  VIP
+                <span className={`py-[3px] px-[5px] bg-[#f5f5f5] ${ticket.ticketType === 'GENERAL' && 'text-[#EF1870]'} ${ticket.ticketType === 'VIP' && 'text-[#7A19C7]'} ${ticket.ticketType === 'VVIP' && 'text-deep-100'} rounded-[30px]`}>
+                  {ticket.ticketType}
                 </span>
               </span>
             </p>
@@ -470,7 +475,7 @@ function Informations() {
               }
             >
               {t('transactions.details.price')}{' '}
-              <span className={'text-deep-100 font-medium leading-[20px]'}>550 HTG</span>
+              <span className={'text-deep-100 font-medium leading-[20px]'}>{ticket.ticketPrice} {ticket.event.currency}</span>
             </p>
             <p
               className={
@@ -478,9 +483,9 @@ function Informations() {
               }
             >
               {t('transactions.details.ticket_id')}{' '}
-              <span className={'text-deep-100 font-medium leading-[20px]'}>#TICK1234567</span>
+              <span className={'text-deep-100 font-medium leading-[20px]'}>{ticket.ticketName}</span>
             </p>
-            <p
+            {/* <p
               className={
                 'flex justify-between items-start text-[1.4rem] leading-[20px] text-neutral-600'
               }
@@ -489,7 +494,7 @@ function Informations() {
               <span className={'text-deep-100 font-medium leading-[20px] max-w-[399px] text-right'}>
                 550 HTG
               </span>
-            </p>
+            </p> */}
           </div>
           <Separator />
           <div className={'w-full flex flex-col gap-8'}>
@@ -498,16 +503,8 @@ function Informations() {
                 'flex justify-between items-center text-[1.4rem] leading-[20px] text-neutral-600'
               }
             >
-              {t('transactions.details.transaction_id')}{' '}
-              <span className={'text-deep-100 font-medium leading-[20px]'}>Jean Baptiste</span>
-            </p>
-            <p
-              className={
-                'flex justify-between items-center text-[1.4rem] leading-[20px] text-neutral-600'
-              }
-            >
               {t('transactions.details.payment_method')}{' '}
-              <span className={'text-deep-100 font-medium leading-[20px]'}>MonCash</span>
+              <span className={'text-deep-100 font-medium leading-[20px]'}>{order.provider}</span>
             </p>
             <p
               className={
@@ -516,10 +513,10 @@ function Informations() {
             >
               {t('transactions.details.payment_date')}{' '}
               <span className={'text-deep-100 font-medium leading-[20px]'}>
-                11 July 2024, 12:21 PM
+                {FormatDate(order.createdAt)}
               </span>
             </p>
-            <p
+            {/* <p
               className={
                 'flex justify-between items-start text-[1.4rem] leading-[20px] text-neutral-600'
               }
@@ -534,7 +531,7 @@ function Informations() {
                   {t('filters.successful')}
                 </span>
               </span>
-            </p>
+            </p> */}
           </div>
           <Separator />
           <div className={'w-full flex flex-col gap-8'}>
@@ -547,10 +544,10 @@ function Informations() {
               <span className={'text-deep-100 font-medium leading-[20px]'}>
                 <span
                   className={
-                    'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#349C2E]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
+                    `py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase ${ticket.status === 'CHECKED' ? 'text-success' : 'text-warning' } px-[5px] rounded-[30px] bg-[#f5f5f5]`
                   }
                 >
-                  checked-in
+                  {ticket.status}
                 </span>
               </span>
             </p>
@@ -561,7 +558,7 @@ function Informations() {
             >
               {t('transactions.details.check_time')}{' '}
               <span className={'text-deep-100 font-medium leading-[20px]'}>
-                11 August 2024, 12:30 PM
+                {checkingTime.toTimeString()}
               </span>
             </p>
             <div></div>

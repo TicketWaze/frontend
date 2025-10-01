@@ -41,7 +41,7 @@ const EventManagerPermission =
   UserActions['event:update'] | 
   UserActions['event:delete']
 
-const FinancePermission = UserActions['finance:update']
+const FinancePermission = UserActions['finance:update'] | UserActions['finance:view']
 
 const StaffPermission = 
   UserActions['team:add'] | 
