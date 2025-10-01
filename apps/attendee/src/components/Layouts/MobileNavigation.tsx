@@ -52,14 +52,8 @@ export default function MobileNavigation({ className }: { className?: string; })
       path: `/settings`,
       Icon: Setting,
     },
-  ] : 
-  [
-    {
-      label: t("links.organizers"),
-      path: `/organizers`,
-      Icon: UserSquare,
-    },
-  ]
+  ] :
+    []
 
   function isMoreLinkActive(path: string) {
     return path.startsWith('/history') || path.startsWith('/organizers') || path.startsWith('/preferences') || path.startsWith('/settings')

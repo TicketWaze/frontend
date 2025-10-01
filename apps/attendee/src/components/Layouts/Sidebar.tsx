@@ -31,11 +31,11 @@ function Sidebar({ className }: { className: string }) {
       path: `/history`,
       Icon: Clock,
     },
-    // {
-    //   label: t("links.organizers"),
-    //   path: `/organizers`,
-    //   Icon: UserSquare,
-    // },
+    {
+      label: t("links.organizers"),
+      path: `/organizers`,
+      Icon: UserSquare,
+    },
   ];
   const userLinks = [
     {
@@ -142,22 +142,6 @@ function Sidebar({ className }: { className: string }) {
                 </li>
               );
             })}
-            <li>
-              <Link href={'/organizers'} className={`group flex items-center gap-4 py-4 relative text-[1.5rem] leading-[20px] ${isActive('/organizers') ? 'font-semibold text-primary-500 is-active' : 'text-neutral-700 hover:text-primary-500'}`}>
-                <UserSquare
-                  size="20"
-                  className={`transition-all duration-500 ${isActive('/organizers') ? "stroke-primary-500 fill-primary-500" : "stroke-neutral-900 fill-neutral-900 group-hover:stroke-primary-500 group-hover:fill-primary-500"}  `}
-                  // className={`${isActive(path) ? "fill-icon-active" : "fill-icon"} group-hover:fill-icon-active`}
-                  variant="Bulk"
-                />
-                <span>{t("links.organizers")}</span>
-                <div
-                  className={
-                    'absolute right-0  opacity-0 group-[.is-active]:translate-x-0 group-[.is-active]:opacity-100 transition-all duration-500 bg-primary-500 w-[2px] h-full'
-                  }
-                ></div>
-              </Link>
-            </li>
           </ul>
         </nav>
         {session?.user && <nav>
