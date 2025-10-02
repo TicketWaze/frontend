@@ -54,7 +54,7 @@ const AdminPermission =
   FinancePermission | 
   StaffPermission | 
   UserActions['organisation:delete'] | 
-  UserActions['team:delete']
+  UserActions['team:delete'] | UserActions['organisation:update']
 
 export const OrganisationPermissions: Record<TRole, bigint> = {
   [Role.Admin]: AdminPermission,
