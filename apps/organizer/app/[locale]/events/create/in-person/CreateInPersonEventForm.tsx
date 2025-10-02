@@ -710,11 +710,13 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
                 <p className={'text-[1.6rem] leading-[22px] text-deep-100 max-w-[380px]'}>
                   {t('mark_as_free')}
                 </p>
-                <label className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-primary-500">
+                <label className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-primary-500 has-[:disabled]:cursor-not-allowed">
                   <input
                     className="peer sr-only"
                     id="free-event"
                     type="checkbox"
+                    checked={isFree}
+                    disabled
                     onChange={() => setIsfree(prev => {
                       if (prev === true) {
                         setValue('ticketTypes', [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }])
