@@ -141,8 +141,6 @@ export default function FinancePageContent({ transactions }: { transactions: { t
           <TableBody>
             {tickets.map(
               (ticket) => {
-                console.log(ticket.event);
-                
                 const [order] = orders.filter((order) => ticket.orderId === order.orderId)
                 return (
                   <TableRow key={ticket.ticketId}>
@@ -271,8 +269,8 @@ export default function FinancePageContent({ transactions }: { transactions: { t
         <div></div>
       </div>
       <div className={'flex flex-col gap-8'}>
-        <div className={'flex items-center justify-between'}>
-          <span className={'font-primary font-medium text-[18px] leading-[25px] text-black'}>
+        <div className={'flex flex-col lg:flex-row gap-8 w-full lg:items-center justify-between'}>
+          <span className={'font-primary font-medium text-left text-[18px] leading-[25px] text-black'}>
             {t('withdrawal.title')}
           </span>
           <div className={'flex items-center gap-4'}>
