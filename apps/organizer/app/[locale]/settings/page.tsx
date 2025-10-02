@@ -45,7 +45,7 @@ export default async function Settings() {
     return (
         <OrganizerLayout title={t('title')}>
             <SimpleTopbar title={t('title')} />
-            <ul className='list-3 w-full'>
+            <ul className='list-3 w-full overflow-y-scroll pb-4 lg:pb-0'>
                 {links.map(({ Icon, label, href }) => {
                     return (
                         <li key={label} className={'cursor-pointer'}>
