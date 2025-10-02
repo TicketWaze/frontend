@@ -141,7 +141,8 @@ export default function FinancePageContent({ transactions }: { transactions: { t
           <TableBody>
             {tickets.map(
               (ticket) => {
-                console.log(ticket);
+                console.log(ticket.event);
+                
                 const [order] = orders.filter((order) => ticket.orderId === order.orderId)
                 return (
                   <TableRow key={ticket.ticketId}>
