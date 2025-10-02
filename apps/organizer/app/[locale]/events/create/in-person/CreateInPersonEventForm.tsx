@@ -48,8 +48,8 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
     city: z.string().min(1, t('errors.basicDetails.city')),
     country: z.string({ error: issue => issue.input === undefined ? t('errors.basicDetails.country') : t('errors.basicDetails.country') })
       .min(1, t('errors.basicDetails.country')),
-    longitude : z.string().min(3, t('errors.basicDetails.longitude')),
-    latitude : z.string(),
+    longitude: z.string().min(3, t('errors.basicDetails.longitude')),
+    latitude: z.string(),
     eventTags: z.array(z.object({ tagId: z.string(), tagName: z.string() }), { error: issue => issue.input === undefined ? t('errors.basicDetails.tags') : t('errors.basicDetails.tags') }).min(1, t('errors.basicDetails.tags')),
     eventImage: z
       .file({ error: issue => issue.input === undefined ? t('errors.basicDetails.image.required') : t('errors.basicDetails.image.required') })
@@ -119,12 +119,18 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
       state: '',
       city: '',
       country: Capitalize(organisation?.country ?? ''),
-      longitude : '',
+      longitude: '',
       latitude: '',
-      eventTags : [],
+      eventTags: [],
       eventImage: undefined as unknown as File,
       eventDays: [{ startDate: '', startTime: '', endTime: '' }],
-      ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
+      // ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
+      ticketTypes: [{
+        ticketTypeName: 'general',
+        ticketTypeDescription: t('general_default'),
+        ticketTypePrice: '',
+        ticketTypeQuantity: '100'
+      }]
     }
   })
 
