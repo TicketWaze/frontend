@@ -213,6 +213,7 @@
     "subtitle" : "Welcome Back ",
     "search": "Search for event",
     "noResult": "There's no result for ",
+    "noEvent": "Looks like there are no upcoming events at the moment. Check back later or explore other categories to discover exciting events near you!",
     "filters": {
       "first": {
         "1": "All",

@@ -1,5 +1,6 @@
 'use client'
 import { UpdateUserProfile } from '@/actions/userActions'
+import PageLoader from '@/components/Loaders/PageLoader'
 import FormatDate from '@/lib/FormatDate'
 import User from '@/types/User'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -39,6 +40,7 @@ export default function UserProfileForm({ user, accessToken }: { user: User; acc
     }
     return (
         <form id='user-form' onSubmit={handleSubmit(submitHandler)} className={'flex flex-col gap-8'}>
+            {isSubmitting &&  <PageLoader isLoading={isSubmitting}/>}
             <span className={'pb-4 font-medium text-[1.8rem] leading-[25px] text-deep-100'}>
                 {t('personal')}
             </span>

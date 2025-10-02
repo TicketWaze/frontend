@@ -17,9 +17,6 @@ function OrganizerLayout({
 
   return (
     <>
-    <Head>
-      <title>{title} - TicketWaze</title>
-    </Head>
       <div className={"bg-neutral-200 p-[1.5rem] pt-8 lg:p-8 h-dvh grid lg:grid-cols-10 overflow-hidden"}>
         <Sidebar className={"col-start-1 col-end-3 pr-8"} />
         <main className="flex flex-col flex-1 overflow-y-auto justify-between lg:col-start-3 lg:col-end-11">

@@ -213,6 +213,7 @@
         "subtitle": "Bon retour ",
         "search": "Rechercher un événement",
         "noResult": "Il n'y a aucun résultat pour ",
+        "noEvent" : "Il n'y a pas d'événements à venir pour le moment. Revenez plus tard ou explorez d'autres catégories pour découvrir des événements passionnants près de chez vous !",
         "filters": {
             "first": {
                 "1": "Tous",

@@ -1,5 +1,6 @@
 'use client'
 import { UpdateOrganisationProfile } from '@/actions/organisationActions'
+import PageLoader from '@/components/Loaders/PageLoader'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@workspace/ui/components/Inputs'
 import Capitalize from '@workspace/ui/lib/Capitalize'
@@ -11,11 +12,9 @@ import { toast } from 'sonner'
 import * as z from 'zod'
 
 export default function ProfileForm() {
-  // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
   const t = useTranslations('Settings.profile')
   const { data: session, update } = useSession()
   const organisation = session?.activeOrganisation
-  // const organisation = session?.user.organisations[0]
 
   const UpdateProfileSchema = z.object({
     organisationName: z.string().min(1, t('errors.name.min')).max(30, t('errors.name.max')),
@@ -30,6 +29,10 @@ export default function ProfileForm() {
       organisationName: organisation?.organisationName ?? '',
       organisationDescription: organisation?.organisationDescription ?? ''
     },
+    defaultValues: {
+      organisationName: organisation?.organisationName ?? '',
+      organisationDescription: organisation?.organisationDescription ?? ''
+    }
   })
   async function submitHandler(data: TUpdateProfileSchema) {
     const result = await UpdateOrganisationProfile(organisation?.organisationId ?? '', data.organisationName, data.organisationDescription, session?.user.accessToken ?? '')
@@ -38,21 +41,22 @@ export default function ProfileForm() {
     } else {
       toast.success(Capitalize(result.status ?? ''))
       if (result.organisation) {
-                    await update({
-                        ...session,
-                        activeOrganisation: {
-                            ...result.organisation
-                        }
-                    })
-                }
+        await update({
+          ...session,
+          activeOrganisation: {
+            ...result.organisation
+          }
+        })
+      }
     }
   }
   return (
     <form onSubmit={handleSubmit(submitHandler)} id='profile-form' className={'flex flex-col gap-8'}>
+      {isSubmitting && <PageLoader isLoading={isSubmitting}/>}
       <span className={'pb-4 font-medium text-[1.8rem] leading-[25px] text-deep-100'}>
         {t('subtitle')}
       </span>
-      <Input {...register('organisationName')} error={errors.organisationName?.message} type='text' isLoading={isSubmitting}>{t('placeholders.name')}</Input>
+      <Input {...register('organisationName')} minLength={3} maxLength={30} error={errors.organisationName?.message} type='text' isLoading={isSubmitting}>{t('placeholders.name')}</Input>
       <div>
         <textarea
           {...register('organisationDescription')}
@@ -60,6 +64,8 @@ export default function ProfileForm() {
           className={
             `bg-neutral-100 w-full rounded-[2rem] resize-none h-[150px] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500 {isLoading ? 'animate-pulse' : null}`
           }
+          minLength={150}
+          maxLength={350}
         />
         <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
           {errors.organisationDescription?.message}
@@ -71,7 +77,7 @@ export default function ProfileForm() {
         <Input className='flex-1' disabled={true} readOnly defaultValue={organisation?.state}>{t('placeholders.state')}</Input>
         <Input className='flex-1' disabled={true} readOnly defaultValue={organisation?.city}>{t('placeholders.city')}</Input>
       </div>
-      <Input className='flex-1' disabled={true} readOnly defaultValue={organisation?.city}>{t('placeholders.city')}</Input>
+      {/* <Input className='flex-1' disabled={true} readOnly defaultValue={organisation?.city}>{t('placeholders.city')}</Input> */}
       {/* <div>
             <input
               className={

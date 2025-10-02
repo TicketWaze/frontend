@@ -1,4 +1,5 @@
 'use client'
+import { useAuthInterceptor } from '@/hooks/useAuthInterceptor';
 import { Link, usePathname } from '@/i18n/navigation';
 import { cn } from '@workspace/ui/lib/utils'
 import { Chart1, Moneys, Setting2, Ticket } from 'iconsax-react';
@@ -7,6 +8,7 @@ import React from 'react'
 
 export default function MobileNavigation({ className }: { className?: string; }) {
     const t = useTranslations("Layout.sidebar");
+    useAuthInterceptor()
     const pathname = usePathname();
     const links = [
         {

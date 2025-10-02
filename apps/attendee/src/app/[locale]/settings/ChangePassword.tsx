@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ButtonPrimary } from '@workspace/ui/components/buttons'
 import { Input, PasswordInput } from '@workspace/ui/components/Inputs'
 import LoadingCircleSmall from '@workspace/ui/components/LoadingCircleSmall'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -38,6 +38,7 @@ export default function ChangePassword() {
         const response = await request.json()
         if(response.status === 'success'){
             toast.success("Password Updated")
+            signOut({ redirect: true, redirectTo: process.env.NEXT_PUBLIC_APP_URL })
         }else{
             toast.error(response.message)
         }

@@ -15,10 +15,12 @@ import { RadioGroup, RadioGroupItem } from "@workspace/ui/components/radio-group
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useAuthInterceptor } from "@/hooks/useAuthInterceptor";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");
   const pathname = usePathname();
+  useAuthInterceptor()
 
   const { data: session, update } = useSession()
   
