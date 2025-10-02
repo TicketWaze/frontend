@@ -8,10 +8,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/component
 import { signOut, useSession } from 'next-auth/react';
 import { Dialog, DialogTrigger } from '@workspace/ui/components/dialog';
 import NoAuthDialog from './NoAuthDialog';
+import { useAuthInterceptor } from '@/hooks/useAuthInterceptor';
 
 export default function MobileNavigation({ className }: { className?: string; }) {
   const t = useTranslations("Layout.sidebar");
   const pathname = usePathname();
+  useAuthInterceptor()
   const locale = useLocale()
   const { data: session } = useSession()
   const links = [

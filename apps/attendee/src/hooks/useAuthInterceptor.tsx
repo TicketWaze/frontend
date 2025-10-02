@@ -17,7 +17,7 @@ export function useAuthInterceptor() {
         const clonedResponse = response.clone();
         
         // Sign out and redirect
-        await signOut({redirect: true, redirectTo : process.env.NEXT_PUBLIC_APP_URL});
+        await signOut({redirect: true, redirectTo : process.env.NEXT_PUBLIC_APP_URL})
         
         return clonedResponse;
       }

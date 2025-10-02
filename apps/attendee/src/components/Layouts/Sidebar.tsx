@@ -10,10 +10,12 @@ import { usePathname } from "@/i18n/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog";
 import NoAuthDialog from "./NoAuthDialog";
+import { useAuthInterceptor } from "@/hooks/useAuthInterceptor";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");
   const pathname = usePathname();
+  useAuthInterceptor()
 
   const eventsLinks = [
     // {
