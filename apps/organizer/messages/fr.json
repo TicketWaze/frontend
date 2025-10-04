@@ -420,6 +420,16 @@
             "basic": "Détails de base",
             "category_search": "Rechercher une catégorie",
             "no_result": "Il n'y a aucun résultat pour le mot-clé ",
+            "list": {
+                "inPerson": {
+                    "title": "En présentiel",
+                    "description": "Événements avec un accès basé sur un lieu, comme des festivals, des conférences ou des rencontres."
+                },
+                "meet": {
+                    "title": "Google Meet",
+                    "description": "Participez virtuellement avec Google Meet — la distance n’a pas d’importance."
+                }
+            },
             "date_time": "Date et heure",
             "ticket": "Billet",
             "event_type": "Type d'événement",
@@ -486,7 +496,8 @@
                 },
                 "dateAndTime": {
                     "startDate": "Le champ date de début est obligatoire",
-                    "startTime": "Le champ heure de début est obligatoire"
+                    "startTime": "Le champ heure de début est obligatoire",
+                    "endTime": "Le champ heure de fin est obligatoire"
                 },
                 "ticketClass": {
                     "name": "Sélectionnez un nom de classe de billet",

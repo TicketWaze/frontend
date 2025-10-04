@@ -4,13 +4,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/componen
 import Event from '@/types/Event'
 import EventCard from '@/components/EventCard'
 import { DateTime } from 'luxon'
-import { useSession } from 'next-auth/react'
 import Slugify from '@/lib/Slugify'
 import { Money3 } from 'iconsax-react'
 import { useTranslations } from 'next-intl'
 
 export default function EventPageContent({ events }: { events: Event[] }) {
-    const { data: session } = useSession()
     const t = useTranslations('Events')
     return (
         <div className='min-h-[75vh]'>
@@ -36,6 +34,7 @@ export default function EventPageContent({ events }: { events: Event[] }) {
                                     price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
                                     currency={event.currency}
                                     tags={event.eventTags}
+                                    eventType={event.eventType}
                                 />
                             </li>
                         })}
@@ -75,7 +74,6 @@ export default function EventPageContent({ events }: { events: Event[] }) {
 }
 
 function UpcomingContent({ events }: { events: Event[] }) {
-    const { data: session } = useSession()
     const t = useTranslations('Events')
     const upcoming = events.filter(event => {
         const today = DateTime.now()
@@ -102,6 +100,7 @@ function UpcomingContent({ events }: { events: Event[] }) {
                             price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
                             currency={event.currency}
                             tags={event.eventTags}
+                            eventType={event.eventType}
                         />
                     </li>
                 })}
@@ -135,7 +134,6 @@ function UpcomingContent({ events }: { events: Event[] }) {
 }
 
 function HistoryContent({ events }: { events: Event[] }) {
-    const { data: session } = useSession()
     const t = useTranslations('Events')
     const history = events.filter(event => {
         const today = DateTime.now()
@@ -162,6 +160,7 @@ function HistoryContent({ events }: { events: Event[] }) {
                             price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
                             currency={event.currency}
                             tags={event.eventTags}
+                            eventType={event.eventType}
                         />
                     </li>
                 })}

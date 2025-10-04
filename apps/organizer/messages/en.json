@@ -422,6 +422,16 @@
       "basic": "Basic Details",
       "category_search": "Search for category",
       "no_result": "They is no result for the keyword ",
+      "list" : {
+        "inPerson" : {
+            "title" : "In-Person",
+            "description" : "Events with location-based access like festivals, conferences, or meetups."
+        },
+        "meet" : {
+          "title" : "Google Meet",
+          "description" : "Attend virtually with Google Meet — distance doesn’t matter."
+        }
+      },
       "date_time": "Date & Time",
       "ticket": "Ticket",
       "event_type": "Event Type",
@@ -488,7 +498,8 @@
         },
         "dateAndTime": {
           "startDate": "Start date field is required",
-          "startTime": "Start time field is required"
+          "startTime": "Start time field is required",
+          "endTime": "End time field is required"
         },
         "ticketClass": {
           "name": "Select one ticket class name",

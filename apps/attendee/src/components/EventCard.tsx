@@ -1,6 +1,6 @@
 import { Link } from '@/i18n/navigation'
 import EventTag from '@/types/EventTag'
-import { Calendar2, Location } from 'iconsax-react'
+import { Calendar2, Google, Location } from 'iconsax-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 
@@ -14,7 +14,8 @@ function EventCard({
   currency,
   href,
   aside,
-  tags
+  tags,
+  eventType
 }: {
   image: string
   name: string
@@ -26,6 +27,7 @@ function EventCard({
   href: string
   aside?: boolean,
   tags: EventTag[]
+  eventType : string
 }) {
   const t = useTranslations('Event')
   
@@ -68,12 +70,18 @@ const formatted = new Intl.DateTimeFormat('fr-FR', {
               {formatted}
             </span>
           </div>
-          <div className={'flex items-center gap-[5px]'}>
-            <Location size="15" color="#2e3237" variant="Bulk" />
+          {eventType === 'meet' ? <div className={'flex items-center gap-[5px]'}>
+            <Google size="15" color="#2e3237" variant="Bulk" />
             <p className={'font-medium text-[1rem] text-deep-100 leading-[15px]'}>
-              {city}, <span className={'text-neutral-700'}>{country}</span>
+              Meet, <span className={'text-neutral-700'}>Google</span>
             </p>
-          </div>
+          </div> :
+            <div className={'flex items-center gap-[5px]'}>
+              <Location size="15" color="#2e3237" variant="Bulk" />
+              <p className={'font-medium text-[1rem] text-deep-100 leading-[15px]'}>
+                {city}, <span className={'text-neutral-700'}>{country}</span>
+              </p>
+            </div>}
         </div>
         <p className="font-bold text-[1.2rem] leading-[15px] text-primary-500">
           {price > 0 ? (

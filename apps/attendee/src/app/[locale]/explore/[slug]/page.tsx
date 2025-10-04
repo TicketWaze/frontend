@@ -6,7 +6,7 @@ import AttendeeLayout from '@/components/Layouts/AttendeeLayout'
 import Image from 'next/image'
 import EventActions from './EventActions'
 import { getTranslations } from 'next-intl/server'
-import { Calendar2, Call, Clock, Global, Location, Sms, Ticket2 } from 'iconsax-react'
+import { Calendar2, Call, Clock, Global, Google, Location, Sms, Ticket2 } from 'iconsax-react'
 import { ButtonBlack } from '@workspace/ui/components/buttons'
 import FormatDate from '@/lib/FormatDate'
 import Capitalize from "@workspace/ui/lib/Capitalize"
@@ -158,7 +158,7 @@ export default async function EventPage({
                   >
                     {FormatDate(event.eventDays[0].startDate)}
                   </span>
-                  <AddToCalendar event={event}/>
+                  {event.eventType !== 'meet' && <AddToCalendar event={event} />}
                 </div>
                 {/*  time*/}
                 <div className={"flex items-center gap-[5px]"}>
@@ -176,6 +176,22 @@ export default async function EventPage({
                   </span>
                 </div>
                 {/*  address*/}
+                {event.eventType === 'meet' && <div className={"flex items-center gap-[5px] "}>
+                  <div
+                    className={
+                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                    }
+                  >
+                    <Google size="20" color="#737c8a" variant="Bulk" />
+                  </div>
+                  <span
+                    className={
+                      "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                    }
+                  >
+                    Meet, Google
+                  </span>
+                </div>}
                 <div className={"flex items-center gap-[5px] "}>
                   <div
                     className={
@@ -210,16 +226,17 @@ export default async function EventPage({
               </span>
             </div> */}
               </div>
-              <Separator />
-              <div className=' flex flex-col gap-8'>
-                <span
-                  className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}
-                >
-                  {t("direction")}
-                </span>
-                <Map event={event} />
-                <div></div>
-              </div>
+              {event.eventType !== 'meet' && <>
+                <Separator />
+                <div className=' flex flex-col gap-8'>
+                  <span
+                    className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}
+                  >
+                    {t("direction")}
+                  </span>
+                  <Map event={event} />
+                  <div></div>
+                </div></>}
             </div>
             <div></div>
           </div>
@@ -272,7 +289,7 @@ export default async function EventPage({
                 >
                   {FormatDate(event.eventDays[0].startDate)}
                 </span>
-                <AddToCalendar event={event}/>
+                {event.eventType !== 'meet' && <AddToCalendar event={event} />}
               </div>
               {/*  time*/}
               <div className={"flex items-center gap-[5px]"}>
@@ -290,6 +307,22 @@ export default async function EventPage({
                 </span>
               </div>
               {/*  address*/}
+              {event.eventType === 'meet' && <div className={"flex items-center gap-[5px] "}>
+                <div
+                  className={
+                    "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                  }
+                >
+                  <Google size="20" color="#737c8a" variant="Bulk" />
+                </div>
+                <span
+                  className={
+                    "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                  }
+                >
+                  Meet, Google
+                </span>
+              </div>}
               <div className={"flex items-center gap-[5px] "}>
                 <div
                   className={
@@ -324,16 +357,17 @@ export default async function EventPage({
               </span>
             </div> */}
             </div>
-            <Separator />
-            <div className=' flex flex-col gap-8'>
-              <span
-                className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}
-              >
-                {t("direction")}
-              </span>
-              <Map event={event} />
-              <div></div>
-            </div>
+            {event.eventType !== 'meet' && <>
+              <Separator />
+              <div className=' flex flex-col gap-8'>
+                <span
+                  className={"font-semibold text-[1.6rem] leading-8 text-deep-200"}
+                >
+                  {t("direction")}
+                </span>
+                <Map event={event} />
+                <div></div>
+              </div></>}
           </div>
 
 

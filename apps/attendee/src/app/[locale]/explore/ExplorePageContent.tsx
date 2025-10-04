@@ -84,6 +84,7 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
                 price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
                 currency={event.currency}
                 tags={event.eventTags}
+                eventType={event.eventType}
               />
             </li>
           })}
