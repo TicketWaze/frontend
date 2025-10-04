@@ -121,6 +121,7 @@ export default async function OrganizerProfile({
                                             price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
                                             currency={event.currency}
                                             tags={event.eventTags}
+                                            eventType={event.eventType}
                                         />
                                     </li>
                                 )
@@ -157,6 +158,7 @@ export default async function OrganizerProfile({
                                         price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
                                         currency={event.currency}
                                         tags={event.eventTags}
+                                        eventType={event.eventType}
                                     />
                                 </li>
                             )
