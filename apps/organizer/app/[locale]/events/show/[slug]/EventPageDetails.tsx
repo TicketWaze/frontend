@@ -217,7 +217,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
             </DialogContent>
           </Dialog>}
 
-          {daysLeft !== null && daysLeft > 0 && !isFree && <TicketClasses event={event} />}
+          {daysLeft !== null && daysLeft > 0 && !isFree && !(event.eventType === 'meet') && <TicketClasses event={event} />}
           {/* more */}
           <Popover>
             <PopoverTrigger>
@@ -423,8 +423,8 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
       </ul>
 
       <div className='flex lg:hidden items-center justify-between'>
-        {daysLeft !== null && daysLeft > 0 && !isFree && <TicketClasses event={event} />}
-        <Dialog>
+        {daysLeft !== null && daysLeft > 0 && !isFree && !(event.eventType === 'meet') && <TicketClasses event={event} />}
+        {!(event.eventType === 'meet') ? <Dialog>
           <DialogTrigger>
             <span className='px-[15px] py-[7.5px] border-2 border-transparent rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center gap-4 bg-neutral-100 text-neutral-700'>
               <Scanner variant={'Bulk'} color={'#737C8A'} size={20} />
@@ -464,7 +464,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
               <DialogClose ref={closeRef} className='sr-only'></DialogClose>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
+        </Dialog> : <div></div>}
         <Popover>
           <PopoverTrigger>
             <div
@@ -515,7 +515,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
                     <EventDrawerContent event={event} />
                   </Drawer>
                 </li>
-                <li>
+                {!(event.eventType === 'meet') && <li>
                   <Dialog>
                     <DialogTrigger className='w-full'>
                       <div
@@ -577,30 +577,25 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
-                </li>
-                {event.isActive ?
-                  <li>
-                    <button
-                      onClick={MarkEventAsInactive}
-                      className={`cursor-pointer font-normal group text-[1.5rem]  py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                    >
-                      <span className={'text-failure'}>
-                        {t('stopChecking')}
-                      </span>
-                      <ScanBarcode size="20" variant="Bulk" color={'#DE0028'} />
-                    </button>
-                  </li> :
-                  <li>
-                    <button onClick={MarkEventAsActive}
-                      className={`cursor-pointer font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                    >
-                      <span className={'text-primary-500'}>
-                        {t('startChecking')}
-                      </span>
-                      <ScanBarcode size="20" variant="Bulk" color={'#E45B00'} />
-                    </button>
-                  </li>
-                }
+                </li>}
+                {!(event.eventType === 'meet') && <li>
+                  {event.isActive ? <button
+                    onClick={MarkEventAsInactive}
+                    className={`cursor-pointer font-normal group text-[1.5rem]  py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                  >
+                    <span className={'text-failure'}>
+                      {t('stopChecking')}
+                    </span>
+                    <ScanBarcode size="20" variant="Bulk" color={'#DE0028'} />
+                  </button> : <button onClick={MarkEventAsActive}
+                    className={`cursor-pointer font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                  >
+                    <span className={'text-primary-500'}>
+                      {t('startChecking')}
+                    </span>
+                    <ScanBarcode size="20" variant="Bulk" color={'#E45B00'} />
+                  </button>}
+                </li>}
 
 
                 {/*<li className={''}>*/}

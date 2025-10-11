@@ -26,7 +26,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "TicketWaze - Create and manage events",
+  title: "Organisation | TicketWaze - Create and manage events",
   description:
     "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place",
 };

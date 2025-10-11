@@ -32,10 +32,15 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
     const { data: session } = useSession()
     const organisation = session?.activeOrganisation
     const countries = UseCountries()
-    const [isFree, setIsfree] = useState(true)
+    const [isFree, setIsfree] = useState(false)
     const searchParams = useSearchParams()
-    
-    
+
+    const [ticketClassDescriptionWordCount, setTicketClassDescriptionWordCount] = useState(0)
+      const handleTicketClassWordCount = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setTicketClassDescriptionWordCount(e.target.value.length)
+      }, [])
+
+
 
     const FormDataSchema = z.object({
         eventName: z.string().min(10, t('errors.basicDetails.name')).max(50).regex(/^[a-zA-Z0-9 ]+$/, {
@@ -118,7 +123,7 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
             // ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
             ticketTypes: [{
                 ticketTypeName: 'general',
-                ticketTypeDescription: t('general_default'),
+                ticketTypeDescription: '',
                 ticketTypePrice: '',
                 ticketTypeQuantity: '100'
             }]
@@ -637,7 +642,6 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
                                         id="free-event"
                                         type="checkbox"
                                         checked={isFree}
-                                        disabled
                                         onChange={() => setIsfree(prev => {
                                             if (prev === true) {
                                                 setValue('ticketTypes', [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }])
@@ -656,7 +660,7 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
                                 </label>
                             </div>
                         </div>
-                        {isFree &&
+                        {isFree ?
                             <div
                                 className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100"
                             >
@@ -675,7 +679,56 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
                                     readOnly
                                 />
                                 <div className={'flex flex-col lg:flex-row gap-4'}>
-                                    <Input defaultValue={'Free'} disabled readOnly>{t('price')}</Input>
+                                    <Input defaultValue={'Free'}>{t('price')}</Input>
+                                    <Input defaultValue='100' readOnly disabled>{t('quantity')}</Input>
+                                </div>
+                            </div> :
+                            <div
+                                className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100"
+                            >
+                                <div className={'flex items-center justify-between'}>
+                                    <span className="font-semibold text-[16px] leading-[22px] text-deep-100">
+                                        {t('ticket_class')}
+                                    </span>
+                                </div>
+                                <Input defaultValue={'General'} disabled readOnly>{t('class_name')}</Input>
+                                <div className=''>
+                                    <textarea
+                                        className={
+                                            'h-[150px] resize-none bg-neutral-100 w-full rounded-[2rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500 '
+                                        }
+                                        placeholder={t('class_description')}
+                                        {...register(`ticketTypes.0.ticketTypeDescription`)}
+                                        onChange={handleTicketClassWordCount}
+                                        maxLength={100}
+                                        minLength={20}
+                                    />
+                                    <div className='flex items-center justify-between'>
+                                        <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
+                                            {errors && errors.ticketTypes?.[0]?.ticketTypeDescription?.message}
+                                        </span>
+                                        {ticketClassDescriptionWordCount > 0 && <span className={`text-[1.2rem] self-end px-8 py-2 ${ticketClassDescriptionWordCount < 20 ? 'text-failure' : 'text-success'}`}>{ticketClassDescriptionWordCount} / 100</span>}
+                                    </div>
+                                </div>
+                                <div className={'flex flex-col lg:flex-row gap-4'}>
+                                    <div className='flex-1'>
+                                        <div
+                                            className={
+                                                'flex-1 bg-neutral-100 w-full rounded-[5rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500 flex gap-2'
+                                            }
+                                        >
+                                            <input
+                                                className={'outline-none'}
+                                                type="number"
+                                                placeholder={`${t('price')}`}
+                                                {...register(`ticketTypes.0.ticketTypePrice`)}
+                                            />
+                                            <span>{session?.user.currency.isoCode}</span>
+                                        </div>
+                                        <span className={"text-[1.2rem] lg:hidden px-8 py-2 text-failure"}>
+                                            {errors.ticketTypes?.[0]?.ticketTypePrice?.message}
+                                        </span>
+                                    </div>
                                     <Input defaultValue='100' readOnly disabled>{t('quantity')}</Input>
                                 </div>
                             </div>

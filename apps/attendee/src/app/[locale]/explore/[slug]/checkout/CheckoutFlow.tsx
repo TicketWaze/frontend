@@ -27,70 +27,9 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
   const t = useTranslations('Checkout')
   const isFree = event.eventTicketTypes[0].ticketTypePrice == 0
 
-
-  const attendeeSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Valid email required"),
-  });
-
-  const ticketSchema = z.object({
-    ticketTypeId: z.string(),
-    quantity: z.number().min(0, "Select at least 0"),
-    attendees: z.array(attendeeSchema).optional(), // Changed to array of attendees
-  });
-
-  // Create a dynamic schema based on current step
-  const createCheckoutSchema = (step: number, selectedTickets: any[]) => {
-    if (step === 0) {
-      // Step 0: Only validate that at least one ticket is selected
-      return z.object({
-        tickets: z
-          .array(ticketSchema)
-          .refine(
-            (tickets) => tickets.some((t) => t.quantity > 0),
-            {
-              message: "Please select at least one ticket",
-              path: ["tickets"],
-            }
-          ),
-      });
-    } else if (step === 1) {
-      // Step 1: Validate attendee info for selected tickets
-      return z.object({
-        tickets: z.array(
-          z.object({
-            ticketTypeId: z.string(),
-            quantity: z.number(),
-            attendee: z.union([
-              z.undefined(),
-              attendeeSchema
-            ])
-          })
-        ).refine((tickets) => {
-          // Only validate attendee info for tickets with quantity > 0
-          const selectedTickets = tickets.filter(t => t.quantity > 0);
-          return selectedTickets.every(ticket =>
-            ticket.attendee &&
-            ticket.attendee.name &&
-            ticket.attendee.email
-          );
-        }, {
-          message: "Please fill in attendee information for all selected tickets",
-          path: ["tickets"]
-        })
-      });
-    } else {
-      // Step 2: Payment validation (if needed)
-      return z.object({
-        tickets: z.array(ticketSchema),
-      });
-    }
-  };
-
   const [currentStep, setCurrentStep] = useState(0)
   const [previousStep, setPreviousStep] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-
 
   const { control, handleSubmit, register, trigger, watch, formState, setValue, getValues } =
     useForm<any>({
@@ -99,8 +38,8 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
         tickets: ticketTypes.map((ticket) => ({
           ticketTypeId: ticket.eventTicketTypeId,
           quantity: 0,
-          attendees: [], // Changed to empty array
         })),
+        attendees: [], // New flat structure: [{ticketTypeId, name, email}]
       },
     });
 
@@ -112,8 +51,56 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
   useEffect(() => {
     if (isFree) {
       setValue(`tickets.0.quantity`, 1, { shouldValidate: true });
+      // Initialize one attendee for free tickets
+      setValue('attendees', [{ ticketTypeId: ticketTypes[0].eventTicketTypeId, name: '', email: '' }]);
+    }
+    if (event.eventType === 'meet') {
+      setValue(`tickets.0.quantity`, 1, { shouldValidate: true });
+      // Initialize one attendee for free tickets
+      setValue('attendees', [{ ticketTypeId: ticketTypes[0].eventTicketTypeId, name: `${user.firstName} ${user.lastName}`, email: user.email }]);
     }
   }, [])
+
+  // Watch for quantity changes and update attendees array
+  const watchedTickets = watch("tickets") || [];
+  const watchedAttendees = watch("attendees") || [];
+
+  useEffect(() => {
+    const currentAttendees = getValues('attendees') || [];
+    const newAttendees: any[] = [];
+
+    watchedTickets.forEach((ticket: any) => {
+      if (ticket.quantity > 0) {
+        // Find existing attendees for this ticket type
+        const existingForType = currentAttendees.filter(
+          (a: any) => a.ticketTypeId === ticket.ticketTypeId
+        );
+
+        // Add existing or new attendees up to quantity
+        for (let i = 0; i < ticket.quantity; i++) {
+          if (existingForType[i]) {
+            newAttendees.push(existingForType[i]);
+          } else {
+            newAttendees.push({
+              ticketTypeId: ticket.ticketTypeId,
+              name: '',
+              email: '',
+              isForSomeoneElse: false,
+            });
+          }
+        }
+      }
+    });
+
+    // Only update if there's a change in length or content
+    const hasChanged = currentAttendees.length !== newAttendees.length ||
+      JSON.stringify(currentAttendees.map((a: any) => a.ticketTypeId)) !==
+      JSON.stringify(newAttendees.map((a: any) => a.ticketTypeId));
+
+    if (hasChanged) {
+      setValue('attendees', newAttendees, { shouldValidate: false });
+    }
+  }, [watchedTickets.map((t: any) => `${t.ticketTypeId}-${t.quantity}`).join(',')]);
 
   const delta = currentStep - previousStep
 
@@ -122,6 +109,12 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
       setCurrentStep(0)
       return
     }
+
+    if (event.eventType === 'meet' && currentStep === 2) {
+      setCurrentStep(0)
+      return
+    }
+
     if (currentStep > 0) {
       setPreviousStep(currentStep)
       setCurrentStep(step => step - 1)
@@ -129,13 +122,14 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
   }
 
   const processForm: SubmitHandler<any> = async data => {
-    console.log(data);
-    // Handle final form submission
+    console.log('Final submission data:', data.attendees);
+    // data.attendees will be in format: [{ticketTypeId, name, email}, ...]
   }
 
   const next = async () => {
     const values = getValues();
     const selectedTickets = values.tickets.filter((t: any) => t.quantity > 0);
+    const attendees = values.attendees || [];
 
     // Validate current step
     if (currentStep === 0) {
@@ -144,33 +138,38 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
         toast.error(t('ticket.error') || "Please select at least one ticket");
         return;
       }
-    }
-    // else if (currentStep === 1) {
-    //   // Step 1: Check if attendee info is filled for all selected tickets
-    //   const hasValidAttendees = selectedTickets.every((ticket: any) => {
-    //     if (!ticket.attendees || ticket.attendees.length !== ticket.quantity) {
-    //       return false;
-    //     }
-    //     return ticket.attendees.every((attendee: any) => 
-    //       attendee && 
-    //       attendee.name && 
-    //       attendee.name.trim() !== '' &&
-    //       attendee.email && 
-    //       attendee.email.trim() !== ''
-    //     );
-    //   });
+    } else if (currentStep === 1) {
+      // Step 1: Check if attendee info is filled for selected tickets that are for "someone else"
+      const hasValidAttendees = attendees.every((attendee: any) => {
+        // If the ticket is for someone else, name and email are required
+        if (attendee.isForSomeoneElse) {
+          return attendee.name &&
+            attendee.name.trim() !== '' &&
+            attendee.email &&
+            attendee.email.trim() !== '';
+        }
+        // If it's not for someone else, it's valid (will use current user's info)
+        return true;
+      });
 
-    //   if (!hasValidAttendees) {
-    //     toast.error("Please fill in attendee information for all tickets");
-    //     return;
-    //   }
-    // }
+      if (!hasValidAttendees) {
+        toast.error("Please fill in attendee information for all tickets marked for someone else");
+        return;
+      }
+    }
 
     if (isFree && currentStep === 0) {
       setCurrentStep(2)
       setPreviousStep(0);
       return
     }
+
+    if (event.eventType === 'meet' && currentStep === 0) {
+      setCurrentStep(2)
+      setPreviousStep(0);
+      return
+    }
+
     if (isFree && currentStep === 2) {
       BuyFreeTicket()
       return
@@ -181,11 +180,10 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
       setCurrentStep((s) => s + 1);
     } else {
       // Final step - submit form
-      await processForm(selectedTickets);
+      await processForm(values);
     }
   };
 
-  const watchedTickets = watch("tickets") || [];
   const selectedWithIndex = watchedTickets
     .map((t: any, i: number) => ({ ...t, __index: i }))
     .filter((t: any) => t.quantity > 0);
@@ -199,34 +197,49 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
   async function MoncashPayment() {
     setIsLoading(true)
     const values = getValues();
-    const selectedTickets = values.tickets.filter((t: any) => t.quantity > 0);
+
+    // Filter out attendees who haven't filled in their info (when "someone else" is checked)
+    const validAttendees = values.attendees.filter((attendee: any) => {
+      // If it's for someone else, they must have filled name and email
+      // If not for someone else, we'll use the current user's info (handled by backend)
+      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
+    });
+
+    // Send the flat attendees array: [{ticketTypeId, name, email}, ...]
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/payments/moncash`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${user.accessToken}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(selectedTickets)
+      body: JSON.stringify(validAttendees)
     })
     const response = await request.json()
-
-
+    if (response.status === 'success') {
+      router.push(response.paymentURL)
+    }
     setIsLoading(false)
   }
+
   const router = useRouter()
 
   async function BuyFreeTicket() {
     setIsLoading(true)
     const values = getValues();
-    const selectedTickets = values.tickets.filter((t: any) => t.quantity > 0);
-    const result = await FreeEventTicket(user.accessToken, event.eventId, selectedTickets)
+
+    // Filter out attendees who haven't filled in their info (when "someone else" is checked)
+    const validAttendees = values.attendees.filter((attendee: any) => {
+      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
+    });
+
+    // Send the flat attendees array: [{ticketTypeId, name, email}, ...]
+    const result = await FreeEventTicket(user.accessToken, event.eventId, validAttendees)
     if (result.status === 'failed') {
       setIsLoading(false)
       toast.error(result.message)
       return
     }
     router.push(`/upcoming/${Slugify(event.eventName)}`)
-
     setIsLoading(false)
   }
 
@@ -304,18 +317,12 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
-                            disabled={isFree}
-                            className="w-[35px] h-[35px] rounded-full bg-black flex items-center justify-center"
+                            disabled={isFree || event.eventType === 'meet'}
+                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center"
                             onClick={() => {
                               const currentValue = getValues(`tickets.${index}.quantity`) || 0;
                               const newQuantity = Math.max(0, currentValue - 1);
                               setValue(`tickets.${index}.quantity`, newQuantity, { shouldValidate: true });
-
-                              // Update attendees array to match new quantity
-                              const currentAttendees = getValues(`tickets.${index}.attendees`) || [];
-                              if (newQuantity < currentAttendees.length) {
-                                setValue(`tickets.${index}.attendees`, currentAttendees.slice(0, newQuantity));
-                              }
                             }}
                           >
                             <MinusCirlce size="20" color="#FFFFFF" variant="Bulk" />
@@ -327,22 +334,12 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
 
                           <button
                             type="button"
-                            disabled={isFree}
-                            className="w-[35px] h-[35px] rounded-full bg-black flex items-center justify-center"
+                            disabled={isFree || event.eventType === 'meet'}
+                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center"
                             onClick={() => {
                               const currentValue = getValues(`tickets.${index}.quantity`) || 0;
                               const newQuantity = currentValue + 1;
                               setValue(`tickets.${index}.quantity`, newQuantity, { shouldValidate: true });
-
-                              // Update attendees array to match new quantity
-                              const currentAttendees = getValues(`tickets.${index}.attendees`) || [];
-                              if (newQuantity > currentAttendees.length) {
-                                const newAttendees = [...currentAttendees];
-                                for (let i = currentAttendees.length; i < newQuantity; i++) {
-                                  newAttendees.push({ name: '', email: '' });
-                                }
-                                setValue(`tickets.${index}.attendees`, newAttendees);
-                              }
                             }}
                           >
                             <AddCircle size="20" color="#FFFFFF" variant="Bulk" />
@@ -359,84 +356,14 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                 <li className='hidden lg:block'></li>
               </ul>
               <div className="lg:hidden flex flex-col gap-8">
-                <div className=' flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]'>
-                  <Image src={ticketBG} alt={'ticket bg'} className='h-full' />
-                  <div
-                    className={
-                      'absolute top-0 w-full px-4 left-[50%] -translate-x-[50%] flex flex-col items-center gap-8'
-                    }
-                  >
-                    <span className={'font-primary font-medium pt-4 text-[2.2rem] leading-[30px] text-black'}>
-                      {t('ticket.summary')}
-                    </span>
-                    <div
-                      className={
-                        'w-full h-[250px] lg:h-[296px]  bg-neutral-100 p-[15px] text-center flex flex-col justify-between items-center '
-                      }
-                    >
-                      <div className={'flex flex-col gap-8 w-full'}>
-                        <span className={'font-mono text-[14px] leading-[22px] text-deep-100 text-center'}>
-                          {selectedWithIndex.length > 0 ? t('ticket.select') : t('ticket.select')}
-                        </span>
-                        <div className={'flex flex-col gap-4'}>
-                          {selectedWithIndex.length > 0 ? (
-                            selectedWithIndex.map((ticket: any) => {
-                              const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                              return (
-                                <div key={ticket.ticketTypeId} className={'w-full flex justify-between'}>
-                                  <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-600'}>
-                                    x{ticket.quantity} {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                                  </span>
-                                  {isFree ? <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                    {t('free')}
-                                  </span> : <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                    {ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0} {event.currency}
-                                  </span>}
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <div className={'w-full flex justify-center'}>
-                              <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-400'}>
-                                No tickets selected
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className={
-                      'absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8'
-                    }
-                  >
-                    {selectedWithIndex.length > 0 && (
-                      <>
-                        <div className={'flex gap-4 justify-center flex-wrap'}>
-                          {selectedWithIndex.map((ticket: any) => {
-                            const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                            return (
-                              <span
-                                key={ticket.ticketTypeId}
-                                className={
-                                  'text-primary-500 text-[1.4rem] leading-[20px] px-[15px] py-[5px] bg-primary-50 rounded-[20px]'
-                                }
-                              >
-                                {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                              </span>
-                            );
-                          })}
-                        </div>
-                        {isFree ? <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                          {t('free')}
-                        </span> : <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                          {totalPrice} {event.currency}
-                        </span>}
-                      </>
-                    )}
-                  </div>
-                </div>
+                <TicketSummaryCard
+                  t={t}
+                  selectedWithIndex={selectedWithIndex}
+                  ticketTypes={ticketTypes}
+                  totalPrice={totalPrice}
+                  event={event}
+                  isFree={isFree}
+                />
                 <div></div>
                 <div></div>
                 <div></div>
@@ -455,49 +382,39 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className="flex flex-col gap-8 overflow-y-auto min-h-0">
               <div className="flex flex-col gap-8">
-                {selectedWithIndex.map((ticket: any) => {
-                  const idx = ticket.__index;
-                  const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
+                {watchedAttendees.map((attendee: any, attendeeIndex: number) => {
+                  const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === attendee?.ticketTypeId);
+
+                  // Count which number this is for this ticket type
+                  const attendeesBeforeThis = watchedAttendees.slice(0, attendeeIndex);
+                  const sameTypeCount = attendeesBeforeThis.filter((a: any) =>
+                    a.ticketTypeId === attendee?.ticketTypeId
+                  ).length;
 
                   return (
-                    <div key={`${ticket.ticketTypeId}-${idx}`} className="">
-                      {/* <h3 className="font-semibold text-lg mb-4">
-                      {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown Ticket'}
-                      ({ticket.quantity} {ticket.quantity === 1 ? 'ticket' : 'tickets'})
-                    </h3> */}
-                      <div className="flex flex-col gap-6">
-                        {Array.from({ length: ticket.quantity }, (_, attendeeIndex: number) => {
-                          const checkboxFieldName = `tickets.${idx}.attendees.${attendeeIndex}.isForSomeoneElse`;
-                          const isChecked = watch(checkboxFieldName);
-
-                          return (
-                            <div key={`attendee-${attendeeIndex}`} className="border border-neutral-100 rounded-[15px] flex flex-col gap-[1.5rem] p-[15px]">
-                              <div className='flex items-center w-full justify-between font-semibold text-[1.6rem] leading-8 text-deep-100'>
-                                <span>#{attendeeIndex + 1}</span>
-                                <span>{ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown Ticket'}</span>
-                              </div>
-                              <div className='flex items-center justify-between py-4 px-[1.5rem] bg-neutral-100 rounded-[10px]'>
-                                <span className='text-[1.5rem] leading-12 text-neutral-900'>{t('recipient.someone')}</span>
-                                <label className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-primary-500">
-                                  <input
-                                    {...register(checkboxFieldName)}
-                                    className="peer sr-only"
-                                    id={`ticket-${idx}-attendee-${attendeeIndex}`}
-                                    type="checkbox"
-                                  />
-                                  <ToggleIcon />
-                                </label>
-                              </div>
-                              {isChecked && (
-                                <div className="flex flex-col gap-3">
-                                  <Input {...register(`tickets.${idx}.attendees.${attendeeIndex}.name`)}>{t('recipient.name')}</Input>
-                                  <Input {...register(`tickets.${idx}.attendees.${attendeeIndex}.email`)}>{t('recipient.email')}</Input>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
+                    <div key={`attendee-${attendeeIndex}-${attendee.ticketTypeId}`} className="border border-neutral-100 rounded-[15px] flex flex-col gap-[1.5rem] p-[15px]">
+                      <div className='flex items-center w-full justify-between font-semibold text-[1.6rem] leading-8 text-deep-100'>
+                        <span>#{sameTypeCount + 1}</span>
+                        <span>{ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown Ticket'}</span>
                       </div>
+                      <div className='flex items-center justify-between py-4 px-[1.5rem] bg-neutral-100 rounded-[10px]'>
+                        <span className='text-[1.5rem] leading-12 text-neutral-900'>{t('recipient.someone')}</span>
+                        <label className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-primary-500">
+                          <input
+                            {...register(`attendees.${attendeeIndex}.isForSomeoneElse`)}
+                            className="peer sr-only"
+                            id={`attendee-${attendeeIndex}`}
+                            type="checkbox"
+                          />
+                          <ToggleIcon />
+                        </label>
+                      </div>
+                      {watch(`attendees.${attendeeIndex}.isForSomeoneElse`) && (
+                        <div className="flex flex-col gap-3">
+                          <Input {...register(`attendees.${attendeeIndex}.name`)}>{t('recipient.name')}</Input>
+                          <Input {...register(`attendees.${attendeeIndex}.email`)}>{t('recipient.email')}</Input>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -508,84 +425,14 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                 <div className='hidden lg:block'></div>
               </div>
               <div className="lg:hidden flex flex-col gap-8">
-                <div className=' flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]'>
-                  <Image src={ticketBG} alt={'ticket bg'} className='h-full' />
-                  <div
-                    className={
-                      'absolute top-0 w-full px-4 left-[50%] -translate-x-[50%] flex flex-col items-center gap-8'
-                    }
-                  >
-                    <span className={'font-primary font-medium pt-4 text-[2.2rem] leading-[30px] text-black'}>
-                      {t('ticket.summary')}
-                    </span>
-                    <div
-                      className={
-                        'w-full h-[250px] lg:h-[296px]  bg-neutral-100 p-[15px] text-center flex flex-col justify-between items-center '
-                      }
-                    >
-                      <div className={'flex flex-col gap-8 w-full'}>
-                        <span className={'font-mono text-[14px] leading-[22px] text-deep-100 text-center'}>
-                          {selectedWithIndex.length > 0 ? t('ticket.select') : t('ticket.select')}
-                        </span>
-                        <div className={'flex flex-col gap-4'}>
-                          {selectedWithIndex.length > 0 ? (
-                            selectedWithIndex.map((ticket: any) => {
-                              const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                              return (
-                                <div key={ticket.ticketTypeId} className={'w-full flex justify-between'}>
-                                  <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-600'}>
-                                    x{ticket.quantity} {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                                  </span>
-                                  {isFree ? <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                    {t('free')}
-                                  </span> : <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                    {ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0} {event.currency}
-                                  </span>}
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <div className={'w-full flex justify-center'}>
-                              <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-400'}>
-                                No tickets selected
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className={
-                      'absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8'
-                    }
-                  >
-                    {selectedWithIndex.length > 0 && (
-                      <>
-                        <div className={'flex gap-4 justify-center flex-wrap'}>
-                          {selectedWithIndex.map((ticket: any) => {
-                            const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                            return (
-                              <span
-                                key={ticket.ticketTypeId}
-                                className={
-                                  'text-primary-500 text-[1.4rem] leading-[20px] px-[15px] py-[5px] bg-primary-50 rounded-[20px]'
-                                }
-                              >
-                                {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                              </span>
-                            );
-                          })}
-                        </div>
-                        {isFree ? <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                          {t('free')}
-                        </span> : <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                          {totalPrice} {event.currency}
-                        </span>}
-                      </>
-                    )}
-                  </div>
-                </div>
+                <TicketSummaryCard
+                  t={t}
+                  selectedWithIndex={selectedWithIndex}
+                  ticketTypes={ticketTypes}
+                  totalPrice={totalPrice}
+                  event={event}
+                  isFree={isFree}
+                />
                 <div></div>
                 <div></div>
                 <div></div>
@@ -683,130 +530,21 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                       />
                     </div>
                   </div>
-
-                  {/* PAYPAL */}
-                  {/* <div
-                className={
-                  "flex items-center justify-between p-[15px] rounded-[15px] border border-neutral-100"
-                }
-              >
-                <div className={"flex items-center gap-4"}>
-                  <Image src={paypal} alt={"Logo of paypal"} />
-                  <span
-                    className={
-                      "font-semibold text-[1.6rem] leading-[22px] text-deep-100"
-                    }
-                  >
-                    {t("payment.paypal")}
-                  </span>
-                </div>
-                <ArrowRight2 size="20" color="#0d0d0d" variant="Bulk" />
-              </div> */}
                 </div>}
                 <div></div>
                 <div></div>
                 <div></div>
                 <div className='hidden lg:block'></div>
-                {/* <div>
-              <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
-              <ul className="space-y-2 mb-4">
-                {selectedWithIndex.map((ticket: any) => {
-                  const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                  return (
-                    <li key={ticket.ticketTypeId} className="flex justify-between">
-                      <span>{ticket.quantity}x {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}</span>
-                      <span>{ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0} {event.currency}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-              <div className="border-t pt-2">
-                <div className="flex justify-between font-bold text-lg">
-                  <span>Total:</span>
-                  <span>{totalPrice} {event.currency}</span>
-                </div>
-              </div>
-            </div> */}
               </div>
               <div className="lg:hidden flex flex-col gap-8">
-                <div className=' flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]'>
-                  <Image src={ticketBG} alt={'ticket bg'} className='h-full' />
-                  <div
-                    className={
-                      'absolute top-0 w-full px-4 left-[50%] -translate-x-[50%] flex flex-col items-center gap-8'
-                    }
-                  >
-                    <span className={'font-primary font-medium pt-4 text-[2.2rem] leading-[30px] text-black'}>
-                      {t('ticket.summary')}
-                    </span>
-                    <div
-                      className={
-                        'w-full h-[250px] lg:h-[296px]  bg-neutral-100 p-[15px] text-center flex flex-col justify-between items-center '
-                      }
-                    >
-                      <div className={'flex flex-col gap-8 w-full'}>
-                        <span className={'font-mono text-[14px] leading-[22px] text-deep-100 text-center'}>
-                          {selectedWithIndex.length > 0 ? t('ticket.select') : t('ticket.select')}
-                        </span>
-                        <div className={'flex flex-col gap-4'}>
-                          {selectedWithIndex.length > 0 ? (
-                            selectedWithIndex.map((ticket: any) => {
-                              const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                              return (
-                                <div key={ticket.ticketTypeId} className={'w-full flex justify-between'}>
-                                  <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-600'}>
-                                    x{ticket.quantity} {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                                  </span>
-                                  {isFree ? <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                    {t('free')}
-                                  </span> : <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                    {ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0} {event.currency}
-                                  </span>}
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <div className={'w-full flex justify-center'}>
-                              <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-400'}>
-                                No tickets selected
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className={
-                      'absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8'
-                    }
-                  >
-                    {selectedWithIndex.length > 0 && (
-                      <>
-                        <div className={'flex gap-4 justify-center flex-wrap'}>
-                          {selectedWithIndex.map((ticket: any) => {
-                            const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                            return (
-                              <span
-                                key={ticket.ticketTypeId}
-                                className={
-                                  'text-primary-500 text-[1.4rem] leading-[20px] px-[15px] py-[5px] bg-primary-50 rounded-[20px]'
-                                }
-                              >
-                                {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                              </span>
-                            );
-                          })}
-                        </div>
-                        {isFree ? <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                          {t('free')}
-                        </span> : <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                          {totalPrice} {event.currency}
-                        </span>}
-                      </>
-                    )}
-                  </div>
-                </div>
+                <TicketSummaryCard
+                  t={t}
+                  selectedWithIndex={selectedWithIndex}
+                  ticketTypes={ticketTypes}
+                  totalPrice={totalPrice}
+                  event={event}
+                  isFree={isFree}
+                />
                 <div></div>
                 <div></div>
                 <div></div>
@@ -814,90 +552,19 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
               <div className='lg:hidden'></div>
               <div className='lg:hidden'></div>
               <div className='lg:hidden'></div>
-
             </motion.div>
           )}
 
           {/* TICKET SUMMARY VIEW */}
           <div className="hidden lg:flex lg:flex-col lg:overflow-y-auto min-h-0 flex-col gap-20 p-4 pt-0">
-            <div className=' flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]'>
-              <Image src={ticketBG} alt={'ticket bg'} className='h-full' />
-              <div
-                className={
-                  'absolute top-0 w-full px-4 left-[50%] -translate-x-[50%] flex flex-col items-center gap-8'
-                }
-              >
-                <span className={'font-primary font-medium pt-4 text-[2.2rem] leading-[30px] text-black'}>
-                  {t('ticket.summary')}
-                </span>
-                <div
-                  className={
-                    'w-full h-[250px] lg:h-[296px]  bg-neutral-100 p-[15px] text-center flex flex-col justify-between items-center '
-                  }
-                >
-                  <div className={'flex flex-col gap-8 w-full'}>
-                    <span className={'font-mono text-[14px] leading-[22px] text-deep-100 text-center'}>
-                      {selectedWithIndex.length > 0 ? t('ticket.select') : t('ticket.select')}
-                    </span>
-                    <div className={'flex flex-col gap-4'}>
-                      {selectedWithIndex.length > 0 ? (
-                        selectedWithIndex.map((ticket: any) => {
-                          const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                          return (
-                            <div key={ticket.ticketTypeId} className={'w-full flex justify-between'}>
-                              <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-600'}>
-                                x{ticket.quantity} {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                              </span>
-                              {isFree ? <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                {t('free')}
-                              </span> : <span className={'font-medium text-[1.4rem] leading-[22px] text-deep-100'}>
-                                {ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0} {event.currency}
-                              </span>}
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <div className={'w-full flex justify-center'}>
-                          <span className={'font-mono text-[1.4rem] leading-[22px] text-neutral-400'}>
-                            No tickets selected
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className={
-                  'absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8'
-                }
-              >
-                {selectedWithIndex.length > 0 && (
-                  <>
-                    <div className={'flex gap-4 justify-center flex-wrap'}>
-                      {selectedWithIndex.map((ticket: any) => {
-                        const ticketType = ticketTypes.find(tt => tt.eventTicketTypeId === ticket.ticketTypeId);
-                        return (
-                          <span
-                            key={ticket.ticketTypeId}
-                            className={
-                              'text-primary-500 text-[1.4rem] leading-[20px] px-[15px] py-[5px] bg-primary-50 rounded-[20px]'
-                            }
-                          >
-                            {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
-                          </span>
-                        );
-                      })}
-                    </div>
-                    {isFree ? <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                      {t('free')}
-                    </span> : <span className={'font-primary font-medium text-[28px] leading-[32px] text-[#000]'}>
-                      {totalPrice} {event.currency}
-                    </span>}
-                  </>
-                )}
-              </div>
-            </div>
+            <TicketSummaryCard
+              t={t}
+              selectedWithIndex={selectedWithIndex}
+              ticketTypes={ticketTypes}
+              totalPrice={totalPrice}
+              event={event}
+              isFree={isFree}
+            />
             <div></div>
             <div></div>
           </div>
@@ -921,4 +588,74 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
       </div>
     </>
   )
+}
+
+// Helper component to reduce duplication
+function TicketSummaryCard({ t, selectedWithIndex, ticketTypes, totalPrice, event, isFree }: any) {
+  return (
+    <div className='flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]'>
+      <Image src={ticketBG} alt={'ticket bg'} className='h-full' />
+      <div className='absolute top-0 w-full px-4 left-[50%] -translate-x-[50%] flex flex-col items-center gap-8'>
+        <span className='font-primary font-medium pt-4 text-[2.2rem] leading-[30px] text-black'>
+          {t('ticket.summary')}
+        </span>
+        <div className='w-full h-[250px] lg:h-[296px] bg-neutral-100 p-[15px] text-center flex flex-col justify-between items-center'>
+          <div className='flex flex-col gap-8 w-full'>
+            <span className='font-mono text-[14px] leading-[22px] text-deep-100 text-center'>
+              {selectedWithIndex.length > 0 ? t('ticket.select') : t('ticket.select')}
+            </span>
+            <div className='flex flex-col gap-4'>
+              {selectedWithIndex.length > 0 ? (
+                selectedWithIndex.map((ticket: any) => {
+                  const ticketType = ticketTypes.find((tt: any) => tt.eventTicketTypeId === ticket.ticketTypeId);
+                  return (
+                    <div key={ticket.ticketTypeId} className='w-full flex justify-between'>
+                      <span className='font-mono text-[1.4rem] leading-[22px] text-neutral-600'>
+                        x{ticket.quantity} {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
+                      </span>
+                      {isFree ? <span className='font-medium text-[1.4rem] leading-[22px] text-deep-100'>
+                        {t('free')}
+                      </span> : <span className='font-medium text-[1.4rem] leading-[22px] text-deep-100'>
+                        {ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0} {event.currency}
+                      </span>}
+                    </div>
+                  );
+                })
+              ) : (
+                <div className='w-full flex justify-center'>
+                  <span className='font-mono text-[1.4rem] leading-[22px] text-neutral-400'>
+                    No tickets selected
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8'>
+        {selectedWithIndex.length > 0 && (
+          <>
+            <div className='flex gap-4 justify-center flex-wrap'>
+              {selectedWithIndex.map((ticket: any) => {
+                const ticketType = ticketTypes.find((tt: any) => tt.eventTicketTypeId === ticket.ticketTypeId);
+                return (
+                  <span
+                    key={ticket.ticketTypeId}
+                    className='text-primary-500 text-[1.4rem] leading-[20px] px-[15px] py-[5px] bg-primary-50 rounded-[20px]'
+                  >
+                    {ticketType ? Capitalize(ticketType.ticketTypeName) : 'Unknown'}
+                  </span>
+                );
+              })}
+            </div>
+            {isFree ? <span className='font-primary font-medium text-[28px] leading-[32px] text-[#000]'>
+              {t('free')}
+            </span> : <span className='font-primary font-medium text-[28px] leading-[32px] text-[#000]'>
+              {totalPrice} {event.currency}
+            </span>}
+          </>
+        )}
+      </div>
+    </div>
+  );
 }

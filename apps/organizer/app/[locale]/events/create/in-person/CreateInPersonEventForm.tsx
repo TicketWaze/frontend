@@ -34,7 +34,7 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
   const { data: session } = useSession()
   const organisation = session?.activeOrganisation
   const countries = UseCountries()
-  const [isFree, setIsfree] = useState(true)
+  const [isFree, setIsfree] = useState(false)
 
   const FormDataSchema = z.object({
     eventName: z.string().min(10, t('errors.basicDetails.name')).max(50).regex(/^[a-zA-Z0-9 ]+$/, {
@@ -124,13 +124,13 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
       eventTags: [],
       eventImage: undefined as unknown as File,
       eventDays: [{ startDate: '', startTime: '', endTime: '' }],
-      // ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
-      ticketTypes: [{
-        ticketTypeName: 'general',
-        ticketTypeDescription: t('general_default'),
-        ticketTypePrice: '',
-        ticketTypeQuantity: '100'
-      }]
+      ticketTypes: [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }]
+      // ticketTypes: [{
+      //   ticketTypeName: 'general',
+      //   ticketTypeDescription: t('general_default'),
+      //   ticketTypePrice: '',
+      //   ticketTypeQuantity: '100'
+      // }]
     }
   })
 
@@ -722,7 +722,6 @@ export default function CreateInPersonEventForm({ tags }: { tags: EventTag[] }) 
                     id="free-event"
                     type="checkbox"
                     checked={isFree}
-                    disabled
                     onChange={() => setIsfree(prev => {
                       if (prev === true) {
                         setValue('ticketTypes', [{ ticketTypeName: '', ticketTypeDescription: '', ticketTypePrice: '', ticketTypeQuantity: '' }])

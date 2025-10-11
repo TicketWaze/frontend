@@ -286,6 +286,9 @@
   "Checkout": {
     "back" : "Back",
     "free" : "Free",
+    "purchased" : "Ticket purchased",
+    "purchased_cta" : "Opening upcoming events ...",
+    "purchased_text" : "Your purchase is confirmed! Access it anytime in Upcoming Events or check your email for a copy",
     "ticket": {
       "title": "Buy Ticket",
       "quantity": "Quantity",
