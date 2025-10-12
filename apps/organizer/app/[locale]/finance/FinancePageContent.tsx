@@ -161,7 +161,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
                       </Drawer>
                     </TableCell>
                     <TableCell className={'hidden lg:table-cell'}>
-                      {ticket.ticketType === 'GENERAL' && (
+                      {ticket.ticketType.toUpperCase() === 'GENERAL' && (
                         <span
                           className={
                             'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#EF1870]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
@@ -170,7 +170,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
                           general
                         </span>
                       )}
-                      {ticket.ticketType === 'VIP' && (
+                      {ticket.ticketType.toUpperCase() === 'VIP' && (
                         <span
                           className={
                             'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#7A19C7]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
@@ -179,7 +179,7 @@ export default function FinancePageContent({ transactions }: { transactions: { t
                           vip
                         </span>
                       )}
-                      {ticket.ticketType === 'VVIP' && (
+                      {ticket.ticketType.toUpperCase() === 'VVIP' && (
                         <span
                           className={
                             'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-deep-100  px-[5px] rounded-[30px] bg-[#f5f5f5]'

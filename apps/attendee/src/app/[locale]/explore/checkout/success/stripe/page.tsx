@@ -1,20 +1,20 @@
 import AttendeeLayout from '@/components/Layouts/AttendeeLayout'
 import React from 'react'
-import RedirectContent from './RedirectContent';
 import { auth } from '@/lib/auth';
 import User from '@/types/User';
+import RedirectContent from './RedirectContent';
 
-export default async function SuccessMoncash({
+export default async function SuccessStripe({
   searchParams,
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
 
-  const transactionId = searchParams?.transactionId;
+  const orderId = searchParams?.orderId;
   const session = await auth()
   return (
     <AttendeeLayout className='items-center justify-center' title=''>
-      <RedirectContent transactionId={transactionId as string} user={session?.user as User} />
+      <RedirectContent orderId={orderId as string} user={session?.user as User} />
       {/* <div className='flex flex-col gap-16 items-center max-w-[530px]'>
         <Image src={Success} alt='success icon' width={150} height={150} />
         <div className='text-center flex flex-col gap-8'>

@@ -7,6 +7,7 @@ export default interface Ticket {
     eventId: string
     orderId: string
     userId: string
+    fullName : string
     ticketPrice: number
     organisationId: string
     status: 'PENDING' | 'CHECKED'

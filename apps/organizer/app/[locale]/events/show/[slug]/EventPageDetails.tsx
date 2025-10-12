@@ -2,7 +2,7 @@
 import TruncateUrl from '@/lib/TruncateUrl'
 import Event from '@/types/Event'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@workspace/ui/components/dialog'
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs'
 import TopBar from '@workspace/ui/components/TopBar'
 import Capitalize from '@workspace/ui/lib/Capitalize'
@@ -27,6 +27,7 @@ import { MarkAsActive, MarkAsInactive, UpdateCheckersListAction } from '@/action
 import User from '@/types/User'
 import PageLoader from '@/components/Loaders/PageLoader'
 import { Input } from '@workspace/ui/components/Inputs'
+import FormatDate from '@/lib/FormatDate'
 
 export default function EventPageDetails({ event, tickets, slug, organisationCheckers, user, eventCheckers }: { event: Event, tickets: Ticket[], slug: string; organisationCheckers: any, user: User, eventCheckers: any }) {
   const t = useTranslations('Events.single_event')
@@ -676,159 +677,187 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
                 >
                   {t('table.date_purchased')}
                 </TableHead>
-                <TableHead
+                {/* <TableHead
                   className={
                     'font-bold hidden lg:table-cell text-[1.1rem] pb-[15px] w-[40px] leading-[15px] text-deep-100 uppercase'
                   }
                 >
-                  {/*{single_event.table.date_purchased}*/}
-                </TableHead>
+                  {single_event.table.date_purchased}
+                </TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* {tickets.map(
-                      ({ ticketId, ticketName, ticketType, ticketPrice, orderId, createdAt }) => {
-                        const [order] = orders.filter((order) => orderId === order.orderId)
-                        return (
-                          <TableRow key={ticketId}>
-                            <TableCell
-                              className={'text-[1.5rem] py-[15px] leading-8 text-neutral-900'}
-                            >
-                              <span className={'cursor-pointer'}>{ticketName}</span>
-                            </TableCell>
-                            <TableCell className={'text-[1.5rem] leading-8 text-neutral-900'}>
-                              <span className={'cursor-pointer'}>{ticketName}</span>
-                            </TableCell>
-                            <TableCell className={'hidden lg:table-cell'}>
-                              {ticketType === 'general' && (
-                                <span
-                                  className={
-                                    'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#EF1870]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
-                                  }
-                                >
-                                  general
-                                </span>
-                              )}
-                              {ticketType === 'vip' && (
-                                <span
-                                  className={
-                                    'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#7A19C7]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
-                                  }
-                                >
-                                  vip
-                                </span>
-                              )}
-                              {ticketType === 'vvip' && (
-                                <span
-                                  className={
-                                    'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-deep-100  px-[5px] rounded-[30px] bg-[#f5f5f5]'
-                                  }
-                                >
-                                  Premium vip
-                                </span>
-                              )}
-                            </TableCell>
-                            <TableCell
+              {tickets.map(
+                ({ ticketId, ticketName, ticketType, ticketPrice, orderId, createdAt, status, fullName }) => {
+                  // const [order] = orders.filter((order) => orderId === order.orderId)
+                  return (
+                    <TableRow key={ticketId}>
+                      <TableCell
+                        className={'text-[1.5rem] py-[15px] leading-8 text-neutral-900'}
+                      >
+                        <span className={'cursor-pointer'}>{ticketName}</span>
+                      </TableCell>
+                      <TableCell className={'text-[1.5rem] leading-8 text-neutral-900'}>
+                        <span className={'cursor-pointer'}>{fullName}</span>
+                      </TableCell>
+                      <TableCell className={'hidden lg:table-cell'}>
+                        {ticketType === 'general' && (
+                          <span
+                            className={
+                              'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#EF1870]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
+                            }
+                          >
+                            general
+                          </span>
+                        )}
+                        {ticketType === 'vip' && (
+                          <span
+                            className={
+                              'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#7A19C7]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
+                            }
+                          >
+                            vip
+                          </span>
+                        )}
+                        {ticketType === 'vvip' && (
+                          <span
+                            className={
+                              'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-deep-100  px-[5px] rounded-[30px] bg-[#f5f5f5]'
+                            }
+                          >
+                            Premium vip
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell
+                        className={
+                          'hidden lg:table-cell text-[1.5rem] font-medium leading-8 text-neutral-900'
+                        }
+                      >
+                        {ticketPrice} HTG
+                      </TableCell>
+                      <TableCell className={'hidden lg:table-cell'}>
+                        {status === 'CHECKED' && (
+                          <span
+                            className={
+                              'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#349C2E]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
+                            }
+                          >
+                            {t('filters.checked')}
+                          </span>
+                        )}
+                        {status === 'PENDING' && (
+                          <span
+                            className={
+                              'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#EA961C]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
+                            }
+                          >
+                            {t('filters.pending')}
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell
+                        className={
+                          'hidden lg:table-cell text-[1.5rem] leading-8 text-neutral-900'
+                        }
+                      >
+                        {FormatDate(createdAt)}
+                      </TableCell>
+                      {/* <TableCell className={'text-[1.5rem] leading-8 text-neutral-900'}>
+                        <Popover>
+                          <PopoverTrigger>
+                            <button
                               className={
-                                'hidden lg:table-cell text-[1.5rem] font-medium leading-8 text-neutral-900'
+                                'w-[35px] h-[35px] cursor-pointer rounded-full bg-neutral-100 flex items-center justify-center'
                               }
                             >
-                              {ticketPrice} HTG
-                            </TableCell>
-                            <TableCell className={'hidden lg:table-cell'}>
-                              {order.status === 'SUCCESSFUL' && (
-                                <span
-                                  className={
-                                    'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#349C2E]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
-                                  }
-                                >
-                                  {single_event.filters.checked}
-                                </span>
-                              )}
-                              {order.status === 'PENDING' && (
-                                <span
-                                  className={
-                                    'py-[3px] text-[1.1rem] font-bold leading-[15px] text-center uppercase text-[#EA961C]  px-[5px] rounded-[30px] bg-[#f5f5f5]'
-                                  }
-                                >
-                                  {single_event.filters.pending}
-                                </span>
-                              )}
-                            </TableCell>
-                            <TableCell
+                              <MoreCircle variant={'Bulk'} size={20} color={'#737C8A'} />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className={
+                              'w-[250px] p-0 m-0 bg-none shadow-none border-none mx-4'
+                            }
+                          >
+                            <ul
                               className={
-                                'hidden lg:table-cell text-[1.5rem] leading-8 text-neutral-900'
+                                'bg-neutral-100 border border-neutral-200 right-8 p-4  mb-8 rounded-[1rem] shadow-xl bottom-full flex flex-col gap-4'
                               }
                             >
-                              {createdAt.toJSDate().toDateString()}
-                            </TableCell>
-                            <TableCell className={'text-[1.5rem] leading-8 text-neutral-900'}>
-                              <Popover>
-                                <PopoverTrigger>
+                              <span
+                                className={
+                                  'font-medium py-[5px] border-b-[1px] border-neutral-200 text-[1.4rem] text-deep-100 leading-[20px]'
+                                }
+                              >
+                                {t('more')}
+                              </span>
+                              <div className={'flex flex-col gap-4'}>
+                                <li className={''}>
+                                  <Drawer direction={'right'}>
+                                    <DrawerTrigger className={'w-full'}>
+                                      <button
+                                        className={`font-normal cursor-pointer group text-[1.5rem] py-4 border-b-[1px] border-neutral-200 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                                      >
+                                        <span className={''}>{t('details')}</span>
+                                        <HambergerMenu
+                                          size="20"
+                                          variant="Bulk"
+                                          color={'#2E3237'}
+                                        />
+                                      </button>
+                                    </DrawerTrigger>
+                                    <Informations />
+                                  </Drawer>
+                                </li>
+                                <li className={''}>
                                   <button
-                                    className={
-                                      'w-[35px] h-[35px] cursor-pointer rounded-full bg-neutral-100 flex items-center justify-center'
-                                    }
+                                    className={`font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
                                   >
-                                    <MoreCircle variant={'Bulk'} size={20} color={'#737C8A'} />
-                                  </button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                  className={
-                                    'w-[250px] p-0 m-0 bg-none shadow-none border-none mx-4'
-                                  }
-                                >
-                                  <ul
-                                    className={
-                                      'bg-neutral-100 border border-neutral-200 right-8 p-4  mb-8 rounded-[1rem] shadow-xl bottom-full flex flex-col gap-4'
-                                    }
-                                  >
-                                    <span
-                                      className={
-                                        'font-medium py-[5px] border-b-[1px] border-neutral-200 text-[1.4rem] text-deep-100 leading-[20px]'
-                                      }
-                                    >
-                                      {single_event.more}
+                                    <span className={'text-primary-500'}>
+                                      {single_event.mark_as_check}
                                     </span>
-                                    <div className={'flex flex-col gap-4'}>
-                                      <li className={''}>
-                                        <Drawer direction={'right'}>
-                                          <DrawerTrigger className={'w-full'}>
-                                            <button
-                                              className={`font-normal cursor-pointer group text-[1.5rem] py-4 border-b-[1px] border-neutral-200 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                                            >
-                                              <span className={''}>{single_event.details}</span>
-                                              <HambergerMenu
-                                                size="20"
-                                                variant="Bulk"
-                                                color={'#2E3237'}
-                                              />
-                                            </button>
-                                          </DrawerTrigger>
-                                          <Informations />
-                                        </Drawer>
-                                      </li>
-                                      <li className={''}>
-                                        <button
-                                          className={`font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                                        >
-                                          <span className={'text-primary-500'}>
-                                            {single_event.mark_as_check}
-                                          </span>
-                                          <TickCircle size="20" variant="Bulk" color={'#E45B00'} />
-                                        </button>
-                                      </li>
-                                    </div>
-                                  </ul>
-                                </PopoverContent>
-                              </Popover>
-                            </TableCell>
-                          </TableRow>
-                        )
-                      }
-                    )} */}
+                                    <TickCircle size="20" variant="Bulk" color={'#E45B00'} />
+                                  </button>
+                                </li>
+                              </div>
+                            </ul>
+                          </PopoverContent>
+                        </Popover>
+                      </TableCell> */}
+                    </TableRow>
+                  )
+                }
+              )}
             </TableBody>
           </Table>
+          {tickets.length === 0 && <div
+                className={
+                  'w-[330px] lg:w-[460px] mx-auto flex flex-col items-center mt-8 gap-[5rem]'
+                }
+              >
+                <div
+                  className={
+                    'w-[120px] h-[120px] rounded-full flex items-center justify-center bg-neutral-100'
+                  }
+                >
+                  <div
+                    className={
+                      'w-[90px] h-[90px] rounded-full flex items-center justify-center bg-neutral-200'
+                    }
+                  >
+                    <Money3 size="50" color="#0d0d0d" variant="Bulk" />
+                  </div>
+                </div>
+                <div className={'flex flex-col gap-[3rem] items-center text-center'}>
+                  <p
+                    className={
+                      'text-[1.8rem] leading-[25px] text-neutral-600 max-w-[330px] lg:max-w-[422px]'
+                    }
+                  >
+                    {t('table.description')}
+                  </p>
+                </div>
+              </div>}
         </TabsContent>
         {event.eventTicketTypes.map((ticketClass, index) => {
           return (
@@ -1060,7 +1089,7 @@ export default function EventPageDetails({ event, tickets, slug, organisationChe
       </Tabs>
 
       {/* no ticket sold */}
-      {true && (
+      {false && (
         <div
           className={
             'w-[330px] lg:w-[460px] mx-auto flex flex-col items-center mt-8 gap-[5rem]'

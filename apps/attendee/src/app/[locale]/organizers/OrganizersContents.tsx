@@ -86,6 +86,7 @@ export default function OrganizersContents({ organisations, followedOrganisation
                                         id={organisation.organisationId}
                                         city={organisation.city}
                                         country={organisation.country}
+                                        isVerified={organisation.isVerified}
                                     />
                                 </li>
                             )
@@ -113,6 +114,7 @@ export default function OrganizersContents({ organisations, followedOrganisation
                                         id={organisation.organisationId}
                                         city={organisation.city}
                                         country={organisation.country}
+                                        isVerified={organisation.isVerified}
                                     />
                                 </li>
                             )

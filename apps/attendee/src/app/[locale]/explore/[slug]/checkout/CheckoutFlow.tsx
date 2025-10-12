@@ -120,10 +120,70 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
       setCurrentStep(step => step - 1)
     }
   }
+  const [paymentType, setPaymentType] = useState<'' | 'moncash' | 'card'>('')
+
+  async function MoncashPayment() {
+    setIsLoading(true)
+    const values = getValues();
+
+    // Filter out attendees who haven't filled in their info (when "someone else" is checked)
+    const validAttendees = values.attendees.filter((attendee: any) => {
+      // If it's for someone else, they must have filled name and email
+      // If not for someone else, we'll use the current user's info (handled by backend)
+      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
+    });
+
+    // Send the flat attendees array: [{ticketTypeId, name, email}, ...]
+    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/payments/moncash`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${user.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(validAttendees)
+    })
+    const response = await request.json()
+    if (response.status === 'success') {
+      router.push(response.paymentURL)
+    }
+    setIsLoading(false)
+  }
+
+  async function CardPayment() {
+    setIsLoading(true)
+    const values = getValues();
+
+    // Filter out attendees who haven't filled in their info (when "someone else" is checked)
+    const validAttendees = values.attendees.filter((attendee: any) => {
+      // If it's for someone else, they must have filled name and email
+      // If not for someone else, we'll use the current user's info (handled by backend)
+      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
+    });
+
+    // Send the flat attendees array: [{ticketTypeId, name, email}, ...]
+    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/payments/stripe`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${user.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(validAttendees)
+    })
+    const response = await request.json()
+    if (response.status === 'success') {
+      router.push(response.redirectUrl)
+    }
+    setIsLoading(false)
+  }
 
   const processForm: SubmitHandler<any> = async data => {
-    console.log('Final submission data:', data.attendees);
-    // data.attendees will be in format: [{ticketTypeId, name, email}, ...]
+    if(paymentType === 'moncash') {
+      await MoncashPayment()
+    }else if(paymentType === 'card'){
+      await CardPayment()
+    }else{
+      toast.error("Select a payment Type")
+    }
   }
 
   const next = async () => {
@@ -194,32 +254,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
     return total + (ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0);
   }, 0);
 
-  async function MoncashPayment() {
-    setIsLoading(true)
-    const values = getValues();
-
-    // Filter out attendees who haven't filled in their info (when "someone else" is checked)
-    const validAttendees = values.attendees.filter((attendee: any) => {
-      // If it's for someone else, they must have filled name and email
-      // If not for someone else, we'll use the current user's info (handled by backend)
-      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
-    });
-
-    // Send the flat attendees array: [{ticketTypeId, name, email}, ...]
-    const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/payments/moncash`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${user.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(validAttendees)
-    })
-    const response = await request.json()
-    if (response.status === 'success') {
-      router.push(response.paymentURL)
-    }
-    setIsLoading(false)
-  }
+  
 
   const router = useRouter()
 
@@ -458,9 +493,9 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                   {/* MONCASH */}
                   <button
                     className={
-                      "flex items-center justify-between cursor-pointer p-[15px] rounded-[15px] border border-neutral-100"
+                      `flex items-center justify-between cursor-pointer p-[15px] rounded-[15px] border border-neutral-100 hover:border-primary-500 transition-all ease-in-out duration-300 ${paymentType === 'moncash' && 'border-2 border-primary-500'}`
                     }
-                    onClick={MoncashPayment}
+                    onClick={()=>setPaymentType('moncash')}
                   >
                     <div className={"flex items-center gap-4"}>
                       <Image src={moncash} alt={"Logo of moncash"} />
@@ -475,12 +510,12 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                     <ArrowRight2 size="20" color="#0d0d0d" variant="Bulk" />
                   </button>
                   {/* CARD */}
-                  <div
+                  <button onClick={()=>setPaymentType('card')}
                     className={
-                      "flex flex-col gap-[15px] p-[15px] rounded-[15px] border border-neutral-100 "
+                      `flex items-center w-full justify-between cursor-pointer p-[15px] rounded-[15px] border border-neutral-100 hover:border-primary-500 transition-all ease-in-out duration-300 ${paymentType === 'card' && 'border-2 border-primary-500'}`
                     }
                   >
-                    <div className={"flex items-center justify-between"}>
+                    <div className={"flex w-full items-center justify-between"}>
                       <div className={"flex items-center gap-4"}>
                         <Card size="20" color="#0d0d0d" variant="Bulk" />
                         <span
@@ -493,43 +528,7 @@ export default function CheckoutFlow({ event, tickets, ticketTypes, user }: { ev
                       </div>
                       <ArrowRight2 size="20" color="#0d0d0d" variant="Bulk" />
                     </div>
-                    <div
-                      className={"flex flex-col lg:flex-row items-center gap-[15px]"}
-                    >
-                      <input
-                        className={
-                          "bg-neutral-100 w-full rounded-[5rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500"
-                        }
-                        type="text"
-                        placeholder={t("payment.placeholders.name")}
-                      />
-                      <input
-                        className={
-                          "bg-neutral-100 w-full lg:w-[135px] rounded-[5rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500"
-                        }
-                        type="text"
-                        placeholder={t("payment.placeholders.expiry")}
-                      />
-                    </div>
-                    <div
-                      className={"flex flex-col lg:flex-row items-center gap-[15px]"}
-                    >
-                      <input
-                        className={
-                          "bg-neutral-100 w-full rounded-[5rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500"
-                        }
-                        type="text"
-                        placeholder={t("payment.placeholders.number")}
-                      />
-                      <input
-                        className={
-                          "bg-neutral-100 w-full lg:w-[135px] rounded-[5rem] p-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500"
-                        }
-                        type="text"
-                        placeholder={"CVV"}
-                      />
-                    </div>
-                  </div>
+                  </button>
                 </div>}
                 <div></div>
                 <div></div>

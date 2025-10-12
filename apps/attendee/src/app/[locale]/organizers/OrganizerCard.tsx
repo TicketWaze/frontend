@@ -3,6 +3,7 @@ import Image, { StaticImageData } from "next/image";
 import { Layer, Location } from "iconsax-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import VerifiedOrganisationCheckMark from "@/components/VerifiedOrganisationCheckMark";
 
 function OrganizerCard({
   image,
@@ -10,14 +11,16 @@ function OrganizerCard({
   number,
   id,
   city,
-  country
+  country,
+  isVerified
 }: {
   image: null | string;
   title: string;
   number: number;
   id: string;
   city : string;
-  country : string
+  country : string;
+  isVerified : boolean
 }) {
   const t = useTranslations("Organizers");
   return (
@@ -40,7 +43,7 @@ function OrganizerCard({
         <span
           className={"font-semibold text-[1.2rem] text-deep-100 leading-[17px]"}
         >
-          {title}
+          {title} {isVerified && <VerifiedOrganisationCheckMark/>}
         </span>
         <div className={"flex items-center justify-between"}>
           <div
