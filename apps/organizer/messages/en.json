@@ -8,8 +8,8 @@
       "title": "Create an Account",
       "organizer": "Create an Account",
       "description": "Please complete the form below to continue.",
-      "invalidToken" : "This invitation link is no longer valid. It may have expired or already been used. Please request a new invite from the event organizer to continue.",
-      "login" : "Log in",
+      "invalidToken": "This invitation link is no longer valid. It may have expired or already been used. Please request a new invite from the event organizer to continue.",
+      "login": "Log in",
       "choice": {
         "title": "Create Account",
         "description": "Choose an option to continue and set up your account.",
@@ -74,21 +74,21 @@
         "phone": "Phone number",
         "website": "Website",
         "currency": "Currency",
-        "back" : "Back",
-        "submit" : "Create organisation",
-        "errors" : {
-          "name" : {
-            "min" : "Organisation name cannot be blank",
-            "max" : "Name cannot exceed 30 characters"
+        "back": "Back",
+        "submit": "Create organisation",
+        "errors": {
+          "name": {
+            "min": "Organisation name cannot be blank",
+            "max": "Name cannot exceed 30 characters"
           },
-          "description" : {
-            "min" : "Description cannot be less than 150 characters",
-            "max" : "Description cannot exceed 350 characters"
+          "description": {
+            "min": "Description cannot be less than 150 characters",
+            "max": "Description cannot exceed 350 characters"
           },
-          "country" : "Select a country",
-          "state" :"This field Cannot be blank",
-          "city" :"City field cannot be blank",
-          "currency" : "Please select a currency"
+          "country": "Select a country",
+          "state": "This field Cannot be blank",
+          "city": "City field cannot be blank",
+          "currency": "Please select a currency"
         }
       },
       "placeholders": {
@@ -106,15 +106,15 @@
         "email": "Contact Email Address",
         "phone": "Phone Number",
         "website": "Organisation Website Url",
-        "currency" : "Currency",
-        "errors" : {
-          "city" : "City field cannot be blank",
-          "state" : "This field Cannot be blank",
-          "gender" : "This field is required",
-          "country" : "Select a country",
-          "dob" : "Please select a date",
-          "currency" : "Please select a currency",
-          "phone" :"Phone Number should be at least 8"
+        "currency": "Currency",
+        "errors": {
+          "city": "City field cannot be blank",
+          "state": "This field Cannot be blank",
+          "gender": "This field is required",
+          "country": "Select a country",
+          "dob": "Please select a date",
+          "currency": "Please select a currency",
+          "phone": "Phone Number should be at least 8"
         }
       },
       "cta": "Complete"
@@ -143,7 +143,7 @@
     "forgot": {
       "title": "Reset Password",
       "description": "Please enter you account details to continue",
-      "back" : "Back",
+      "back": "Back",
       "errors": {
         "email": "Enter a valid email address"
       },
@@ -183,7 +183,7 @@
       "settings": "Settings",
       "help": "Help",
       "switch": "Organisations",
-      "switching" : "Swtich Organisation",
+      "switching": "Swtich Organisation",
       "new": "New organisation",
       "login": "Log in",
       "logout": "Log out",
@@ -215,7 +215,7 @@
     "content": {
       "upcomingTitle": "Upcoming Events",
       "view": "Event Views",
-      "followers" : "Followers"
+      "followers": "Followers"
     },
     "tickets": {
       "title": "Ticket Sales Insights",
@@ -224,7 +224,7 @@
     },
     "event": {
       "event_demographics": {
-        "title": "Event Demographics",
+        "title": "Events Demographics",
         "gender_distribution": {
           "title": "Gender Distribution",
           "gender": {
@@ -340,10 +340,10 @@
       "checkers_description": "Checkers are users assigned to verify tickets at event entrances. They scan and validate tickets to ensure only authorized attendees gain entry.",
       "select_checkers": "Select Checkers",
       "update_checker": "Update Checkers list",
-      "startChecking" : "Start CheckIn",
-      "stopChecking" : "Stop CheckIn",
-      "check_in_description" : "Enter the ticket ID below to verify and check in an attendee.",
-      "ticketID" : "Ticket ID",
+      "startChecking": "Start CheckIn",
+      "stopChecking": "Stop CheckIn",
+      "check_in_description": "Enter the ticket ID below to verify and check in an attendee.",
+      "ticketID": "Ticket ID",
       "revenue": "Total Revenue",
       "sold": "Tickets Sold",
       "left": "Tickets Left",
@@ -407,7 +407,7 @@
         "checked": "Checked-In"
       },
       "all": "All",
-      "search": "Search for ticket, attendee",
+      "search": "Search ticketID",
       "table": {
         "id": "ticket ID",
         "name": "Buyer name",
@@ -423,14 +423,14 @@
       "basic": "Basic Details",
       "category_search": "Search for category",
       "no_result": "They is no result for the keyword ",
-      "list" : {
-        "inPerson" : {
-            "title" : "In-Person",
-            "description" : "Events with location-based access like festivals, conferences, or meetups."
+      "list": {
+        "inPerson": {
+          "title": "In-Person",
+          "description": "Events with location-based access like festivals, conferences, or meetups."
         },
-        "meet" : {
-          "title" : "Google Meet",
-          "description" : "Attend virtually with Google Meet — distance doesn’t matter."
+        "meet": {
+          "title": "Google Meet",
+          "description": "Attend virtually with Google Meet — distance doesn’t matter."
         }
       },
       "date_time": "Date & Time",
@@ -450,7 +450,7 @@
       "city": "City",
       "state": "State / Region / Province",
       "country": "Country",
-      "coordinates" : "Coordinates",
+      "coordinates": "Coordinates",
       "thumbnail": "Event Thumbnail",
       "thumbnail_text": "Drop your thumbnail here or ",
       "resize": "Resize your image",
@@ -489,7 +489,7 @@
           "state": "This field Cannot be blank",
           "city": "City field cannot be blank",
           "country": "Select a country",
-          "longitude" : "Select a place on the map",
+          "longitude": "Select a place on the map",
           "tags": "Select at least one tag",
           "image": {
             "required": "Event should have a cover image",

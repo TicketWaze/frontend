@@ -1,6 +1,6 @@
 import Organisation from "@/types/Organisation";
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 
 const nextAuthResult = NextAuth({
   session: {
@@ -16,76 +16,80 @@ const nextAuthResult = NextAuth({
       credentials: {
         email: {},
         password: {},
-        accessToken: {}
+        accessToken: {},
       },
       authorize: async (credentials) => {
         try {
-          console.log(credentials.accessToken);
-          
+          // console.log(credentials.accessToken);
+
           if (credentials.accessToken) {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-              method: "GET",
-              headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${credentials.accessToken}`
-              },
-            })
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${credentials.accessToken}`,
+                },
+              }
+            );
 
             if (!response.ok) {
-              console.error('Failed to fetch user:', response.status)
-              return null
+              // console.error('Failed to fetch user:', response.status)
+              return null;
             }
 
-            const data = await response.json()
+            const data = await response.json();
 
-            if (!data.status || data.status !== 'success') {
-              console.error('User fetch failed:', data.message)
-              return null
+            if (!data.status || data.status !== "success") {
+              // console.error('User fetch failed:', data.message)
+              return null;
             }
 
             // Make sure to return a valid user object with at least an id
-            const user = data.user || data
-            console.log('User from accessToken:', user) // Debug log
-            return user
-
+            const user = data.user || data;
+            // console.log('User from accessToken:', user) // Debug log
+            return user;
           } else {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-              method: "POST",
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                email: credentials.email,
-                password: credentials.password
-              })
-            })
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  email: credentials.email,
+                  password: credentials.password,
+                }),
+              }
+            );
 
             if (!response.ok) {
-              console.error('Login failed:', response.status)
-              return null
+              // console.error('Login failed:', response.status)
+              return null;
             }
 
-            const data = await response.json()
+            const data = await response.json();
 
-            if (!data.status || data.status !== 'success') {
-              console.error('Login failed:', data.message)
-              return null
+            if (!data.status || data.status !== "success") {
+              // console.error('Login failed:', data.message)
+              return null;
             }
 
-            console.log('User from login:', data.user) // Debug log
-            return data.user
+            console.log("User from login:", data.user); // Debug log
+            return data.user;
           }
         } catch (error) {
-          console.error('Authorize error:', error)
-          return null
+          // console.error('Authorize error:', error)
+          return null;
         }
       },
     }),
-
   ],
   pages: {
     signIn: `/auth/login`,
-    error: `/auth/login`
+    error: `/auth/login`,
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
@@ -110,10 +114,10 @@ const nextAuthResult = NextAuth({
       return session;
     },
     redirect({ url, baseUrl }) {
-      return url
-    }
+      return url;
+    },
   },
-},);
+});
 
 export const handlers: typeof nextAuthResult.handlers = nextAuthResult.handlers;
 export const signIn: typeof nextAuthResult.signIn = nextAuthResult.signIn;
