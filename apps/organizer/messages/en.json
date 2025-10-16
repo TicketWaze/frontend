@@ -214,7 +214,8 @@
     },
     "content": {
       "upcomingTitle": "Upcoming Events",
-      "view": "Event Views"
+      "view": "Event Views",
+      "followers" : "Followers"
     },
     "tickets": {
       "title": "Ticket Sales Insights",

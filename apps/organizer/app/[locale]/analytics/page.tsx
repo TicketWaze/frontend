@@ -8,6 +8,7 @@ import BarChart from "./BarChart";
 import { api } from "@/lib/Api";
 import { organisationPolicy } from "@/lib/role/organisationPolicy";
 import UnauthorizedView from "@/components/Layouts/UnauthorizedView";
+import Ticket from "@/types/Ticket";
 
 export default async function AnalyticsPage() {
   const session = await auth()
@@ -78,7 +79,7 @@ export default async function AnalyticsPage() {
                       'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
                     }
                   >
-                    {analytics.ticketsSold}
+                    {analytics.ticketsSold.length}
                   </p>
                 </div>
               </div>
@@ -116,7 +117,7 @@ export default async function AnalyticsPage() {
                         'text-start text-[14px] text-neutral-600 font-sans leading-tight pb-[5px]'
                       }
                     >
-                      {t('content.view')}
+                      {t('content.followers')}
                     </span>
                   </div>
                   <p
@@ -124,7 +125,7 @@ export default async function AnalyticsPage() {
                       'text-[16px] font-medium capitalize leading-loose font-primary lg:text-[25px]'
                     }
                   >
-                    {analytics.eventViews}
+                    {analytics.followers}
                   </p>
                 </div>
               </div>
@@ -155,7 +156,7 @@ export default async function AnalyticsPage() {
                     >
                       {t('tickets.daily')}
                     </span>
-                    <DailyTicketSalesChart />
+                    <DailyTicketSalesChart tickets={analytics.ticketsSold as Ticket[]} />
                   </div>
                 </div>
                 <div

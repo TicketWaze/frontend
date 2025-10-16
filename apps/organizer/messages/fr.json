@@ -214,7 +214,8 @@
         },
         "content": {
             "upcomingTitle": "Événements à venir",
-            "view": "Vues d'événement"
+            "view": "Vues d'événement",
+            "followers" : "Followers"
         },
         "tickets": {
             "title": "Informations sur les ventes de billets",

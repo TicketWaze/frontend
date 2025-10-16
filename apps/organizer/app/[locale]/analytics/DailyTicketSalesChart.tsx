@@ -14,6 +14,7 @@ import {
   Filler
 } from 'chart.js';
 import { useState, useEffect } from 'react';
+import Ticket from '@/types/Ticket';
 
 ChartJS.register(
   CategoryScale,
@@ -40,49 +41,95 @@ function useIsMobile() {
   return isMobile;
 }
 
-const DailyTicketSalesChart = () => {
+// Function to process tickets and generate sales data per day
+const processTicketsData = (tickets) => {
+  const now = new Date();
+  const currentDay = now.getDate();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  // Create a map for the last 30 days
+  const salesByDay = {};
+  
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(currentYear, currentMonth, currentDay - i);
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    salesByDay[dateKey] = 0;
+  }
+
+  // Count tickets per day
+  tickets.forEach(ticket => {
+    // Handle both Luxon DateTime objects and regular Date strings
+    let ticketDate;
+    
+    if (ticket.createdAt?.ts) {
+      // Luxon DateTime object
+      ticketDate = new Date(ticket.createdAt.ts);
+    } else if (typeof ticket.createdAt === 'string') {
+      // ISO string
+      ticketDate = new Date(ticket.createdAt);
+    } else if (ticket.createdAt instanceof Date) {
+      // Already a Date object
+      ticketDate = ticket.createdAt;
+    } else {
+      return; // Skip invalid dates
+    }
+
+    const dateKey = `${ticketDate.getFullYear()}-${String(ticketDate.getMonth() + 1).padStart(2, '0')}-${String(ticketDate.getDate()).padStart(2, '0')}`;
+    
+    if (salesByDay.hasOwnProperty(dateKey)) {
+      salesByDay[dateKey]++;
+    }
+  });
+
+  return Object.values(salesByDay);
+};
+
+const DailyTicketSalesChart = ({ tickets } : {tickets : Ticket[]}) => {
   const isMobile = useIsMobile();
   const now = new Date();
-  const currentHour = now.getHours();
+  const currentDay = now.getDate();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
 
-  // Toutes les heures formatées 00-23
-  const allLabels = Array.from({length: 24}, (_, i) => 
-    i.toString().padStart(2, '0')
-  );
+  // Generate last 30 days labels
+  const getDaysLabels = () => {
+    const labels = [];
+    const daysOfWeek = ['', '', '', '', '', '', ''];
+    
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(currentYear, currentMonth, currentDay - i);
+      const dayName = daysOfWeek[date.getDay()];
+      const dayNum = date.getDate();
+      labels.push(`${dayName} ${dayNum}`);
+    }
+    return labels;
+  };
 
-  // Version modifiée des labels avec "Now" à l'heure actuelle
-  const formattedLabels = allLabels.map((label, i) => 
-    i === currentHour ? `Now` : label
-  );
+  const allLabels = getDaysLabels();
+  
+  // Mark today's label
+  // const formattedLabels = allLabels.map((label, i) => 
+  //   i === allLabels.length - 1 ? `Aujourd'hui` : label
+  // );
 
-  const allData = [];
-  // const allData = [100, 85, 92, 105, 110, 100, 115, 120, 130, 140, 150, 160, 175, 190, 180, 170, 165, 160, 150, 145, 140, 135, 130, 125];
+  // Process tickets to get sales data
+  const allData = processTicketsData(tickets);
 
-  // Fonction pour sélectionner 13 heures en mobile (incluant l'heure actuelle)
+  // Function to select visible days for mobile (13 days including today)
   const getMobileLabels = () => {
-    const visibleHours = 13;
-    const halfRange = Math.floor(visibleHours / 2);
-    
-    let start = Math.max(0, currentHour - halfRange);
-    let end = Math.min(23, currentHour + halfRange);
-    
-    // Ajustement si près des bords
-    if (start === 0) end = visibleHours - 1;
-    if (end === 23) start = 23 - visibleHours + 1;
-    
-    return formattedLabels.slice(start, end + 1);
+    const visibleDays = 13;
+    const start = allLabels.length - visibleDays;
+    return allLabels.slice(start);
   };
 
   const data = {
-    labels: isMobile ? getMobileLabels() : formattedLabels,
+    labels: isMobile ? getMobileLabels() : allLabels,
     datasets: [
       {
         label: 'Ventes',
         data: isMobile ? 
-          allData.slice(
-            allLabels.indexOf(getMobileLabels()[0].replace('Now (', '').substring(0, 2)),
-            allLabels.indexOf(getMobileLabels()[getMobileLabels().length - 1].replace('Now (', '').substring(0, 2)) + 1
-          ) 
+          allData.slice(allLabels.length - 13)
           : allData,
         fill: {
           target: 'origin',
@@ -106,7 +153,7 @@ const DailyTicketSalesChart = () => {
         },
         borderColor: '#F97316',
         borderWidth: 1.5,
-        tension: 0,
+        tension: 0.3,
         pointRadius: 0,
         pointHoverRadius: 5,
         pointBackgroundColor: '#F97316',
@@ -125,10 +172,10 @@ const DailyTicketSalesChart = () => {
         mode: 'index',
         intersect: false,
         callbacks: {
-          label: (context: any) => `${context.parsed.y}`,
+          label: (context: any) => `${context.parsed.y} vente${context.parsed.y > 1 ? 's' : ''}`,
           title: (context: any) => {
             const label = context[0].label;
-            return label.includes('Now') ? `Heure actuelle` : `Heure: ${label}`;
+            return label === "Aujourd'hui" ? `Aujourd'hui` : label;
           }
         },
         displayColors: false,
@@ -151,21 +198,21 @@ const DailyTicketSalesChart = () => {
           drawBorder: false,
         },
         ticks: {
-          maxRotation: 0,
+          maxRotation: 45,
           minRotation: 0,
           padding: 14,
-          autoSkip: false,
+          autoSkip: isMobile ? false : true,
+          // maxTicksLimit: isMobile ? 13 : 15,
           font: (context: any) => ({
             size: isMobile ? 8 : 10,
-            weight: context.tick.label.includes('Now') ? 'bold' : 'normal'
+            weight: context.tick.label === "Aujourd'hui" ? 'bold' : 'normal'
           }),
           color: (context: any) => 
-            context.tick.label.includes('Now') ? '#F97316' : '#666',
+            context.tick.label === "Aujourd'hui" ? '#F97316' : '#666',
         },
       },
       y: {
-        beginAtZero: false,
-        min: Math.min(...allData) * 0.9,
+        beginAtZero: true,
         grid: {
           color: '#E5E7EB',
           drawBorder: false,
