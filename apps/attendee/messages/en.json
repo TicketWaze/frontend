@@ -93,21 +93,21 @@
         "phone": "Phone number",
         "website": "Website",
         "currency": "Currency",
-        "back" : "Back",
-        "submit" : "Create organisation",
-        "errors" : {
-          "name" : {
-            "min" : "Organisation name cannot be blank",
-            "max" : "Name cannot exceed 30 characters"
+        "back": "Back",
+        "submit": "Create organisation",
+        "errors": {
+          "name": {
+            "min": "Organisation name cannot be blank",
+            "max": "Name cannot exceed 30 characters"
           },
-          "description" : {
-            "min" : "Description cannot be less than 150 characters",
-            "max" : "Description cannot exceed 350 characters"
+          "description": {
+            "min": "Description cannot be less than 150 characters",
+            "max": "Description cannot exceed 350 characters"
           },
-          "country" : "Select a country",
-          "state" :"This field Cannot be blank",
-          "city" :"City field cannot be blank",
-          "currency" : "Please select a currency"
+          "country": "Select a country",
+          "state": "This field Cannot be blank",
+          "city": "City field cannot be blank",
+          "currency": "Please select a currency"
         }
       },
       "placeholders": {
@@ -125,15 +125,15 @@
         "email": "Contact Email Address",
         "phone": "Phone Number",
         "website": "Organisation Website Url",
-        "currency" : "Currency",
-        "errors" : {
-          "city" : "City field cannot be blank",
-          "state" : "This field Cannot be blank",
-          "gender" : "This field is required",
-          "country" : "Select a country",
-          "dob" : "Please select a date",
-          "currency" : "Please select a currency",
-          "phone" :"Phone Number should be at least 8"
+        "currency": "Currency",
+        "errors": {
+          "city": "City field cannot be blank",
+          "state": "This field Cannot be blank",
+          "gender": "This field is required",
+          "country": "Select a country",
+          "dob": "Please select a date",
+          "currency": "Please select a currency",
+          "phone": "Phone Number should be at least 8"
         }
       },
       "cta": "Complete"
@@ -141,7 +141,7 @@
     "forgot": {
       "title": "Reset Password",
       "description": "Please enter you account details to continue",
-      "back" : "Back",
+      "back": "Back",
       "errors": {
         "email": "Enter a valid email address"
       },
@@ -181,7 +181,7 @@
       "more": "More",
       "help": "Help",
       "logout": "Logout",
-      "verified" : "This is a verified organisation",
+      "verified": "This is a verified organisation",
       "links": {
         "title1": "Events",
         "explore": "Explore",
@@ -201,16 +201,16 @@
       "notification": "Notifications",
       "view": "View"
     },
-    "noAuth" : {
-      "title" : "You are not Logged in",
-      "description" : "Access your account to securely manage tickets, complete actions, and enjoy a seamless event experience.",
-      "cancel" : "Cancel",
-      "proceed" : "Proceed"
+    "noAuth": {
+      "title": "You are not Logged in",
+      "description": "Access your account to securely manage tickets, complete actions, and enjoy a seamless event experience.",
+      "cancel": "Cancel",
+      "proceed": "Proceed"
     }
   },
   "Explore": {
     "title": "Explore Events",
-    "subtitle" : "Welcome Back ",
+    "subtitle": "Welcome Back ",
     "search": "Search for event",
     "noResult": "There's no result for ",
     "noEvent": "Looks like there are no upcoming events at the moment. Check back later or explore other categories to discover exciting events near you!",
@@ -236,20 +236,24 @@
   },
   "Upcoming": {
     "title": "Upcoming Events",
+    "subtitle": "Welcome Back ",
     "search": "Search for upcoming event",
-    "description" : "There are no upcoming events right now. Stay tuned to discover and book the next ones!"
+    "description": "There are no upcoming events right now. Stay tuned to discover and book the next ones!",
+    "noResult": "There's no result for "
   },
-  "history": {
+  "History": {
     "title": "Events history",
-    "search": "Search for upcoming event"
+    "subtitle": "Welcome Back ",
+    "search": "Search for event",
+    "description": "You haven’t attended any events yet. Once you join an event, it will appear here for you to revisit your past experiences."
   },
   "Event": {
-    "from" : "From",
-    "free" : "Free",
-    "back" : "Back",
+    "from": "From",
+    "free": "Free",
+    "back": "Back",
     "share": "Share event",
     "share_text": "Spread the word and invite your friends! Share this event on social media or via direct message.",
-    "copy" : "Copy",
+    "copy": "Copy",
     "buy": "Buy ticket",
     "buy_more": "Buy more ticket",
     "about": "About event",
@@ -257,17 +261,17 @@
     "details": "Event details",
     "followers": "Followers",
     "follow": "Follow",
-    "unfollow" : "Unfollow",
-    "viewProfile" : "View profile",
-    "more" : "More",
-    "reportEvent" : "Report Event",
-    "reportEventDescription" : "Help us keep the platform safe. Share details about any issues with this event.",
-    "inappropriateContent" : "Inappropriate Content",
-    "misleadingInformation" : "Misleading Information",
-    "fraud" : "Fraud or Scam Concerns",
-    "venue" : "Venue or Date Issues",
-    "validStatus" : "You must select a valid reason",
-    "reportOrg" : "Report Organisation",
+    "unfollow": "Unfollow",
+    "viewProfile": "View profile",
+    "more": "More",
+    "reportEvent": "Report Event",
+    "reportEventDescription": "Help us keep the platform safe. Share details about any issues with this event.",
+    "inappropriateContent": "Inappropriate Content",
+    "misleadingInformation": "Misleading Information",
+    "fraud": "Fraud or Scam Concerns",
+    "venue": "Venue or Date Issues",
+    "validStatus": "You must select a valid reason",
+    "reportOrg": "Report Organisation",
     "sold": "Sold",
     "direction": "Direction",
     "open": "Open map",
@@ -280,15 +284,17 @@
     "send": "Send feedback",
     "use": "Ticket used",
     "not_used": "Ticket not used",
-    "ticket" : "Ticket",
-    "ticketId" : "Ticket ID"
+    "ticket": "Ticket",
+    "ticketId": "Ticket ID",
+    "name": "Full Name",
+    "email": "Email"
   },
   "Checkout": {
-    "back" : "Back",
-    "free" : "Free",
-    "purchased" : "Ticket purchased",
-    "purchased_cta" : "Opening upcoming events ...",
-    "purchased_text" : "Your purchase is confirmed! Access it anytime in Upcoming Events or check your email for a copy",
+    "back": "Back",
+    "free": "Free",
+    "purchased": "Ticket purchased",
+    "purchased_cta": "Opening upcoming events ...",
+    "purchased_text": "Your purchase is confirmed! Access it anytime in Upcoming Events or check your email for a copy",
     "ticket": {
       "title": "Buy Ticket",
       "quantity": "Quantity",
@@ -297,11 +303,13 @@
       "discount": "Apply discount code",
       "discount_code": "Discount Code",
       "apply": "Apply",
-      "error" : "Select at least one ticket"
+      "error": "Select at least one ticket"
     },
     "recipient": {
       "title": "Recipient",
       "someone": "I’m purchasing this ticket for someone else",
+      "error": "Please fill in attendee information for all tickets marked for someone else",
+      "warning": "Please double-check the information before submitting. If these details are incorrect, the person may not be able to access their ticket.",
       "email": "Email Address",
       "name": "Full Name"
     },
@@ -311,7 +319,8 @@
       "card": "Pay with card",
       "paypal": "Pay with PayPal",
       "moncash": "Pay with MonCash",
-      "nopayment" :"This event is completely free of charge. No payment is required to complete your registration. Just continue to confirm your ticket and you’re all set.",
+      "nopayment": "This event is completely free of charge. No payment is required to complete your registration. Just continue to confirm your ticket and you’re all set.",
+      "paymentType": "Select a payment provider",
       "placeholders": {
         "name": "Card Name",
         "expiry": "Expiry",
@@ -343,11 +352,11 @@
       "firstname": "Firstname",
       "lastname": "Lastname",
       "email": "Email Address",
-      "state" :"State / Region / Province",
-      "city" : "City",
-      "country" :"Country",
-      "dob" :"Date of Birth",
-      "phone" : "Phone number",
+      "state": "State / Region / Province",
+      "city": "City",
+      "country": "Country",
+      "dob": "Date of Birth",
+      "phone": "Phone number",
       "gender": "Gender",
       "male": "Male",
       "female": "Female",
@@ -422,7 +431,8 @@
   },
   "Organizers": {
     "title": "Organizers",
-    "back" : "Back",
+    "subtitle": "Welcome Back ",
+    "back": "Back",
     "search": "Search for organizers",
     "filters": {
       "all": "All",
@@ -434,7 +444,7 @@
     "unfollow": "Unfollow",
     "profile": {
       "upcoming": "Upcoming events",
-      "noUpcoming" : "No upcoming events",
+      "noUpcoming": "No upcoming events",
       "rating": "rating",
       "followers": "followers",
       "events": "Events",
@@ -442,7 +452,7 @@
       "unfollow": "Unfollow",
       "about": "About organizer",
       "contact": "Contact Information",
-      "noResult" : "There's no result for "
+      "noResult": "There's no result for "
     }
   }
 }
