@@ -214,6 +214,7 @@
     "search": "Rechercher un événement",
     "noResult": "Il n'y a aucun résultat pour ",
     "noEvent": "Il n'y a pas d'événements à venir pour le moment. Revenez plus tard ou explorez d'autres catégories pour découvrir des événements passionnants près de chez vous !",
+    "liked": "Événements aimés",
     "filters": {
       "first": {
         "1": "Tous",
@@ -287,7 +288,8 @@
     "ticket": "Billet",
     "ticketId": "ID du billet",
     "name": "Nom complet",
-    "email": "E-mail"
+    "email": "E-mail",
+    "liked": "Événements aimés"
   },
   "Checkout": {
     "back": "Retour",
@@ -334,8 +336,10 @@
       "continue": "Continuer"
     }
   },
-  "saved": {
-    "title": "Événements sauvegardés",
+  "Liked": {
+    "title": "Événements aimées",
+    "back": "Retour",
+    "noEvent": "Vous n'avez aimé aucun événement. Parcourez les événements à venir et appuyez sur ❤️ pour enregistrer vos favoris !",
     "filters": {
       "saved": "Sauvegardés",
       "liked": "Aimés"

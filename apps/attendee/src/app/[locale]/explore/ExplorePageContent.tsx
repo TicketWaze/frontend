@@ -1,9 +1,23 @@
 "use client";
 import EventCard from "@/components/EventCard";
+import NoAuthDialog from "@/components/Layouts/NoAuthDialog";
+import { Link } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import Event from "@/types/Event";
-import { CloseCircle, Money3, SearchNormal, Ticket } from "iconsax-react";
+import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
+import {
+  CloseCircle,
+  Heart,
+  Money3,
+  SearchNormal,
+  Ticket,
+} from "iconsax-react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
@@ -59,30 +73,57 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
               </button>
             </div>
           )}
-          <div
-            className={
-              "hidden bg-neutral-100 rounded-[30px] lg:flex items-center justify-between w-[243px] px-[1.5rem] py-4"
-            }
-          >
-            <input
-              placeholder={t("search")}
+          <div className="flex items-center gap-4">
+            <div
               className={
-                "text-black font-normal text-[1.4rem] leading-[20px] w-full outline-none"
-              }
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <SearchNormal size="20" color="#737c8a" variant="Bulk" />
-          </div>
-          {!mobileSearch && (
-            <button
-              onClick={() => setMobileSearch(!mobileSearch)}
-              className={
-                "w-[35px] h-[35px] bg-neutral-100 rounded-full flex lg:hidden items-center justify-center"
+                "hidden bg-neutral-100 rounded-[30px] lg:flex items-center justify-between w-[243px] px-[1.5rem] py-4"
               }
             >
+              <input
+                placeholder={t("search")}
+                className={
+                  "text-black font-normal text-[1.4rem] leading-[20px] w-full outline-none"
+                }
+                onChange={(e) => setQuery(e.target.value)}
+              />
               <SearchNormal size="20" color="#737c8a" variant="Bulk" />
-            </button>
-          )}
+            </div>
+            <div className="w-[1px] h-[18px] bg-neutral-100"></div>
+            {!mobileSearch && (
+              <button
+                onClick={() => setMobileSearch(!mobileSearch)}
+                className={
+                  "w-[35px] h-[35px] bg-neutral-100 rounded-full flex lg:hidden items-center justify-center"
+                }
+              >
+                <SearchNormal size="20" color="#737c8a" variant="Bulk" />
+              </button>
+            )}
+            {session?.user ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={"/explore/liked"}
+                    className="w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                  >
+                    <Heart size={20} color="#737C8A" variant="Bulk" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-[1.2rem]">{t("liked")}</p>
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Dialog>
+                <DialogTrigger>
+                  <div className="w-[35px] h-[35px] cursor-pointer flex items-center justify-center bg-neutral-100 rounded-full">
+                    <Heart size={20} color="#737C8A" variant="Bulk" />
+                  </div>
+                </DialogTrigger>
+                <NoAuthDialog />
+              </Dialog>
+            )}
+          </div>
         </div>
       </header>
       {events.length > 0 ? (

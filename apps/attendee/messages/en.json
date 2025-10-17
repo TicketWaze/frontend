@@ -214,6 +214,7 @@
     "search": "Search for event",
     "noResult": "There's no result for ",
     "noEvent": "Looks like there are no upcoming events at the moment. Check back later or explore other categories to discover exciting events near you!",
+    "liked": "Liked events",
     "filters": {
       "first": {
         "1": "All",
@@ -287,7 +288,8 @@
     "ticket": "Ticket",
     "ticketId": "Ticket ID",
     "name": "Full Name",
-    "email": "Email"
+    "email": "Email",
+    "liked": "Liked events"
   },
   "Checkout": {
     "back": "Back",
@@ -334,8 +336,10 @@
       "continue": "Continue"
     }
   },
-  "saved": {
-    "title": "Saved Events",
+  "Liked": {
+    "title": "Like Events",
+    "back": "Back",
+    "noEvent": "You haven’t liked any events yet. Browse upcoming events and tap the ❤️ to save your favorites!",
     "filters": {
       "saved": "Saved",
       "liked": "Liked"
