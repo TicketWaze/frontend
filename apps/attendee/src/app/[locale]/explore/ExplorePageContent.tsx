@@ -1,6 +1,7 @@
 "use client";
 import EventCard from "@/components/EventCard";
 import Slugify from "@/lib/Slugify";
+import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import Event from "@/types/Event";
 import { CloseCircle, Money3, SearchNormal, Ticket } from "iconsax-react";
 import { useSession } from "next-auth/react";
@@ -88,11 +89,9 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
         <>
           <ul className="list pt-4">
             {filteredEvents.map((event) => {
-              const date = new Date(
+              const date = TimesTampToDateTime(
                 event.eventDays[0]?.startDate ?? ""
-              ).toUTCString();
-              const UtcDAte = new Date(date);
-
+              );
               const slug = Slugify(event.eventName);
               return (
                 <li key={event.eventId}>
@@ -100,7 +99,7 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
                     href={`/explore/${slug}`}
                     image={event.eventImageUrl}
                     name={event.eventName}
-                    date={UtcDAte}
+                    date={date}
                     country={event.country ?? ""}
                     city={event.city ?? ""}
                     price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}

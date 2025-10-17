@@ -111,10 +111,6 @@ export default function EventPageDetails({
     const bIndex = desiredOrder.indexOf(b.ticketTypeName.trim());
     return aIndex - bIndex;
   });
-  const [currentUrl, setCurrentUrl] = useState("");
-  useEffect(() => {
-    setCurrentUrl(window.location.href);
-  }, []);
 
   const today = DateTime.now();
   const eventStart = event.eventDays?.[0]?.startDate
@@ -941,20 +937,22 @@ export default function EventPageDetails({
                 );
               })}
           </TabsList>
-          <div
-            className={
-              "bg-neutral-100 order-1 lg:order-2 w-full rounded-[30px] flex items-center justify-between lg:w-[243px] px-[1.5rem] py-4"
-            }
-          >
-            <input
-              placeholder={t("search")}
+          {tickets.length > 0 && (
+            <div
               className={
-                "text-black font-normal text-[1.4rem] leading-[20px] w-full outline-none"
+                "bg-neutral-100 order-1 lg:order-2 w-full rounded-[30px] flex items-center justify-between lg:w-[243px] px-[1.5rem] py-4"
               }
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <SearchNormal size="20" color="#737c8a" variant="Bulk" />
-          </div>
+            >
+              <input
+                placeholder={t("search")}
+                className={
+                  "text-black font-normal text-[1.4rem] leading-[20px] w-full outline-none"
+                }
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <SearchNormal size="20" color="#737c8a" variant="Bulk" />
+            </div>
+          )}
         </div>
         <TabsContent value="all" className={"w-full"}>
           <Table className={"mt-4"}>
@@ -1442,7 +1440,7 @@ export default function EventPageDetails({
         })}
       </Tabs>
 
-      {/* no ticket sold */}
+      {/* no ticket sold
       {tickets.length === 0 && (
         <div
           className={
@@ -1472,7 +1470,7 @@ export default function EventPageDetails({
             </p>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

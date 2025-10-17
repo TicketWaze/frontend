@@ -96,7 +96,6 @@ export default function UpcomingPageContent({ events }: { events: any }) {
           const roundedDays = Math.ceil(
             daysLeft && daysLeft > 0 ? daysLeft : 0
           );
-          const date = new Date(event.eventDays[0]?.startDate ?? "");
           const slug = Slugify(event.eventName);
           return (
             <li key={event.eventId}>
@@ -111,7 +110,7 @@ export default function UpcomingPageContent({ events }: { events: any }) {
           );
         })}
       </ul>
-      {filteredEvents.length === 0 && (
+      {events.length > 0 && filteredEvents.length === 0 && (
         <div className="flex flex-col h-full justify-center items-center gap-[30px]">
           <div className="h-[120px] w-[120px] bg-neutral-100 rounded-full flex items-center justify-center">
             <div className="w-[90px] h-[90px] bg-neutral-200 flex items-center justify-center rounded-full">

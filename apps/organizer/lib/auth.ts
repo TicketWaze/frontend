@@ -77,7 +77,7 @@ const nextAuthResult = NextAuth({
               return null;
             }
 
-            console.log("User from login:", data.user); // Debug log
+            // console.log("User from login:", data.user); // Debug log
             return data.user;
           }
         } catch (error) {

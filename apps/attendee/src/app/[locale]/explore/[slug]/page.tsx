@@ -28,6 +28,7 @@ import Unfollow from "./Unfollow";
 import Map from "./MapComponent";
 import { Link } from "@/i18n/navigation";
 import AddToCalendar from "./AddToCalendar";
+import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 
 export default async function EventPage({
   params,
@@ -230,8 +231,9 @@ export default async function EventPage({
                       "font-normal text-[1.4rem] leading-8 text-deep-200"
                     }
                   >
-                    {event.eventDays[0].startTime} -{" "}
-                    {event.eventDays[0].endTime}
+                    {`${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").minute}`}{" "}
+                    -{" "}
+                    {`${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").minute}`}
                   </span>
                 </div>
                 {/*  address*/}
@@ -411,7 +413,9 @@ export default async function EventPage({
                     "font-normal text-[1.4rem] leading-8 text-deep-200"
                   }
                 >
-                  {event.eventDays[0].startTime} - {event.eventDays[0].endTime}
+                  {`${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").minute}`}{" "}
+                  -{" "}
+                  {`${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").minute}`}
                 </span>
               </div>
               {/*  address*/}

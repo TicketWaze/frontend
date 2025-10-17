@@ -9,6 +9,7 @@ import { api } from "@/lib/Api";
 import { organisationPolicy } from "@/lib/role/organisationPolicy";
 import UnauthorizedView from "@/components/Layouts/UnauthorizedView";
 import Ticket from "@/types/Ticket";
+import { InfoCircle } from "iconsax-react";
 
 export default async function AnalyticsPage() {
   const session = await auth();
@@ -348,14 +349,20 @@ export default async function AnalyticsPage() {
                     {t("event.event_demographics.events_top.title")}
                   </span>
                   <div className={"w-full"}>
-                    <BarChart
-                      category1={analytics.topEvents[0].eventName}
-                      category2="sdfdsf"
-                      category3="dfas"
-                      percent1="18%"
-                      percent2="59%"
-                      percent3="78%"
-                    ></BarChart>
+                    {analytics.topEvents.length > 0 ? (
+                      <BarChart
+                        category1={analytics.topEvents[0].eventName}
+                        category2="sdfdsf"
+                        category3="dfas"
+                        percent1="18%"
+                        percent2="59%"
+                        percent3="78%"
+                      ></BarChart>
+                    ) : (
+                      <div className="flex justify-center">
+                        <InfoCircle size="32" color="#D5D8DC" />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
