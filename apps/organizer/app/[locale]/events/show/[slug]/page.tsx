@@ -7,6 +7,7 @@ import EventPageDetails from "./EventPageDetails";
 import Ticket from "@/types/Ticket";
 import { auth } from "@/lib/auth";
 import User from "@/types/User";
+import { organisationPolicy } from "@/lib/role/organisationPolicy";
 
 export default async function Page({
   params,
@@ -27,6 +28,11 @@ export default async function Page({
   const session = await auth();
   const eventCheckers = eventResponse.eventCheckers;
 
+  const authorized = await organisationPolicy.viewFinance(
+    session?.user.userId ?? "",
+    session?.activeOrganisation.organisationId ?? ""
+  );
+
   return (
     <OrganizerLayout title="">
       <BackButton text={t("back")} />
@@ -38,6 +44,7 @@ export default async function Page({
         slug={slug}
         organisationCheckers={organisationCheckers}
         orders={orders}
+        authorized={authorized}
       />
     </OrganizerLayout>
   );

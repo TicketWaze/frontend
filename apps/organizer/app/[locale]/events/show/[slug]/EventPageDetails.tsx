@@ -40,7 +40,7 @@ import {
   TicketDiscount,
 } from "iconsax-react";
 import { useLocale, useTranslations } from "next-intl";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from "sonner";
 import TicketClasses from "./TicketClasses";
 import {
@@ -91,6 +91,7 @@ export default function EventPageDetails({
   user,
   eventCheckers,
   orders,
+  authorized,
 }: {
   event: Event;
   tickets: OrganisationTicket[];
@@ -99,6 +100,7 @@ export default function EventPageDetails({
   organisationCheckers: any;
   user: User;
   eventCheckers: any;
+  authorized: boolean;
 }) {
   const t = useTranslations("Events.single_event");
   const locale = useLocale();
@@ -363,6 +365,7 @@ export default function EventPageDetails({
           {daysLeft !== null &&
             daysLeft > 0 &&
             !isFree &&
+            authorized &&
             !(event.eventType === "meet") && <TicketClasses event={event} />}
           {/* more */}
           <Popover>
@@ -428,7 +431,7 @@ export default function EventPageDetails({
                       <EventDrawerContent event={event} />
                     </Drawer>
                   </li>
-                  {event.eventType !== "meet" && (
+                  {event.eventType !== "meet" && authorized && (
                     <>
                       <li>
                         <Dialog>
@@ -1686,9 +1689,9 @@ function Informations({
               {t("transactions.details.close")}
             </ButtonAccent>
           </DrawerClose>
-          <ButtonPrimary className={"flex-1"}>
+          {/* <ButtonPrimary className={"flex-1"}>
             {t("transactions.details.resend")}
-          </ButtonPrimary>
+          </ButtonPrimary> */}
         </div>
       </DrawerFooter>
     </DrawerContent>

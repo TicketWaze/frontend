@@ -26,6 +26,7 @@ import Order from "@/types/Order";
 import { ButtonAccent, ButtonPrimary } from "@workspace/ui/components/buttons";
 import FormatDate from "@/lib/FormatDate";
 import Event from "@/types/Event";
+import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 
 interface OrganisationTicket extends Ticket {
   event: Event;
@@ -524,8 +525,9 @@ function Informations({
               >
                 {t("transactions.details.time")}{" "}
                 <span className={"text-deep-100 font-medium leading-[20px]"}>
-                  {ticket.event.eventDays[0]?.startTime} -{" "}
-                  {ticket.event.eventDays[0]?.endTime}
+                  {`${TimesTampToDateTime(ticket.event.eventDays[0]?.startDate ?? "").hour}:${TimesTampToDateTime(ticket.event.eventDays[0]?.startDate ?? "").minute}`}{" "}
+                  -{" "}
+                  {`${TimesTampToDateTime(ticket.event.eventDays[0]?.endTime ?? "").hour}:${TimesTampToDateTime(ticket.event.eventDays[0]?.endTime ?? "").minute}`}
                 </span>
               </p>
               <p
@@ -661,9 +663,9 @@ function Informations({
               {t("transactions.details.close")}
             </ButtonAccent>
           </DrawerClose>
-          <ButtonPrimary className={"flex-1"}>
+          {/* <ButtonPrimary className={"flex-1"}>
             {t("transactions.details.resend")}
-          </ButtonPrimary>
+          </ButtonPrimary> */}
         </div>
       </DrawerFooter>
     </DrawerContent>
