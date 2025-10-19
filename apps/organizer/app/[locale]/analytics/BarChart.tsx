@@ -17,12 +17,12 @@ function BarChart({
     <table className={"w-full"}>
       <tbody className={""}>
         <tr className={""}>
-          <td className={""}>
-            <div className="text-[14px] font-sans text-black-100 py-[8px]">
+          <td className={"w-[70px]"}>
+            <div className="text-[14px] font-sans text-black-100">
               {category1}
             </div>
           </td>
-          <td className={"w-full px-[50px]"}>
+          <td className={"w-full px-[20px]"}>
             <div className="w-full h-[5px] bg-gray-300 rounded-full overflow-hidden">
               <div
                 className="h-full bg-amber-500 rounded-full"
@@ -32,19 +32,19 @@ function BarChart({
           </td>
           <td
             className={
-              "text-right text-nowrap text-[14px] font-sans text-black-100"
+              "text-right text-nowrap text-[14px] font-sans text-black-100 min-w-[70px]"
             }
           >
             {percent1}
           </td>
         </tr>
         <tr className={""}>
-          <td className={""}>
+          <td className={"min-w-[70px]"}>
             <div className="text-[14px] font-sans text-black-100 py-[8px]">
               {category2}
             </div>
           </td>
-          <td className={"w-full px-[50px]"}>
+          <td className={"w-full px-[16px]"}>
             <div className="w-full h-[5px] bg-gray-300 rounded-full overflow-hidden">
               <div
                 className="h-full bg-amber-500 rounded-full"
@@ -54,7 +54,7 @@ function BarChart({
           </td>
           <td
             className={
-              "text-[14px] text-nowrap font-sans text-right text-black-100"
+              "text-[14px] text-nowrap font-sans text-right text-black-100 w-[70px]"
             }
           >
             {percent2}
@@ -66,7 +66,7 @@ function BarChart({
               {category3}
             </div>
           </td>
-          <td className={"w-full px-[50px]"}>
+          <td className={"w-full px-[16px]"}>
             <div className="w-full h-[5px] bg-gray-300 rounded-full overflow-hidden">
               <div
                 className="h-full bg-amber-500 rounded-full"

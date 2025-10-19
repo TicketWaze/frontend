@@ -10,6 +10,7 @@ import { organisationPolicy } from "@/lib/role/organisationPolicy";
 import UnauthorizedView from "@/components/Layouts/UnauthorizedView";
 import Ticket from "@/types/Ticket";
 import { InfoCircle } from "iconsax-react";
+import TruncateUrl from "@/lib/TruncateUrl";
 
 export default async function AnalyticsPage() {
   const session = await auth();
@@ -351,12 +352,23 @@ export default async function AnalyticsPage() {
                   <div className={"w-full"}>
                     {analytics.topEvents.length > 0 ? (
                       <BarChart
-                        category1={analytics.topEvents[0].eventName}
-                        category2="sdfdsf"
-                        category3="dfas"
-                        percent1="18%"
-                        percent2="59%"
-                        percent3="78%"
+                        category1={TruncateUrl(
+                          analytics.topEvents[0].eventName,
+                          9
+                        )}
+                        category2={TruncateUrl(
+                          analytics.topEvents[1].eventName,
+                          9
+                        )}
+                        category3={
+                          TruncateUrl(
+                            analytics.topEvents[2]?.eventName ?? "",
+                            9
+                          ) ?? ""
+                        }
+                        percent1={analytics.topEvents[0].percentage}
+                        percent2={analytics.topEvents[1].percentage}
+                        percent3={analytics.topEvents[2]?.percentage ?? "0%"}
                       ></BarChart>
                     ) : (
                       <div className="flex justify-center">
