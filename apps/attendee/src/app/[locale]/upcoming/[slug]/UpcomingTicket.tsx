@@ -6,6 +6,7 @@ import Ticket from "@/types/Ticket";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import Event from "@/types/Event";
 import FormatDate from "@/lib/FormatDate";
+import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 
 export default function UpcomingTicket({
   ticket,
@@ -75,7 +76,9 @@ export default function UpcomingTicket({
             <div className={"flex items-center justify-between gap-4 w-full"}>
               <span className="text-neutral-600">{t("time")}</span>
               <span className="text-deep-100 font-medium">
-                {event.eventDays[0].startTime}
+                {`${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").minute}`}{" "}
+                -{" "}
+                {`${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").minute}`}
               </span>
             </div>
             <div className={"flex items-center justify-between gap-4 w-full"}>

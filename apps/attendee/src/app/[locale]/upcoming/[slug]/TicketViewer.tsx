@@ -11,6 +11,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import FormatDate from "@/lib/FormatDate";
+import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 
 export default function TicketViewer({
   tickets,
@@ -367,7 +368,9 @@ export default function TicketViewer({
               <div className={"flex items-center justify-between gap-4 w-full"}>
                 <span className="text-neutral-600">{t("time")}</span>
                 <span className="text-deep-100 font-medium">
-                  {event.eventDays[0].startTime}
+                  {`${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.startDate ?? "").minute}`}{" "}
+                  -{" "}
+                  {`${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").minute}`}
                 </span>
               </div>
               <div className={"flex items-center justify-between gap-4 w-full"}>

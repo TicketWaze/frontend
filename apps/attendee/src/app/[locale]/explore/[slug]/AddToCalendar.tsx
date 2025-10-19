@@ -6,9 +6,6 @@ export default function AddToCalendar({ event }: { event: Event }) {
   const startDateTime = event.eventDays[0].startDate;
   const endDateTime = event.eventDays[0].endTime;
 
-  console.log(startDateTime);
-  console.log(endDateTime);
-
   // Format dates for Google Calendar (YYYYMMDDTHHmmssZ)
   const formatGoogleCalendarDate = (dateString: string) => {
     return dateString.replace(/[-:]/g, "").replace(/\.\d{3}/, "");
