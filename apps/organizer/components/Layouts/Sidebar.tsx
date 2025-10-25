@@ -64,7 +64,7 @@ function Sidebar({ className }: { className: string }) {
       .then((res) => res.json())
       .then((res) => setAllOrganisations(res.organisations))
       .finally(() => setIsLoading(false));
-  }, [session?.user?.accessToken]);
+  }, [session?.user?.accessToken, session?.activeOrganisation]);
 
   const links = [
     {

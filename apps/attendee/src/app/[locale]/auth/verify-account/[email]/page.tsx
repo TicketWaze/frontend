@@ -1,36 +1,41 @@
-import React from 'react'
-import mail from './mail-big.svg'
-import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
-import ResendButton from './ResendButton'
+import React from "react";
+import mail from "./mail-big.svg";
+import Image from "next/image";
+import { getTranslations } from "next-intl/server";
+// import ResendButton from "./ResendButton";
 
 export default async function VerifyAccountPage({
   params,
 }: {
-  params: Promise<{ email: string }>
+  params: Promise<{ email: string }>;
 }) {
-  const { email } = await params
-  const t = await getTranslations('Auth.verify')
+  const { email } = await params;
+  const t = await getTranslations("Auth.verify");
   return (
-    <div className={' flex flex-col gap-16 items-center justify-center h-dvh lg:h-full'}>
-      <Image src={mail} alt={'email icon'} />
-      <div className={'flex flex-col gap-8 items-center'}>
+    <div
+      className={
+        " flex flex-col gap-16 items-center justify-center h-dvh lg:h-full"
+      }
+    >
+      <Image src={mail} alt={"email icon"} />
+      <div className={"flex flex-col gap-8 items-center"}>
         <h2
           className={
-            'font-medium font-primary text-[3.2rem] leading-[35px] text-center text-black'
+            "font-medium font-primary text-[3.2rem] leading-[35px] text-center text-black"
           }
         >
-          {t('title')}
+          {t("title")}
         </h2>
         <p
           className={
-            'font-normal max-w-[530px] text-[1.8rem] leading-[25px] text-center text-neutral-700'
+            "font-normal max-w-[530px] text-[1.8rem] leading-[25px] text-center text-neutral-700"
           }
         >
-          {t('description')}{' '}<span className='font-semibold'>{decodeURIComponent(email)}</span>
+          {t("description")}{" "}
+          <span className="font-semibold">{decodeURIComponent(email)}</span>
         </p>
       </div>
-      <div
+      {/* <div
         className={
           'flex items-center gap-[1.8rem] border border-neutral-100 p-4 rounded-[10rem] mb-8'
         }
@@ -42,7 +47,7 @@ export default async function VerifyAccountPage({
         </span>
         <ResendButton email={decodeURIComponent(email)}/>
         
-      </div>
+      </div> */}
     </div>
-  )
+  );
 }

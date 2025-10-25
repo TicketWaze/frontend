@@ -4,6 +4,11 @@
       "title": "Empowering events across Your Country & beyond",
       "description": "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place"
     },
+    "onboarding": {
+      "title": "Organisation Invitation",
+      "description": "You've been invited to join and organisation on TicketWaze — a platform for managing and selling event tickets with ease.",
+      "join": "Join"
+    },
     "register": {
       "title": "Create an Account",
       "organizer": "Create an Account",

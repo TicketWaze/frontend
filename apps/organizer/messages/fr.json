@@ -4,6 +4,11 @@
       "title": "Donnez du pouvoir aux événements à travers votre pays et au-delà",
       "description": "Créez des événements en quelques minutes, vendez des billets, gérez les participants et suivez vos revenus — le tout en un seul endroit"
     },
+    "onboarding": {
+      "title": "Organisation Invitation",
+      "description": "Vous avez été invité à rejoindre une organisation sur TicketWaze — une plateforme permettant de gérer et de vendre des billets d'événements en toute simplicité.",
+      "join": "Rejoindre"
+    },
     "register": {
       "title": "Créer un compte",
       "organizer": "Créer un compte",
