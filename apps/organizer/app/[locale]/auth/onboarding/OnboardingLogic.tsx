@@ -46,7 +46,33 @@ export default function OnboardingLogic({ session }: { session: Session }) {
         } else {
           update({
             activeOrganisation: data.user.organisations[0],
-          }).then((res) => router.push(`/analytics`));
+          }).then((res) => {
+            if (res?.activeOrganisation.organisationId) {
+              router.push(`/analytics`);
+            } else {
+              const maxAttempts = 20; // Maximum 2 seconds (20 * 100ms)
+              let attempts = 0;
+              const checkAndRedirect = () => {
+                attempts++;
+                // Check your state/store for the organisationId
+                const currentOrgId =
+                  res?.activeOrganisation.organisationId ?? undefined;
+                if (currentOrgId) {
+                  router.push(`/analytics`);
+                } else if (attempts < maxAttempts) {
+                  setTimeout(checkAndRedirect, 100); // Check again in 100ms
+                } else {
+                  // Timeout - redirect anyway or show error
+                  console.error("Timeout waiting for organisation ID");
+                  toast.error(
+                    "Taking longer than expected. Please refresh if needed."
+                  );
+                  router.push(`/analytics`); // Redirect anyway
+                }
+              };
+              checkAndRedirect();
+            }
+          });
         }
       } catch (error) {
         console.error("Error fetching onboarding:", error);

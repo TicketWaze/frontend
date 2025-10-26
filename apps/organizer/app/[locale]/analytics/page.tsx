@@ -25,7 +25,6 @@ export default async function AnalyticsPage() {
     session?.user.userId ?? "",
     currentOrganisation?.organisationId ?? ""
   );
-  console.log(analytics.topEvents);
 
   return (
     <OrganizerLayout title="Analytics">
