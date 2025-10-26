@@ -1,7 +1,6 @@
 import React from "react";
 import OnboardingLogic from "./OnboardingLogic";
 import { auth } from "@/lib/auth";
-import { Session } from "next-auth";
 import { getLocale } from "next-intl/server";
 
 export default async function OnboardingPage() {
@@ -23,7 +22,6 @@ export default async function OnboardingPage() {
   const responseType: "invite" | "login" = response.type;
   const user = response.user;
   const organisations = response.organisations;
-  console.log(response);
   return (
     <>
       <OnboardingLogic

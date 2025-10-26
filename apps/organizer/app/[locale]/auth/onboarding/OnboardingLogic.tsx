@@ -5,7 +5,6 @@ import Organisation from "@/types/Organisation";
 import User from "@/types/User";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
-import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
@@ -29,16 +28,11 @@ export default function OnboardingLogic({
   const locale = useLocale();
   const router = useRouter();
   const [isLoading, setIsloading] = useState(false);
-
-  // Move all the logic into useEffect
   useEffect(() => {
     const handleOnboarding = async () => {
-      console.log(user?.organisations?.[0]?.organisationId);
-      console.log(user?.organisations[0]?.organisationId);
       if (responseType === "invite") {
         setInvitedOrganisation(organisations);
       } else {
-        // Check if organisation exists before updating
         if (user?.organisations?.[0]?.organisationId) {
           try {
             await update({
@@ -57,7 +51,6 @@ export default function OnboardingLogic({
         }
       }
     };
-
     handleOnboarding();
   }, []);
 
@@ -78,9 +71,9 @@ export default function OnboardingLogic({
       );
       const res = await req.json();
       if (res.status === "success") {
-        await update({ activeOrganisation: organisation });
-        // Give state time to propagate
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await update({
+          activeOrganisation: organisation,
+        });
         router.push(`/analytics?organisationId=${organisation.organisationId}`);
       }
     } catch (error) {
