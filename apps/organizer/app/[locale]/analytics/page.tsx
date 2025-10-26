@@ -12,18 +12,25 @@ import Ticket from "@/types/Ticket";
 import { InfoCircle } from "iconsax-react";
 import TruncateUrl from "@/lib/TruncateUrl";
 
-export default async function AnalyticsPage() {
+export default async function AnalyticsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const organisationId = (await searchParams).accessToken as string;
   const session = await auth();
   const currentOrganisation = session?.activeOrganisation;
+  const currentOrganisationId =
+    organisationId ?? session?.activeOrganisation.organisationId;
   const t = await getTranslations("Analytics");
   const analytics = await api(
-    `/organisations/${session?.activeOrganisation.organisationId}/analytics`,
+    `/organisations/${currentOrganisationId}/analytics`,
     session?.user.accessToken ?? ""
   );
 
   const authorized = await organisationPolicy.viewAnalytics(
     session?.user.userId ?? "",
-    currentOrganisation?.organisationId ?? ""
+    currentOrganisationId ?? ""
   );
 
   return (
