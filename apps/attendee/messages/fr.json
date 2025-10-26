@@ -73,6 +73,7 @@
     "verify": {
       "title": "Vérifier le compte",
       "description": "Un e-mail de vérification a été envoyé à",
+      "wrong": "Email incorrect?",
       "footer": {
         "text": "Vous n'avez pas reçu d'e-mail ?",
         "cta": "Renvoyer"

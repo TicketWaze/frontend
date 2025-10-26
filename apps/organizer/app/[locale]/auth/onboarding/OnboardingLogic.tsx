@@ -47,8 +47,6 @@ export default function OnboardingLogic({ session }: { session: Session }) {
           update({
             activeOrganisation: data.user.organisations[0],
           }).then((res) => router.push(`/analytics`));
-          // await new Promise((resolve) => setTimeout(resolve, 2000));
-          // router.push(`/analytics`);
         }
       } catch (error) {
         console.error("Error fetching onboarding:", error);

@@ -2,6 +2,7 @@ import React from "react";
 import mail from "./mail-big.svg";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 // import ResendButton from "./ResendButton";
 
 export default async function VerifyAccountPage({
@@ -34,6 +35,14 @@ export default async function VerifyAccountPage({
           {t("description")}{" "}
           <span className="font-semibold">{decodeURIComponent(email)}</span>
         </p>
+        <Link
+          href={"/auth/register"}
+          className={
+            "font-normal max-w-[530px] text-[1.4rem] leading-[25px] text-center text-primary-500"
+          }
+        >
+          {t("wrong")}
+        </Link>
       </div>
       {/* <div
         className={

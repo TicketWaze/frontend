@@ -73,6 +73,7 @@
     "verify": {
       "title": "Verify Account",
       "description": "A verification mail has been sent to",
+      "wrong": "Wrong email ?",
       "footer": {
         "text": "Didn't get a mail?",
         "cta": "Resend"

@@ -25,6 +25,7 @@ export default async function AnalyticsPage() {
     session?.user.userId ?? "",
     currentOrganisation?.organisationId ?? ""
   );
+  console.log(analytics.topEvents);
 
   return (
     <OrganizerLayout title="Analytics">
@@ -352,22 +353,32 @@ export default async function AnalyticsPage() {
                   <div className={"w-full"}>
                     {analytics.topEvents.length > 0 ? (
                       <BarChart
-                        category1={TruncateUrl(
-                          analytics.topEvents[0].eventName,
-                          9
-                        )}
-                        category2={TruncateUrl(
-                          analytics.topEvents[1].eventName,
-                          9
-                        )}
+                        category1={
+                          TruncateUrl(
+                            analytics.topEvents[0].eventName ?? "",
+                            9
+                          ) ?? ""
+                        }
+                        category2={
+                          analytics.topEvents.length >= 2
+                            ? (TruncateUrl(
+                                analytics.topEvents[1]?.eventName ?? "",
+                                9
+                              ) ?? "")
+                            : ""
+                        }
                         category3={
                           TruncateUrl(
                             analytics.topEvents[2]?.eventName ?? "",
                             9
                           ) ?? ""
                         }
-                        percent1={analytics.topEvents[0].percentage}
-                        percent2={analytics.topEvents[1].percentage}
+                        percent1={analytics.topEvents[0]?.percentage ?? "0%"}
+                        percent2={
+                          analytics.topEvents.length >= 2
+                            ? analytics.topEvents[1]?.percentage
+                            : "0%"
+                        }
                         percent3={analytics.topEvents[2]?.percentage ?? "0%"}
                       ></BarChart>
                     ) : (
