@@ -44,9 +44,11 @@ export default function OnboardingLogic({ session }: { session: Session }) {
         if (data.type === "invite") {
           setInvitedOrganisation(data.organisations);
         } else {
-          await update({ activeOrganisation: data.user.organisations[0] });
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          router.push("/analytics");
+          update({
+            activeOrganisation: data.user.organisations[0],
+          }).then((res) => router.push(`/analytics`));
+          // await new Promise((resolve) => setTimeout(resolve, 2000));
+          // router.push(`/analytics`);
         }
       } catch (error) {
         console.error("Error fetching onboarding:", error);
