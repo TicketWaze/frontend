@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@workspace/typescript-config";
 import { Input } from "@workspace/ui/components/Inputs";
 import Capitalize from "@workspace/ui/lib/Capitalize";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -20,15 +20,13 @@ export default function UserProfileForm({
   accessToken: string;
 }) {
   const t = useTranslations("Settings.account");
-
+  const locale = useLocale();
   const UpdateProfileSchema = z.object({
     firstName: z.string().min(1, t("errors.firstName")),
     lastName: z.string().min(1, t("errors.lastName")),
     phoneNumber: z.string().min(8, t("errors.phoneNumber")),
   });
-
   type TUpdateProfileSchema = z.infer<typeof UpdateProfileSchema>;
-
   const {
     register,
     handleSubmit,
@@ -36,13 +34,13 @@ export default function UserProfileForm({
   } = useForm<TUpdateProfileSchema>({
     resolver: zodResolver(UpdateProfileSchema),
   });
-
   async function submitHandler(data: TUpdateProfileSchema) {
     const result = await UpdateUserProfile(
       data.firstName,
       data.lastName,
       String(data.phoneNumber),
-      accessToken
+      accessToken,
+      locale
     );
     if (result?.error) {
       toast.error(result.error);

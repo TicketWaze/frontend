@@ -150,7 +150,8 @@ export default function EventPageDetails({
       event.eventId,
       user.accessToken,
       pathname,
-      data
+      data,
+      locale
     );
     if (result.status !== "success") {
       toast.error(result.error);
@@ -162,7 +163,8 @@ export default function EventPageDetails({
     const result = await MarkAsActive(
       event.eventId,
       user.accessToken,
-      pathname
+      pathname,
+      locale
     );
     if (result.status !== "success") {
       toast.error(result.error);
@@ -174,7 +176,8 @@ export default function EventPageDetails({
     const result = await MarkAsInactive(
       event.eventId,
       user.accessToken,
-      pathname
+      pathname,
+      locale
     );
     if (result.status !== "success") {
       toast.error(result.error);

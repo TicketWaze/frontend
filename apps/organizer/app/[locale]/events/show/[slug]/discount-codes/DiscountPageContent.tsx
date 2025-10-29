@@ -57,7 +57,7 @@ import {
   TicketDiscount,
 } from "iconsax-react";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -65,6 +65,7 @@ import * as z from "zod";
 
 export default function DiscountPageContent({ event }: { event: Event }) {
   const t = useTranslations("Events.single_event.discount");
+  const locale = useLocale();
   const pathname = usePathname();
   const { data: session } = useSession();
 
@@ -73,7 +74,8 @@ export default function DiscountPageContent({ event }: { event: Event }) {
       event.eventId,
       discountCodeId,
       session?.user.accessToken ?? "",
-      pathname
+      pathname,
+      locale
     );
     if (result.status === "success") {
       toast.success("success");
@@ -88,7 +90,8 @@ export default function DiscountPageContent({ event }: { event: Event }) {
       event.eventId,
       discountCodeId,
       session?.user.accessToken ?? "",
-      pathname
+      pathname,
+      locale
     );
     if (result.status === "success") {
       toast.success("success");
@@ -899,6 +902,7 @@ export default function DiscountPageContent({ event }: { event: Event }) {
 
 function DiscountDrawerContent({ event }: { event: Event }) {
   const t = useTranslations("Events.single_event.discount");
+  const locale = useLocale();
   const { data: session } = useSession();
   const pathname = usePathname();
 
@@ -944,7 +948,8 @@ function DiscountDrawerContent({ event }: { event: Event }) {
       event.eventId,
       session?.user.accessToken ?? "",
       { ...data, currencyId: session?.activeOrganisation.currencyId },
-      pathname
+      pathname,
+      locale
     );
     if (result.status === "success") {
       toast.success("success");

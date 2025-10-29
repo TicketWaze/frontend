@@ -1,6 +1,4 @@
 "use server";
-
-import { api, patch, post } from "@/lib/Api";
 import { revalidatePath } from "next/cache";
 
 export async function CreateInPersonEvent(
@@ -43,7 +41,8 @@ export async function UpdateTicketTypes(
   eventId: string,
   accessToken: string,
   data: unknown,
-  pathname: string
+  pathname: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -53,6 +52,8 @@ export async function UpdateTicketTypes(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
         body: JSON.stringify(data),
       }
@@ -78,7 +79,8 @@ export async function CreateDiscountCode(
   eventId: string,
   accessToken: string,
   data: unknown,
-  pathname: string
+  pathname: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -88,6 +90,8 @@ export async function CreateDiscountCode(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
         body: JSON.stringify(data),
       }
@@ -113,7 +117,8 @@ export async function MarkDiscountCodeAsInactive(
   eventId: string,
   discountCodeId: string,
   accessToken: string,
-  pathname: string
+  pathname: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -123,6 +128,8 @@ export async function MarkDiscountCodeAsInactive(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
       }
     );
@@ -147,7 +154,8 @@ export async function MarkDiscountCodeAsActive(
   eventId: string,
   discountCodeId: string,
   accessToken: string,
-  pathname: string
+  pathname: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -157,6 +165,8 @@ export async function MarkDiscountCodeAsActive(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
       }
     );
@@ -181,7 +191,8 @@ export async function UpdateCheckersListAction(
   eventId: string,
   accessToken: string,
   pathname: string,
-  body: unknown
+  body: unknown,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -191,6 +202,8 @@ export async function UpdateCheckersListAction(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
         body: JSON.stringify(body),
       }
@@ -215,7 +228,8 @@ export async function UpdateCheckersListAction(
 export async function MarkAsActive(
   eventId: string,
   accessToken: string,
-  pathname: string
+  pathname: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -225,6 +239,8 @@ export async function MarkAsActive(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
       }
     );
@@ -248,7 +264,8 @@ export async function MarkAsActive(
 export async function MarkAsInactive(
   eventId: string,
   accessToken: string,
-  pathname: string
+  pathname: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -258,6 +275,8 @@ export async function MarkAsInactive(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
       }
     );
@@ -282,7 +301,8 @@ export async function CheckInWithTicketID(
   eventId: string,
   accessToken: string,
   pathname: string,
-  ticketID: string
+  ticketID: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -292,6 +312,8 @@ export async function CheckInWithTicketID(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
       }
     );
@@ -315,7 +337,8 @@ export async function CreateGoogleMeetEvent(
   organisationId: string,
   accessToken: string,
   body: FormData,
-  code: string
+  code: string,
+  locale: string
 ) {
   try {
     const request = await fetch(
@@ -324,6 +347,8 @@ export async function CreateGoogleMeetEvent(
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
         body: body,
       }

@@ -1,6 +1,6 @@
 "use server";
 
-import { api, patch, post } from "@/lib/Api";
+import { api, post } from "@/lib/Api";
 import { revalidatePath } from "next/cache";
 
 export async function UpdateOrganisationProfile(
@@ -87,22 +87,35 @@ export async function UpdateOrganisationPaymentInformation(
   bankName: string,
   bankAccountName: string,
   bankAccountNumber: string,
-  accessToken: string
+  accessToken: string,
+  locale: string
 ) {
   try {
-    const data = await patch(
-      `/organisations/${organisationId}/payment-informations`,
-      accessToken ?? "",
-      { bankName, bankAccountName, bankAccountNumber }
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/organisations/${organisationId}/payment-informations`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        },
+        body: JSON.stringify({
+          bankName,
+          bankAccountName,
+          bankAccountNumber,
+        }),
+      }
     );
-
-    if (data.status === "success") {
+    const response = await request.json();
+    if (response.status === "success") {
       revalidatePath("/settings/payment");
       return {
         status: "success",
       };
     } else {
-      throw new Error(data.message);
+      throw new Error(response.message);
     }
   } catch (error: any) {
     return {
@@ -114,23 +127,32 @@ export async function UpdateOrganisationPaymentInformation(
 export async function UpdateOrganisationNotificationPreferences(
   organisationId: string,
   body: unknown,
-  accessToken: string
+  accessToken: string,
+  locale: string
 ) {
   try {
-    const data = await patch(
-      `/organisations/${organisationId}/notifications-preferences`,
-      accessToken ?? "",
-      body
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/organisations/${organisationId}/notifications-preferences`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        },
+        body: JSON.stringify(body),
+      }
     );
-
-    if (data.status === "success") {
+    const response = await request.json();
+    if (response.status === "success") {
       revalidatePath("/settings/notification");
       return {
         status: "success",
       };
     } else {
       revalidatePath("/settings/notification");
-      throw new Error(data.message);
+      throw new Error(response.message);
     }
   } catch (error: any) {
     return {
@@ -173,7 +195,8 @@ export async function EditMemberAction(
   organisationId: string,
   userId: string,
   accessToken: string,
-  role: string
+  role: string,
+  locale: string
 ) {
   try {
     const res = await fetch(
@@ -182,6 +205,9 @@ export async function EditMemberAction(
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
       }
     );

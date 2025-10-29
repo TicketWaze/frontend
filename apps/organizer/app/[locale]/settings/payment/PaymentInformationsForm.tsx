@@ -3,7 +3,7 @@ import { UpdateOrganisationPaymentInformation } from "@/actions/organisationActi
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@workspace/ui/components/Inputs";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,16 +11,15 @@ import * as z from "zod";
 
 export default function PaymentInformationsForm() {
   const t = useTranslations("Settings.payment");
+  const locale = useLocale();
   const { data: session } = useSession();
   const organisation = session?.activeOrganisation;
-
   const PaymentDetailsSchema = z.object({
     bankName: z.string().min(1, t("errors.bank_name")),
     bankAccountName: z.string().min(1, t("errors.bank_account_name")),
     bankAccountNumber: z.string().min(1, t("errors.bank_name")),
   });
   type TPaymentDetailsSchema = z.infer<typeof PaymentDetailsSchema>;
-
   const {
     register,
     handleSubmit,
@@ -40,7 +39,8 @@ export default function PaymentInformationsForm() {
       data.bankName,
       data.bankAccountName,
       data.bankAccountNumber,
-      session?.user.accessToken ?? ""
+      session?.user.accessToken ?? "",
+      locale
     );
 
     if (result.status === "success") {

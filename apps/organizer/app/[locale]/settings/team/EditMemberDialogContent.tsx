@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import * as z from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,33 +36,30 @@ export default function EditMemberDialogContent({
   user: User;
 }) {
   const t = useTranslations("Settings.team");
-
+  const locale = useLocale();
   const AddMemberSchema = z.object({
     role: z.string().min(1).max(1),
   });
   type TAddMemberSchema = z.infer<typeof AddMemberSchema>;
-
   const { control, handleSubmit } = useForm<TAddMemberSchema>({
     resolver: zodResolver(AddMemberSchema),
     values: {
       role: defaultRole,
     },
   });
-
   const { data: session } = useSession();
   const organisation = session?.activeOrganisation;
   const CloseDialogRef = useRef<HTMLButtonElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-
   async function submitHandler(data: TAddMemberSchema) {
     setIsLoading(true);
     const result = await EditMemberAction(
       organisation?.organisationId ?? "",
       userId,
       user.accessToken,
-      data.role
+      data.role,
+      locale
     );
-
     if (result?.status === "success") {
       toast.success("Role Updated");
     } else {
@@ -71,7 +68,6 @@ export default function EditMemberDialogContent({
     setIsLoading(false);
     CloseDialogRef.current?.click();
   }
-
   return (
     <DialogContent className={"w-[360px] lg:w-[520px] "}>
       <DialogHeader>

@@ -849,7 +849,9 @@ function TicketSummaryCard({
                       ) : (
                         <span className="font-medium text-[1.4rem] leading-[22px] text-deep-100">
                           {ticketType
-                            ? ticketType.ticketTypePrice * ticket.quantity
+                            ? (event.currency === "USD"
+                                ? ticketType.usdPrice
+                                : ticketType.ticketTypePrice) * ticket.quantity
                             : 0}{" "}
                           {event.currency}
                         </span>

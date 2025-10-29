@@ -16,7 +16,7 @@ import {
 } from "@workspace/ui/components/select";
 import { AddCircle, ArrowLeft2, Trash } from "iconsax-react";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React, { useState } from "react";
 import * as z from "zod";
 import { Controller, useForm } from "react-hook-form";
@@ -29,6 +29,7 @@ import { Event, EventTicketType } from "@workspace/typescript-config";
 export default function TicketClasses({ event }: { event: Event }) {
   const t = useTranslations("Events.single_event");
   const q = useTranslations("Events.create_event");
+  const locale = useLocale();
   const { data: session } = useSession();
   const pathname = usePathname();
 
@@ -88,7 +89,8 @@ export default function TicketClasses({ event }: { event: Event }) {
       event.eventId,
       session?.user.accessToken ?? "",
       { ...data, currencyId: session?.activeOrganisation.currencyId },
-      pathname
+      pathname,
+      locale
     );
     if (result.status === "success") {
       toast.success("success");

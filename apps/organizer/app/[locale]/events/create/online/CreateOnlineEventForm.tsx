@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useRef } from "react";
 import BackButton from "@workspace/ui/components/BackButton";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Input } from "@workspace/ui/components/Inputs";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import { AddCircle, ArrowLeft2, DocumentUpload, Trash } from "iconsax-react";
@@ -43,6 +43,7 @@ import { EventTag } from "@workspace/typescript-config";
 
 export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
   const t = useTranslations("Events.create_event");
+  const locale = useLocale();
   const { data: session } = useSession();
   const organisation = session?.activeOrganisation;
   const countries = UseCountries();
@@ -254,7 +255,8 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
       organisation?.organisationId ?? "",
       session?.user.accessToken ?? "",
       formData,
-      encodeURIComponent(searchParams.get("code") ?? "")
+      encodeURIComponent(searchParams.get("code") ?? ""),
+      locale
     );
     if (result.status === "success") {
       toast.success("success");

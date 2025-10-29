@@ -3,7 +3,7 @@ import { UpdateOrganisationNotificationPreferences } from "@/actions/organisatio
 import { NotificationPreference } from "@workspace/typescript-config";
 import ToggleIcon from "@workspace/ui/components/ToggleIcon";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { toast } from "sonner";
 
@@ -13,7 +13,7 @@ export default function NotificationForm({
   notificationPreferences: NotificationPreference;
 }) {
   const t = useTranslations("Settings.notification");
-  // const organisation = useStore(organisationStore, organisationStore => organisationStore.state.organisation)
+  const locale = useLocale();
   const { data: session } = useSession();
   const organisation = session?.activeOrganisation;
   async function changeHandler(e: React.FormEvent<HTMLFormElement>) {
@@ -33,7 +33,8 @@ export default function NotificationForm({
     const result = await UpdateOrganisationNotificationPreferences(
       organisation?.organisationId ?? "",
       body,
-      session?.user.accessToken ?? ""
+      session?.user.accessToken ?? "",
+      locale
     );
 
     if (result.error) {
