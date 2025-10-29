@@ -18,7 +18,6 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import VerifierOrganisationCheckMark from "@/components/VerifiedOrganisationCheckMark";
 import { signOut, useSession } from "next-auth/react";
-import Organisation from "@/types/Organisation";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +35,7 @@ import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useAuthInterceptor } from "@/hooks/useAuthInterceptor";
+import { Organisation } from "@workspace/typescript-config";
 
 function Sidebar({ className }: { className: string }) {
   const t = useTranslations("Layout.sidebar");

@@ -1,6 +1,6 @@
 // @ts-nocheck
-'use client'
-import { Line } from 'react-chartjs-2';
+"use client";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,10 +11,10 @@ import {
   Tooltip,
   Legend,
   TimeScale,
-  Filler
-} from 'chart.js';
-import { useState, useEffect } from 'react';
-import Ticket from '@/types/Ticket';
+  Filler,
+} from "chart.js";
+import { useState, useEffect } from "react";
+import { Ticket } from "@workspace/typescript-config";
 
 ChartJS.register(
   CategoryScale,
@@ -34,8 +34,8 @@ function useIsMobile() {
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   return isMobile;
@@ -50,22 +50,22 @@ const processTicketsData = (tickets) => {
 
   // Create a map for the last 30 days
   const salesByDay = {};
-  
+
   for (let i = 29; i >= 0; i--) {
     const date = new Date(currentYear, currentMonth, currentDay - i);
-    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
     salesByDay[dateKey] = 0;
   }
 
   // Count tickets per day
-  tickets.forEach(ticket => {
+  tickets.forEach((ticket) => {
     // Handle both Luxon DateTime objects and regular Date strings
     let ticketDate;
-    
+
     if (ticket.createdAt?.ts) {
       // Luxon DateTime object
       ticketDate = new Date(ticket.createdAt.ts);
-    } else if (typeof ticket.createdAt === 'string') {
+    } else if (typeof ticket.createdAt === "string") {
       // ISO string
       ticketDate = new Date(ticket.createdAt);
     } else if (ticket.createdAt instanceof Date) {
@@ -75,8 +75,8 @@ const processTicketsData = (tickets) => {
       return; // Skip invalid dates
     }
 
-    const dateKey = `${ticketDate.getFullYear()}-${String(ticketDate.getMonth() + 1).padStart(2, '0')}-${String(ticketDate.getDate()).padStart(2, '0')}`;
-    
+    const dateKey = `${ticketDate.getFullYear()}-${String(ticketDate.getMonth() + 1).padStart(2, "0")}-${String(ticketDate.getDate()).padStart(2, "0")}`;
+
     if (salesByDay.hasOwnProperty(dateKey)) {
       salesByDay[dateKey]++;
     }
@@ -85,7 +85,7 @@ const processTicketsData = (tickets) => {
   return Object.values(salesByDay);
 };
 
-const DailyTicketSalesChart = ({ tickets } : {tickets : Ticket[]}) => {
+const DailyTicketSalesChart = ({ tickets }: { tickets: Ticket[] }) => {
   const isMobile = useIsMobile();
   const now = new Date();
   const currentDay = now.getDate();
@@ -95,8 +95,8 @@ const DailyTicketSalesChart = ({ tickets } : {tickets : Ticket[]}) => {
   // Generate last 30 days labels
   const getDaysLabels = () => {
     const labels = [];
-    const daysOfWeek = ['', '', '', '', '', '', ''];
-    
+    const daysOfWeek = ["", "", "", "", "", "", ""];
+
     for (let i = 29; i >= 0; i--) {
       const date = new Date(currentYear, currentMonth, currentDay - i);
       const dayName = daysOfWeek[date.getDay()];
@@ -107,9 +107,9 @@ const DailyTicketSalesChart = ({ tickets } : {tickets : Ticket[]}) => {
   };
 
   const allLabels = getDaysLabels();
-  
+
   // Mark today's label
-  // const formattedLabels = allLabels.map((label, i) => 
+  // const formattedLabels = allLabels.map((label, i) =>
   //   i === allLabels.length - 1 ? `Aujourd'hui` : label
   // );
 
@@ -127,36 +127,36 @@ const DailyTicketSalesChart = ({ tickets } : {tickets : Ticket[]}) => {
     labels: isMobile ? getMobileLabels() : allLabels,
     datasets: [
       {
-        label: 'Ventes',
-        data: isMobile ? 
-          allData.slice(allLabels.length - 13)
-          : allData,
+        label: "Ventes",
+        data: isMobile ? allData.slice(allLabels.length - 13) : allData,
         fill: {
-          target: 'origin',
+          target: "origin",
           above: (context: any) => {
             const chart = context.chart;
-            const {ctx, chartArea} = chart;
-            
+            const { ctx, chartArea } = chart;
+
             if (!chartArea) return;
-            
+
             const gradient = ctx.createLinearGradient(
-              0, chartArea.top,
-              0, chartArea.bottom
+              0,
+              chartArea.top,
+              0,
+              chartArea.bottom
             );
-            
-            gradient.addColorStop(0, 'rgba(249, 115, 22, 0.3)');
-            gradient.addColorStop(0.5, 'rgba(249, 115, 22, 0.15)');
-            gradient.addColorStop(1, 'rgba(249, 115, 22, 0)');
-            
+
+            gradient.addColorStop(0, "rgba(249, 115, 22, 0.3)");
+            gradient.addColorStop(0.5, "rgba(249, 115, 22, 0.15)");
+            gradient.addColorStop(1, "rgba(249, 115, 22, 0)");
+
             return gradient;
-          }
+          },
         },
-        borderColor: '#F97316',
+        borderColor: "#F97316",
         borderWidth: 1.5,
         tension: 0.3,
         pointRadius: 0,
         pointHoverRadius: 5,
-        pointBackgroundColor: '#F97316',
+        pointBackgroundColor: "#F97316",
       },
     ],
   };
@@ -169,26 +169,27 @@ const DailyTicketSalesChart = ({ tickets } : {tickets : Ticket[]}) => {
         display: false,
       },
       tooltip: {
-        mode: 'index',
+        mode: "index",
         intersect: false,
         callbacks: {
-          label: (context: any) => `${context.parsed.y} vente${context.parsed.y > 1 ? 's' : ''}`,
+          label: (context: any) =>
+            `${context.parsed.y} vente${context.parsed.y > 1 ? "s" : ""}`,
           title: (context: any) => {
             const label = context[0].label;
             return label === "Aujourd'hui" ? `Aujourd'hui` : label;
-          }
+          },
         },
         displayColors: false,
-        backgroundColor: '#000000',
+        backgroundColor: "#000000",
         titleFont: {
           size: 10,
-          weight: 'normal',
-          color: "#8F96A1"
+          weight: "normal",
+          color: "#8F96A1",
         },
         bodyFont: {
           size: 18,
-          weight: 'bold'
-        }
+          weight: "bold",
+        },
       },
     },
     scales: {
@@ -205,31 +206,31 @@ const DailyTicketSalesChart = ({ tickets } : {tickets : Ticket[]}) => {
           // maxTicksLimit: isMobile ? 13 : 15,
           font: (context: any) => ({
             size: isMobile ? 8 : 10,
-            weight: context.tick.label === "Aujourd'hui" ? 'bold' : 'normal'
+            weight: context.tick.label === "Aujourd'hui" ? "bold" : "normal",
           }),
-          color: (context: any) => 
-            context.tick.label === "Aujourd'hui" ? '#F97316' : '#666',
+          color: (context: any) =>
+            context.tick.label === "Aujourd'hui" ? "#F97316" : "#666",
         },
       },
       y: {
         beginAtZero: true,
         grid: {
-          color: '#E5E7EB',
+          color: "#E5E7EB",
           drawBorder: false,
         },
         border: {
-          display: false
+          display: false,
         },
         ticks: {
-          display: false
-        }
+          display: false,
+        },
       },
     },
     interaction: {
-      mode: 'nearest',
-      axis: 'x',
-      intersect: false
-    }
+      mode: "nearest",
+      axis: "x",
+      intersect: false,
+    },
   };
 
   return (

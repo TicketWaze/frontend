@@ -2,14 +2,13 @@ import EventCard from "@/components/EventCard";
 import AttendeeLayout from "@/components/Layouts/AttendeeLayout";
 import Separator from "@/components/Separator";
 import { auth } from "@/lib/auth";
-import Event from "@/types/Event";
+import { Event, User } from "@workspace/typescript-config";
 import BackButton from "@workspace/ui/components/BackButton";
 import { Call, Global, Sms, Ticket } from "iconsax-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 import React from "react";
 import OrganizerActions from "./OrganizerActions";
-import User from "@/types/User";
 import Slugify from "@/lib/Slugify";
 import { redirect } from "@/i18n/navigation";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
@@ -187,7 +186,11 @@ export default async function OrganizerProfile({
                     date={date}
                     country={event.country ?? ""}
                     city={event.city ?? ""}
-                    price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
+                    price={
+                      event.currency === "USD"
+                        ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
+                        : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
+                    }
                     currency={event.currency}
                     tags={event.eventTags}
                     eventType={event.eventType}

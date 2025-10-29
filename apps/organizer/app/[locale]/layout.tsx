@@ -31,11 +31,11 @@ export const metadata: Metadata = {
     "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place",
 };
 
-export const viewport : Viewport = {
-  width : 'device-width',
-  initialScale : 1,
-  maximumScale : 1
-}
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export default async function RootLayout({
   children,
@@ -56,10 +56,10 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <AuthProvider>
             {/* <OrganisationProvider/> */}
-              {children}
+            {children}
           </AuthProvider>
-          <TopLoader/>
-          <Toaster richColors position="top-right"/>
+          <TopLoader />
+          <Toaster richColors position="top-right" />
         </NextIntlClientProvider>
       </body>
     </html>

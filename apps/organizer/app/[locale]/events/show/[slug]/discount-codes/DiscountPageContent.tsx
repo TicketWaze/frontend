@@ -6,8 +6,8 @@ import {
 } from "@/actions/EventActions";
 import { usePathname } from "@/i18n/navigation";
 import { generateDiscountCode } from "@/lib/GenerateDiscountCode";
-import Event from "@/types/Event";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Event } from "@workspace/typescript-config";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import {
   Drawer,

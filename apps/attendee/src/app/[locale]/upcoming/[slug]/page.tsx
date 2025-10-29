@@ -5,15 +5,13 @@ import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import React from "react";
 import EventActions from "./EventActions";
-import User from "@/types/User";
 import Separator from "@/components/Separator";
 import VerifiedOrganisationCheckMark from "@/components/VerifiedOrganisationCheckMark";
 import { Link } from "@/i18n/navigation";
 import MapComponent from "./MapComponent";
 import { Call, Global, RouteSquare, Sms } from "iconsax-react";
-import UpcomingTicket from "./UpcomingTicket";
-import Ticket from "@/types/Ticket";
 import TicketViewer from "./TicketViewer";
+import { Ticket, User } from "@workspace/typescript-config";
 
 export default async function UpcomingEventPage({
   params,

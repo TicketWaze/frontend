@@ -1,5 +1,5 @@
 import React from "react";
-import Event from "@/types/Event";
+import { Event } from "@workspace/typescript-config";
 import { Google } from "iconsax-react";
 
 export default function AddToCalendar({ event }: { event: Event }) {

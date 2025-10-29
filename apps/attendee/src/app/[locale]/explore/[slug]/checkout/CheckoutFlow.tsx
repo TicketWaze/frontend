@@ -13,9 +13,12 @@ import {
   Warning2,
 } from "iconsax-react";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
-import Event from "@/types/Event";
-import Ticket from "@/types/Ticket";
-import EventTicketType from "@/types/EventTicketType";
+import {
+  Event,
+  EventTicketType,
+  Ticket,
+  User,
+} from "@workspace/typescript-config";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import Image from "next/image";
 import ticketBG from "./ticket-bg.svg";
@@ -26,7 +29,6 @@ import ToggleIcon from "@workspace/ui/components/ToggleIcon";
 import { Input } from "@workspace/ui/components/Inputs";
 import moncash from "./moncash.svg";
 import PageLoader from "@/components/Loaders/PageLoader";
-import User from "@/types/User";
 import { FreeEventTicket } from "@/actions/paymentActions";
 import { useRouter } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
@@ -344,14 +346,25 @@ export default function CheckoutFlow({
     .filter((t: any) => t.quantity > 0);
 
   // Calculate total price
-  const totalPrice = selectedWithIndex.reduce((total: number, ticket: any) => {
-    const ticketType = ticketTypes.find(
-      (tt) => tt.eventTicketTypeId === ticket.ticketTypeId
-    );
-    return (
-      total + (ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0)
-    );
-  }, 0);
+  let totalPrice = 0;
+
+  if (event.currency === "USD") {
+    totalPrice = selectedWithIndex.reduce((total: number, ticket: any) => {
+      const ticketType = ticketTypes.find(
+        (tt) => tt.eventTicketTypeId === ticket.ticketTypeId
+      );
+      return total + (ticketType ? ticketType.usdPrice * ticket.quantity : 0);
+    }, 0);
+  } else {
+    totalPrice = selectedWithIndex.reduce((total: number, ticket: any) => {
+      const ticketType = ticketTypes.find(
+        (tt) => tt.eventTicketTypeId === ticket.ticketTypeId
+      );
+      return (
+        total + (ticketType ? ticketType.ticketTypePrice * ticket.quantity : 0)
+      );
+    }, 0);
+  }
 
   const router = useRouter();
 
@@ -456,7 +469,10 @@ export default function CheckoutFlow({
                         </span>
                       ) : (
                         <span className="font-primary font-bold text-[1.8rem] leading-12 text-primary-500">
-                          {ticketType.ticketTypePrice} {event.currency}
+                          {event.currency === "USD"
+                            ? ticketType.usdPrice
+                            : ticketType.ticketTypePrice}{" "}
+                          {event.currency}
                         </span>
                       )}
                       <div className="flex bg-neutral-100 items-center justify-between py-4 px-[1.5rem] rounded-[10px]">
@@ -530,6 +546,7 @@ export default function CheckoutFlow({
                   totalPrice={totalPrice}
                   event={event}
                   isFree={isFree}
+                  currentStep={currentStep}
                 />
                 <div></div>
                 <div></div>
@@ -740,6 +757,7 @@ export default function CheckoutFlow({
               totalPrice={totalPrice}
               event={event}
               isFree={isFree}
+              currentStep={currentStep}
             />
             <div></div>
             <div></div>
@@ -788,7 +806,11 @@ function TicketSummaryCard({
   totalPrice,
   event,
   isFree,
+  currentStep,
 }: any) {
+  const TAX = event.currency === "HTG" ? 1.49 * 131 : 1.49; // take rate from db, replace 131
+  const FEE = 0.025;
+  const price = totalPrice * FEE + totalPrice + TAX;
   return (
     <div className="flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]">
       <Image src={ticketBG} alt={"ticket bg"} className="h-full" />
@@ -842,6 +864,17 @@ function TicketSummaryCard({
                   </span>
                 </div>
               )}
+              {currentStep === 2 && (
+                <div className="w-full flex justify-between">
+                  <span className="font-mono text-[1.4rem] leading-[22px] text-neutral-600">
+                    {t("ticket.platform")}
+                    {`(${event.currency})`}
+                  </span>
+                  <span className="font-medium text-[1.4rem] leading-[22px] text-deep-100">
+                    {FEE * Number(totalPrice)} + {TAX}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -872,7 +905,7 @@ function TicketSummaryCard({
               </span>
             ) : (
               <span className="font-primary font-medium text-[28px] leading-[32px] text-[#000]">
-                {totalPrice} {event.currency}
+                {currentStep < 2 ? totalPrice : price} {event.currency}
               </span>
             )}
           </>

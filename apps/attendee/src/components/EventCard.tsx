@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import EventTag from "@/types/EventTag";
+import { EventTag } from "@workspace/typescript-config";
 import { Calendar2, Google, Location } from "iconsax-react";
 import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";

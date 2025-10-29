@@ -1,13 +1,11 @@
 import OrganizerLayout from "@/components/Layouts/OrganizerLayout";
-import Event from "@/types/Event";
 import BackButton from "@workspace/ui/components/BackButton";
 import { getTranslations } from "next-intl/server";
 import React from "react";
 import EventPageDetails from "./EventPageDetails";
-import Ticket from "@/types/Ticket";
 import { auth } from "@/lib/auth";
-import User from "@/types/User";
 import { organisationPolicy } from "@/lib/role/organisationPolicy";
+import { Event, User } from "@workspace/typescript-config";
 
 export default async function Page({
   params,

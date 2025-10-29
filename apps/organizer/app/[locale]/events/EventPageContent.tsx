@@ -6,13 +6,13 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
-import Event from "@/types/Event";
 import EventCard from "@/components/EventCard";
 import { DateTime } from "luxon";
 import Slugify from "@/lib/Slugify";
 import { Money3 } from "iconsax-react";
 import { useTranslations } from "next-intl";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
+import { Event } from "@workspace/typescript-config";
 
 export default function EventPageContent({ events }: { events: Event[] }) {
   const t = useTranslations("Events");
@@ -40,7 +40,11 @@ export default function EventPageContent({ events }: { events: Event[] }) {
                     date={date}
                     country={event.country ?? ""}
                     city={event.city ?? ""}
-                    price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
+                    price={
+                      event.currency === "USD"
+                        ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
+                        : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
+                    }
                     currency={event.currency}
                     tags={event.eventTags}
                     eventType={event.eventType}

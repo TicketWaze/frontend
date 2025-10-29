@@ -4,7 +4,7 @@ import { redirect } from "@/i18n/navigation";
 import { auth } from "@/lib/auth";
 import Slugify from "@/lib/Slugify";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
-import Event from "@/types/Event";
+import { Event } from "@workspace/typescript-config";
 import BackButton from "@workspace/ui/components/BackButton";
 import { Heart } from "iconsax-react";
 import { getLocale, getTranslations } from "next-intl/server";

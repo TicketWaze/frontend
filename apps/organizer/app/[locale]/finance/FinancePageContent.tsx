@@ -1,5 +1,4 @@
 "use client";
-import { Link } from "@/i18n/navigation";
 import {
   Drawer,
   DrawerClose,
@@ -17,16 +16,14 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import { ArrowRight2, Money3, SearchNormal } from "iconsax-react";
+import { Money3, SearchNormal } from "iconsax-react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React from "react";
-import Ticket from "@/types/Ticket";
-import Order from "@/types/Order";
-import { ButtonAccent, ButtonPrimary } from "@workspace/ui/components/buttons";
+import { ButtonAccent } from "@workspace/ui/components/buttons";
 import FormatDate from "@/lib/FormatDate";
-import Event from "@/types/Event";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
+import { Event, Order, Ticket } from "@workspace/typescript-config";
 
 interface OrganisationTicket extends Ticket {
   event: Event;
@@ -41,6 +38,11 @@ export default function FinancePageContent({
   const { data: session } = useSession();
   const currentOrganisation = session?.activeOrganisation;
   const { orders, tickets } = transactions;
+  const total = Object.values(orders).reduce(
+    (acc, order) => acc + order.usdPrice,
+    0
+  );
+  const roundTotal = Math.round(total * 100) / 100;
   return (
     <div className={"flex flex-col gap-[3rem] overflow-y-scroll"}>
       <div
@@ -59,16 +61,13 @@ export default function FinancePageContent({
               "font-medium text-[1.6rem] lg:text-[25px] leading-[30px] font-primary"
             }
           >
-            {Object.values(orders).reduce(
-              (acc, order) => acc + order.amount,
-              0
-            )}{" "}
+            {roundTotal}{" "}
             <span
               className={
                 "font-normal text-[1.6rem] lg:text-[20px] text-neutral-500"
               }
             >
-              HTG
+              USD
             </span>
           </p>
         </div>
@@ -92,14 +91,14 @@ export default function FinancePageContent({
               "font-medium text-[1.6rem] lg:text-[25px] leading-[30px] font-primary"
             }
           >
-            {currentOrganisation?.balance}
+            {currentOrganisation?.usdBalance}
             <span
               className={
                 "font-normal text-[1.6rem] lg:text-[20px] text-neutral-500"
               }
             >
               {" "}
-              HTG
+              USD
             </span>
           </p>
         </div>
@@ -250,7 +249,10 @@ export default function FinancePageContent({
                       "text-[1.5rem] hidden lg:table-cell font-medium leading-8 text-neutral-900"
                     }
                   >
-                    {ticket.ticketPrice} HTG
+                    {ticket.event.currency === "USD"
+                      ? ticket.ticketUsdPrice
+                      : ticket.ticketPrice}{" "}
+                    {ticket.event.currency}
                   </TableCell>
                   <TableCell className={"hidden lg:table-cell"}>
                     {order?.status === "SUCCESSFUL" && (
@@ -569,7 +571,10 @@ function Informations({
               >
                 {t("transactions.details.price")}{" "}
                 <span className={"text-deep-100 font-medium leading-[20px]"}>
-                  {ticket.ticketPrice} {ticket.event.currency}
+                  {ticket.event.currency === "USD"
+                    ? ticket.ticketUsdPrice
+                    : ticket.ticketPrice}{" "}
+                  {ticket.event.currency}
                 </span>
               </p>
               <p

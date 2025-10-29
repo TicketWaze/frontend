@@ -1,7 +1,5 @@
 "use client";
-import UseCountries from "@/hooks/UseCountries";
 import { useRouter } from "@/i18n/navigation";
-import Currency from "@/types/Currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import { Input } from "@workspace/ui/components/Inputs";
@@ -15,22 +13,23 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { useLocale, useTranslations } from "next-intl";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { signIn } from "next-auth/react";
+import { Country } from "@workspace/typescript-config";
 
 export default function CompleteRegistrationForm({
   accessToken,
   email,
   password,
-  currencies,
+  countries,
 }: {
   accessToken: string;
   email: string;
   password: string;
-  currencies: Currency[];
+  countries: Country[];
 }) {
   const t = useTranslations("Auth.complete");
   const CompleteRegistrationSchema = z.object({
@@ -40,7 +39,7 @@ export default function CompleteRegistrationForm({
     dateOfBirth: z.string().min(1, { error: t("placeholders.errors.dob") }),
     gender: z.string({ error: t("placeholders.errors.gender") }),
     phoneNumber: z.string().min(8, { error: t("placeholders.errors.phone") }),
-    currencyId: z.string({ error: t("placeholders.errors.currency") }),
+    // currencyId: z.string({ error: t("placeholders.errors.currency") }),
   });
   type TCompleteRegistrationSchema = z.infer<typeof CompleteRegistrationSchema>;
   const {
@@ -51,13 +50,6 @@ export default function CompleteRegistrationForm({
   } = useForm<TCompleteRegistrationSchema>({
     resolver: zodResolver(CompleteRegistrationSchema),
   });
-  const countries = UseCountries();
-  const [host, setHost] = useState<string>("");
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setHost(window.location.host);
-    }
-  }, []);
   const locale = useLocale();
   const router = useRouter();
   async function submitHandler(data: TCompleteRegistrationSchema) {
@@ -68,7 +60,7 @@ export default function CompleteRegistrationForm({
         headers: {
           "Content-Type": "application/json",
           "Accept-Language": locale,
-          Origin: host,
+          Origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
         body: JSON.stringify(data),
       }
@@ -213,7 +205,8 @@ export default function CompleteRegistrationForm({
                   </span>
                 )}
               </div>
-              <div>
+              {/* CURRENCY */}
+              {/* <div>
                 <Select onValueChange={(e) => setValue("currencyId", e)}>
                   <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
                     <SelectValue placeholder={t("placeholders.currency")} />
@@ -239,7 +232,7 @@ export default function CompleteRegistrationForm({
                     {errors.currencyId.message}
                   </span>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="w-full hidden lg:block">
               <ButtonPrimary

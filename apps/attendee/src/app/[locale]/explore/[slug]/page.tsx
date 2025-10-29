@@ -1,5 +1,3 @@
-import Event from "@/types/Event";
-import Ticket from "@/types/Ticket";
 import React from "react";
 import BackButton from "@workspace/ui/components/BackButton";
 import AttendeeLayout from "@/components/Layouts/AttendeeLayout";
@@ -15,20 +13,18 @@ import {
   Location,
   RouteSquare,
   Sms,
-  Ticket2,
 } from "iconsax-react";
-import { ButtonBlack } from "@workspace/ui/components/buttons";
 import FormatDate from "@/lib/FormatDate";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import VerifiedOrganisationCheckMark from "@/components/VerifiedOrganisationCheckMark";
 import Follow from "./Follow";
 import { auth } from "@/lib/auth";
-import User from "@/types/User";
 import Unfollow from "./Unfollow";
 import Map from "./MapComponent";
 import { Link } from "@/i18n/navigation";
 import AddToCalendar from "./AddToCalendar";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
+import { Event, Ticket, User } from "@workspace/typescript-config";
 
 export default async function EventPage({
   params,

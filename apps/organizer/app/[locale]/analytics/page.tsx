@@ -8,9 +8,11 @@ import BarChart from "./BarChart";
 import { api } from "@/lib/Api";
 import { organisationPolicy } from "@/lib/role/organisationPolicy";
 import UnauthorizedView from "@/components/Layouts/UnauthorizedView";
-import Ticket from "@/types/Ticket";
 import { InfoCircle } from "iconsax-react";
 import TruncateUrl from "@/lib/TruncateUrl";
+import { Ticket } from "@workspace/typescript-config";
+import { signOut } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function AnalyticsPage({
   searchParams,
@@ -21,7 +23,11 @@ export default async function AnalyticsPage({
   const session = await auth();
   const currentOrganisation = session?.activeOrganisation;
   const currentOrganisationId =
-    organisationId ?? session?.activeOrganisation.organisationId;
+    organisationId ?? session?.activeOrganisation?.organisationId;
+  console.log(currentOrganisationId);
+  if (!organisationId && !session?.activeOrganisation?.organisationId) {
+    redirect(`/auth/logout`);
+  }
   const t = await getTranslations("Analytics");
   const analytics = await api(
     `/organisations/${currentOrganisationId}/analytics`,
@@ -74,7 +80,7 @@ export default async function AnalyticsPage({
                     }
                   >
                     {analytics.totalRevenue}{" "}
-                    <span className={"font-normal text-neutral-500"}>HTG</span>
+                    <span className={"font-normal text-neutral-500"}>USD</span>
                   </p>
                 </div>
               </div>
@@ -362,21 +368,21 @@ export default async function AnalyticsPage({
                         category1={
                           TruncateUrl(
                             analytics.topEvents[0].eventName ?? "",
-                            9
+                            8
                           ) ?? ""
                         }
                         category2={
                           analytics.topEvents.length >= 2
                             ? (TruncateUrl(
                                 analytics.topEvents[1]?.eventName ?? "",
-                                9
+                                8
                               ) ?? "")
                             : ""
                         }
                         category3={
                           TruncateUrl(
                             analytics.topEvents[2]?.eventName ?? "",
-                            9
+                            8
                           ) ?? ""
                         }
                         percent1={analytics.topEvents[0]?.percentage ?? "0%"}

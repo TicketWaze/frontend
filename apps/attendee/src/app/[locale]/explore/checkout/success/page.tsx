@@ -1,20 +1,22 @@
-import AttendeeLayout from '@/components/Layouts/AttendeeLayout'
-import React from 'react'
-import RedirectContent from './RedirectContent';
-import { auth } from '@/lib/auth';
-import User from '@/types/User';
+import AttendeeLayout from "@/components/Layouts/AttendeeLayout";
+import React from "react";
+import RedirectContent from "./RedirectContent";
+import { auth } from "@/lib/auth";
+import { User } from "@workspace/typescript-config";
 
 export default async function SuccessMoncash({
   searchParams,
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-
   const transactionId = searchParams?.transactionId;
-  const session = await auth()
+  const session = await auth();
   return (
-    <AttendeeLayout className='items-center justify-center' title=''>
-      <RedirectContent transactionId={transactionId as string} user={session?.user as User} />
+    <AttendeeLayout className="items-center justify-center" title="">
+      <RedirectContent
+        transactionId={transactionId as string}
+        user={session?.user as User}
+      />
       {/* <div className='flex flex-col gap-16 items-center max-w-[530px]'>
         <Image src={Success} alt='success icon' width={150} height={150} />
         <div className='text-center flex flex-col gap-8'>
@@ -27,5 +29,5 @@ export default async function SuccessMoncash({
         </div>
       </div> */}
     </AttendeeLayout>
-  )
+  );
 }

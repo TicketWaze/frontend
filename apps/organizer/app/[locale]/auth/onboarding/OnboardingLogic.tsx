@@ -1,8 +1,7 @@
 "use client";
 import PageLoader from "@/components/Loaders/PageLoader";
 import { useRouter } from "@/i18n/navigation";
-import Organisation from "@/types/Organisation";
-import User from "@/types/User";
+import { Organisation, User } from "@workspace/typescript-config";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { useSession } from "next-auth/react";

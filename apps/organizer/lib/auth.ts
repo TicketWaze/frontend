@@ -1,4 +1,3 @@
-import Organisation from "@/types/Organisation";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -56,7 +55,8 @@ const nextAuthResult = NextAuth({
     async jwt({ token, user, trigger, session }) {
       // Initial sign-in
       if (user) {
-        const customUser = user as unknown as import("@/types/User").default;
+        const customUser =
+          user as unknown as import("@workspace/typescript-config").User;
         token = { ...token, ...customUser };
         token.activeOrganisation = customUser.organisations?.[0] ?? null;
       }

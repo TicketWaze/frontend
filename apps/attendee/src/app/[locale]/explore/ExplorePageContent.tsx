@@ -4,7 +4,7 @@ import NoAuthDialog from "@/components/Layouts/NoAuthDialog";
 import { Link } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
-import Event from "@/types/Event";
+import { Event } from "@workspace/typescript-config";
 import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog";
 import {
   Tooltip,
@@ -143,7 +143,11 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
                     date={date}
                     country={event.country ?? ""}
                     city={event.city ?? ""}
-                    price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
+                    price={
+                      event.currency === "USD"
+                        ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
+                        : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
+                    }
                     currency={event.currency}
                     tags={event.eventTags}
                     eventType={event.eventType}

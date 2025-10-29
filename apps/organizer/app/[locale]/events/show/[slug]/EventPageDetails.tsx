@@ -1,6 +1,5 @@
 "use client";
 import TruncateUrl from "@/lib/TruncateUrl";
-import Event from "@/types/Event";
 import {
   Dialog,
   DialogClose,
@@ -60,7 +59,6 @@ import {
 } from "@workspace/ui/components/drawer";
 import EventDrawerContent from "./EventDrawerContent";
 import { DateTime } from "luxon";
-import Ticket from "@/types/Ticket";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import z from "zod";
@@ -72,12 +70,11 @@ import {
   MarkAsInactive,
   UpdateCheckersListAction,
 } from "@/actions/EventActions";
-import User from "@/types/User";
 import PageLoader from "@/components/Loaders/PageLoader";
 import { Input } from "@workspace/ui/components/Inputs";
 import FormatDate from "@/lib/FormatDate";
-import Order from "@/types/Order";
 import Slugify from "@/lib/Slugify";
+import { Event, Order, Ticket, User } from "@workspace/typescript-config";
 
 interface OrganisationTicket extends Ticket {
   event: Event;
@@ -591,13 +588,20 @@ export default function EventPageDetails({
             {t("revenue")}
           </span>
           <p className={"font-medium text-[25px] leading-[30px] font-primary"}>
-            {tickets.reduce((acc, curr) => acc + curr.ticketPrice, 0)}{" "}
+            {tickets.reduce(
+              (acc, curr) =>
+                acc +
+                (event.currency === "USD"
+                  ? curr.ticketUsdPrice
+                  : curr.ticketPrice),
+              0
+            )}{" "}
             <span
               className={
                 "font-normal text-[1.6rem] lg:text-[25px] text-neutral-500"
               }
             >
-              HTG
+              {event.currency}
             </span>
           </p>
         </li>
@@ -1079,7 +1083,10 @@ export default function EventPageDetails({
                         "hidden lg:table-cell text-[1.5rem] font-medium leading-8 text-neutral-900"
                       }
                     >
-                      {ticket.ticketPrice} HTG
+                      {ticket.event.currency === "USD"
+                        ? ticket.ticketUsdPrice
+                        : ticket.ticketPrice}{" "}
+                      {event.currency}
                     </TableCell>
                     <TableCell className={"hidden lg:table-cell"}>
                       {ticket.status === "CHECKED" && (
@@ -1344,7 +1351,10 @@ export default function EventPageDetails({
                             "hidden lg:table-cell text-[1.5rem] font-medium leading-8 text-neutral-900"
                           }
                         >
-                          {ticket.ticketPrice} HTG
+                          {ticket.event.currency === "USD"
+                            ? ticket.ticketUsdPrice
+                            : ticket.ticketPrice}{" "}
+                          {event.currency}
                         </TableCell>
                         <TableCell className={"hidden lg:table-cell"}>
                           {ticket.status === "CHECKED" && (
@@ -1552,7 +1562,7 @@ function Informations({
               >
                 {t("transactions.details.time")}{" "}
                 <span className={"text-deep-100 font-medium leading-[20px]"}>
-                  {ticket.event.eventDays[0]?.startTime} -{" "}
+                  {ticket.event.eventDays[0]?.startDate} -{" "}
                   {ticket.event.eventDays[0]?.endTime}
                 </span>
               </p>
@@ -1595,7 +1605,10 @@ function Informations({
               >
                 {t("transactions.details.price")}{" "}
                 <span className={"text-deep-100 font-medium leading-[20px]"}>
-                  {ticket.ticketPrice} {ticket.event.currency}
+                  {ticket.event.currency === "USD"
+                    ? ticket.ticketUsdPrice
+                    : ticket.ticketPrice}{" "}
+                  {ticket.event.currency}
                 </span>
               </p>
               <p

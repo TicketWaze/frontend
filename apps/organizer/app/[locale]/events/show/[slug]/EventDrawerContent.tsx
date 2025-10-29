@@ -1,7 +1,6 @@
 "use client";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
-import Event from "@/types/Event";
-import { ButtonPrimary } from "@workspace/ui/components/buttons";
+import { Event } from "@workspace/typescript-config";
 import {
   DrawerClose,
   DrawerContent,
@@ -9,10 +8,9 @@ import {
   DrawerFooter,
   DrawerTitle,
 } from "@workspace/ui/components/drawer";
-import { Calendar2, Clock, Edit2, Location } from "iconsax-react";
+import { Calendar2, Clock, Location } from "iconsax-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useState } from "react";
 
 export default function EventDrawerContent({ event }: { event: Event }) {
   const t = useTranslations("Events.single_event");

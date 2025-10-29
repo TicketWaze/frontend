@@ -7,10 +7,10 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
-import Organisation from "@/types/Organisation";
 import OrganizerCard from "./OrganizerCard";
 import { CloseCircle, SearchNormal, Ticket } from "iconsax-react";
 import { useSession } from "next-auth/react";
+import { Organisation } from "@workspace/typescript-config";
 
 export default function OrganizersContents({
   organisations,

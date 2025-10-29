@@ -1,7 +1,5 @@
 "use client";
-
-import Event from "@/types/Event";
-import Ticket from "@/types/Ticket";
+import { Event, Ticket } from "@workspace/typescript-config";
 import { useRef, useState } from "react";
 import UpcomingTicket from "./UpcomingTicket";
 import { ArrowLeft2, ArrowRight2, DocumentDownload } from "iconsax-react";
@@ -335,7 +333,7 @@ export default function TicketViewer({
               {isFree ? (
                 <span className="text-deep-100 font-medium">{t("free")}</span>
               ) : (
-                `${tickets[currentIndex].ticketPrice} ${event.currency}`
+                `${event.currency === "USD" ? tickets[currentIndex].ticketUsdPrice : tickets[currentIndex].ticketPrice} ${event.currency}`
               )}
             </div>
             <div className="flex flex-col gap-4 w-full">

@@ -1,4 +1,4 @@
-import Event from "@/types/Event";
+import { Event } from "@workspace/typescript-config";
 
 export type SimpleStyleSpec = {
   type: "FeatureCollection";

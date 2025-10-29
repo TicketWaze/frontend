@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import BackButton from "@workspace/ui/components/BackButton";
 import { useTranslations } from "next-intl";
 import { Input } from "@workspace/ui/components/Inputs";
@@ -36,10 +36,10 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { CreateGoogleMeetEvent } from "@/actions/EventActions";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import EventTag from "@/types/EventTag";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { redirect, useSearchParams } from "next/navigation";
+import { EventTag } from "@workspace/typescript-config";
 
 export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
   const t = useTranslations("Events.create_event");

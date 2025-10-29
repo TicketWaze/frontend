@@ -2,11 +2,10 @@ import Image from "next/image";
 import React from "react";
 import ticketBG from "./ticket-bg.svg";
 import { useTranslations } from "next-intl";
-import Ticket from "@/types/Ticket";
 import Capitalize from "@workspace/ui/lib/Capitalize";
-import Event from "@/types/Event";
 import FormatDate from "@/lib/FormatDate";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
+import { Event, Ticket } from "@workspace/typescript-config";
 
 export default function UpcomingTicket({
   ticket,
@@ -45,7 +44,7 @@ export default function UpcomingTicket({
             {isFree ? (
               <span className="text-deep-100 font-medium">{t("free")}</span>
             ) : (
-              `${ticket.ticketPrice} ${event.currency}`
+              `${event.currency === "USD" ? ticket.ticketUsdPrice : ticket.ticketPrice} ${event.currency}`
             )}
           </div>
           <div className="flex flex-col gap-4 w-full">
