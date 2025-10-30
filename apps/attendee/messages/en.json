@@ -303,7 +303,7 @@
       "quantity": "Quantity",
       "summary": "Summary",
       "select": "Select a ticket type to continue",
-      "platform": "Ticketwaze fees + tax",
+      "platform": "fees + tax / ticket",
       "discount": "Apply discount code",
       "discount_code": "Discount Code",
       "apply": "Apply",
