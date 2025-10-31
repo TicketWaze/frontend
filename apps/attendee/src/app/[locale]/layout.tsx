@@ -26,17 +26,17 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? ""),
   title: "TicketWaze - Discover Events, Connect with Culture.",
   description:
     "Easily explore, share, and enjoy the best events your country has to offer. Join us today and start your journey!",
-    // "Empowering events across your country and reaching beyond borders to connect people, ideas, and experiences.",
-    
+  // "Empowering events across your country and reaching beyond borders to connect people, ideas, and experiences.",
 };
-export const viewport : Viewport = {
-  width : 'device-width',
-  initialScale : 1,
-  maximumScale : 1
-}
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export default async function RootLayout({
   children,
@@ -57,10 +57,10 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <AuthProvider>
             {/* <OrganisationProvider/> */}
-              {children}
+            {children}
           </AuthProvider>
-          <Toaster richColors position="top-right"/>
-          <TopLoader/>
+          <Toaster richColors position="top-right" />
+          <TopLoader />
         </NextIntlClientProvider>
       </body>
     </html>

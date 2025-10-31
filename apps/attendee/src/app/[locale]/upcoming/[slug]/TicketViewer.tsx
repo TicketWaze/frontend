@@ -2,7 +2,12 @@
 import { Event, Ticket } from "@workspace/typescript-config";
 import { useRef, useState } from "react";
 import UpcomingTicket from "./UpcomingTicket";
-import { ArrowLeft2, ArrowRight2, DocumentDownload } from "iconsax-react";
+import {
+  ArrowLeft2,
+  ArrowRight2,
+  DocumentDownload,
+  Warning2,
+} from "iconsax-react";
 import { useTranslations } from "next-intl";
 import { QRCodeCanvas } from "qrcode.react";
 import html2canvas from "html2canvas";
@@ -379,6 +384,10 @@ export default function TicketViewer({
               </div>
             </div>
           </div>
+          <span className="text-warning flex gap-4 items-center">
+            <Warning2 size="16" color="#ea961c" variant="TwoTone" />
+            {t("ticketWarning")}
+          </span>
           <QRCodeCanvas
             value={tickets[currentIndex].ticketId}
             size={128}

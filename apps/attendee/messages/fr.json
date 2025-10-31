@@ -290,6 +290,7 @@
     "ticketId": "ID du billet",
     "name": "Nom complet",
     "email": "E-mail",
+    "ticketWarning": "Votre billet est personnel — ne le partagez pas. Ce billet est non remboursable",
     "liked": "Événements aimés"
   },
   "Checkout": {
@@ -307,7 +308,8 @@
       "discount": "Appliquer un code de réduction",
       "discount_code": "Code de réduction",
       "apply": "Appliquer",
-      "error": "Sélectionnez au moins un billet"
+      "error": "Sélectionnez au moins un billet",
+      "ticketWarning": "Les billets ne sont pas remboursables. Toutes les ventes sont définitives"
     },
     "recipient": {
       "title": "Destinataire",
@@ -324,6 +326,7 @@
       "paypal": "Payer avec PayPal",
       "moncash": "Payer avec MonCash",
       "nopayment": "Cet événement est entièrement gratuit. Aucun paiement n'est requis pour finaliser votre inscription. Continuez simplement pour confirmer votre billet et le tour est joué.",
+      "secured": "Votre sécurité est notre priorité. Toutes les transactions sont effectuées via des canaux cryptés et sont surveillées en temps réel afin de prévenir toute fraude et de garantir la protection de vos informations personnelles. Nos systèmes sont supervisés par des partenaires de confiance et respectent les normes les plus strictes en matière de sécurité des paiements et des données.",
       "paymentType": "Sélétionner un moyen de paiement",
       "placeholders": {
         "name": "Nom sur la carte",

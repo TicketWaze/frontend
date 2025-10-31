@@ -10,6 +10,7 @@ import {
   Card,
   InfoCircle,
   MinusCirlce,
+  ShieldSecurity,
   Warning2,
 } from "iconsax-react";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
@@ -736,6 +737,14 @@ export default function CheckoutFlow({
                         <ArrowRight2 size="20" color="#0d0d0d" variant="Bulk" />
                       </div>
                     </button>
+                    <div
+                      className={
+                        "flex flex-col items-start gap-4 p-[15px] rounded-[15px] border border-neutral-100 text-[1.2rem] leading-8 text-neutral-700"
+                      }
+                    >
+                      <ShieldSecurity size="20" color="#E45B00" />
+                      {t("payment.secured")}
+                    </div>
                   </div>
                 )}
                 <div></div>
@@ -892,6 +901,10 @@ function TicketSummaryCard({
             </div>
           </div>
         </div>
+        <span className="text-warning flex gap-4 items-center">
+          <Warning2 size="16" color="#ea961c" variant="TwoTone" />
+          {t("ticket.ticketWarning")}
+        </span>
       </div>
       <div className="absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8">
         {selectedWithIndex.length > 0 && (

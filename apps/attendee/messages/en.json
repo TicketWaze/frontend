@@ -290,6 +290,7 @@
     "ticketId": "Ticket ID",
     "name": "Full Name",
     "email": "Email",
+    "ticketWarning": "Your ticket is personal—don’t share it. This ticket is non-refundable",
     "liked": "Liked events"
   },
   "Checkout": {
@@ -307,7 +308,8 @@
       "discount": "Apply discount code",
       "discount_code": "Discount Code",
       "apply": "Apply",
-      "error": "Select at least one ticket"
+      "error": "Select at least one ticket",
+      "ticketWarning": "Tickets are non-refundable. All sales are final."
     },
     "recipient": {
       "title": "Recipient",
@@ -324,6 +326,7 @@
       "paypal": "Pay with PayPal",
       "moncash": "Pay with MonCash",
       "nopayment": "This event is completely free of charge. No payment is required to complete your registration. Just continue to confirm your ticket and you’re all set.",
+      "secured": "Your security matters to us. Every transaction is processed through encrypted channels and monitored in real time to prevent fraud and ensure your personal information remains protected. Our systems are supervised by trusted partners and comply with the highest industry standards for data and payment security.",
       "paymentType": "Select a payment provider",
       "placeholders": {
         "name": "Card Name",

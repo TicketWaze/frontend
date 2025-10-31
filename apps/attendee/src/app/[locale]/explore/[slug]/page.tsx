@@ -25,6 +25,27 @@ import { Link } from "@/i18n/navigation";
 import AddToCalendar from "./AddToCalendar";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event, Ticket, User } from "@workspace/typescript-config";
+import { Metadata, ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+  {
+    params,
+  }: {
+    params: Promise<{ slug: string }>;
+  },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const eventRequest = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/events/${slug}`
+  );
+  const eventResponse = await eventRequest.json();
+  const event: Event = eventResponse.event;
+  return {
+    title: event.eventName,
+    description: event.eventDescription,
+  };
+}
 
 export default async function EventPage({
   params,

@@ -6,6 +6,7 @@ import Capitalize from "@workspace/ui/lib/Capitalize";
 import FormatDate from "@/lib/FormatDate";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event, Ticket } from "@workspace/typescript-config";
+import { Warning2 } from "iconsax-react";
 
 export default function UpcomingTicket({
   ticket,
@@ -88,6 +89,13 @@ export default function UpcomingTicket({
             </div>
           </div>
         </div>
+        <span className="text-warning flex gap-4 items-center">
+          <Warning2 size="16" color="#ea961c" variant="TwoTone" />
+          {t("ticketWarning")}
+        </span>
+        {/* Your ticket is unique and linked to your personal access. Please do not
+        share it with others, as it may compromise your entry or benefits. Keep
+        it safe and secure. */}
       </div>
       <div
         className={
