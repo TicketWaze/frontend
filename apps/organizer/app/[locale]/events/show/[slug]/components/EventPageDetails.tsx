@@ -29,17 +29,8 @@ import { useLocale, useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import TicketClasses from "./TicketClasses";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@workspace/ui/components/drawer";
+import { Drawer, DrawerTrigger } from "@workspace/ui/components/drawer";
 import { DateTime } from "luxon";
-import { ButtonAccent } from "@workspace/ui/components/buttons";
 import FormatDate from "@/lib/FormatDate";
 import Slugify from "@/lib/Slugify";
 import {
@@ -47,13 +38,19 @@ import {
   EventPerformer,
   Order,
   OrganisationTicket,
-  Ticket,
   User,
 } from "@workspace/typescript-config";
 import MoreComponent from "./MoreComponent";
 import CheckingDialog from "./CheckingDialog";
 import Informations from "./Informations";
 import EventArtist from "./EventArtist";
+import Whatsapp from "@workspace/ui/assets/icons/whatsApp.svg";
+import Instagram from "@workspace/ui/assets/icons/instagram.svg";
+import Twitter from "@workspace/ui/assets/icons/twitter.svg";
+import Tiktok from "@workspace/ui/assets/icons/tiktok.svg";
+import Linkedin from "@workspace/ui/assets/icons/linkedIn.svg";
+import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 
 export default function EventPageDetails({
   event,
@@ -98,6 +95,7 @@ export default function EventPageDetails({
     const search = query.toLowerCase();
     return ticket.ticketName.toLowerCase().includes(search);
   });
+  const eventLink = `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`;
   return (
     <div className={"flex flex-col gap-[3rem] overflow-y-scroll"}>
       <TopBar title={event.eventName}>
@@ -149,26 +147,19 @@ export default function EventPageDetails({
                         "lg:hidden text-neutral-700 text-[1.8rem] max-w-[335px]"
                       }
                     >
-                      {TruncateUrl(
-                        `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`,
-                        22
-                      )}
+                      {TruncateUrl(eventLink, 22)}
                     </span>
                     <span
                       className={
                         "hidden lg:block text-neutral-700 text-[1.8rem] max-w-[335px]"
                       }
                     >
-                      {TruncateUrl(
-                        `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`
-                      )}
+                      {TruncateUrl(eventLink)}
                     </span>
                     <button
                       onClick={async () => {
                         try {
-                          await navigator.clipboard.writeText(
-                            `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`
-                          );
+                          await navigator.clipboard.writeText(eventLink);
                           toast.success("Url copied to clipboard");
                         } catch (e) {
                           toast.error("Failed to copy url");
@@ -181,6 +172,37 @@ export default function EventPageDetails({
                       <Copy size="20" color="#e45b00" variant="Bulk" />
                       Copy
                     </button>
+                  </div>
+                  <div className="flex items-center gap-12">
+                    <Link
+                      href={`https://wa.me/?text=${encodeURIComponent(`*Check this out — it’s worth your time!* \nSomething exciting is happening and I wanted you to be part of it.\nTap the link to explore - Reserve your spot now! \n${eventLink}`)}`}
+                      target="_blank"
+                      className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                    >
+                      <Image src={Whatsapp} alt="whatsapp Icon" />
+                    </Link>
+                    {/* <div className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full">
+                      <Image src={Instagram} alt="instagram Icon" />
+                    </div> */}
+                    <Link
+                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                        `Check this out — it’s worth your time! 🚀\nSomething exciting is happening and I wanted you to be part of it.\nReserve your spot now: ${eventLink}`
+                      )}`}
+                      target="_blank"
+                      className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                    >
+                      <Image src={Twitter} alt="Twitter Icon" />
+                    </Link>
+                    {/* <div className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full">
+                      <Image src={Tiktok} alt="tiktok Icon" />
+                    </div> */}
+                    <Link
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventLink)}`}
+                      target="_blank"
+                      className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                    >
+                      <Image src={Linkedin} alt="LinkedIn Icon" />
+                    </Link>
                   </div>
                 </div>
               </DialogContent>

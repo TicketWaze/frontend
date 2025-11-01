@@ -7,7 +7,7 @@ import {
 import NoAuthDialog from "@/components/Layouts/NoAuthDialog";
 import { LinkPrimary } from "@/components/Links";
 import PageLoader from "@/components/Loaders/PageLoader";
-import { usePathname } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
 import TruncateUrl from "@/lib/TruncateUrl";
 import { Event, User } from "@workspace/typescript-config";
@@ -31,11 +31,15 @@ import {
 } from "@workspace/ui/components/popover";
 import { Copy, Heart, MoreCircle, Send2, Warning2 } from "iconsax-react";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import Image from "next/image";
+import Whatsapp from "@workspace/ui/assets/icons/whatsApp.svg";
+import Twitter from "@workspace/ui/assets/icons/twitter.svg";
+import Linkedin from "@workspace/ui/assets/icons/linkedIn.svg";
 
 export default function EventActions({
   event,
@@ -47,6 +51,7 @@ export default function EventActions({
   isFavorite: boolean;
 }) {
   const t = useTranslations("Event");
+  const locale = useLocale();
   const [currentUrl, setCurrentUrl] = useState("");
   const { data: session } = useSession();
   useEffect(() => {
@@ -127,6 +132,8 @@ export default function EventActions({
 
     setIsLoading(false);
   }
+  const eventLink = currentUrl;
+  // const eventLink = `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`;
   return (
     <div className="flex items-center justify-between">
       <PageLoader isLoading={isLoading} />
@@ -198,6 +205,37 @@ export default function EventActions({
                   <Copy size="20" color="#e45b00" variant="Bulk" />
                   {t("copy")}
                 </button>
+              </div>
+              <div className="flex w-full justify-center items-center gap-12">
+                <Link
+                  href={`https://wa.me/?text=${encodeURIComponent(`*Check this out — it’s worth your time!* \nSomething exciting is happening and I wanted you to be part of it.\nTap the link to explore - Reserve your spot now! \n${eventLink}`)}`}
+                  target="_blank"
+                  className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                >
+                  <Image src={Whatsapp} alt="whatsapp Icon" />
+                </Link>
+                {/* <div className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full">
+                      <Image src={Instagram} alt="instagram Icon" />
+                    </div> */}
+                <Link
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `Check this out — it’s worth your time! 🚀\nSomething exciting is happening and I wanted you to be part of it.\nReserve your spot now: ${eventLink}`
+                  )}`}
+                  target="_blank"
+                  className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                >
+                  <Image src={Twitter} alt="Twitter Icon" />
+                </Link>
+                {/* <div className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full">
+                      <Image src={Tiktok} alt="tiktok Icon" />
+                    </div> */}
+                <Link
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventLink)}`}
+                  target="_blank"
+                  className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                >
+                  <Image src={Linkedin} alt="LinkedIn Icon" />
+                </Link>
               </div>
             </div>
           </DialogContent>

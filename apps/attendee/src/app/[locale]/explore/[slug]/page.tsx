@@ -3,7 +3,7 @@ import BackButton from "@workspace/ui/components/BackButton";
 import AttendeeLayout from "@/components/Layouts/AttendeeLayout";
 import Image from "next/image";
 import EventActions from "./EventActions";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import {
   Calendar2,
   Call,
@@ -21,7 +21,7 @@ import Follow from "./Follow";
 import { auth } from "@/lib/auth";
 import Unfollow from "./Unfollow";
 import Map from "./MapComponent";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import AddToCalendar from "./AddToCalendar";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event, Ticket, User } from "@workspace/typescript-config";
@@ -54,6 +54,7 @@ export default async function EventPage({
 }) {
   const { slug } = await params;
   const session = await auth();
+  const locale = await getLocale();
   const eventRequest = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/events/${slug}`
   );
@@ -74,6 +75,10 @@ export default async function EventPage({
     }
   );
   const favoriteResponse = await favoriteRequest.json();
+
+  if (favoriteResponse.status === "failed") {
+    redirect({ href: "/explore", locale });
+  }
 
   const isFollowing = organisation.followers.filter(
     (follower: any) => follower.userId === session?.user.userId
