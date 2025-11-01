@@ -407,6 +407,25 @@
           }
         }
       },
+      "artist": {
+        "add": "Ajouter un intervenant",
+        "description": "Vous pouvez téléverser une photo et ajouter un lien vers leur profil. Une fois ajouté, l’intervenant apparaîtra dans la programmation de votre événement.",
+        "noArtist": "Ajouter des intervenants pour donner vie à votre liste !",
+        "name": "Nom de l'intervenant",
+        "link": "Liens vers sont profile ou website",
+        "thumbnail": "Déposez votre miniature ici ou ",
+        "browse": "parcourir",
+        "resize": "Redimensionner votre image",
+        "errors": {
+          "name": "Entrez un nom valide",
+          "link": "Entrez un lien valide",
+          "image": {
+            "required": "L'intervenant doit avoir une image de profile",
+            "max": "La taille maximale du fichier est de 200ko.",
+            "type": "Les fichiers .jpg, .jpeg, .png et .webp sont acceptés."
+          }
+        }
+      },
       "filters": {
         "all": "Tous les statuts",
         "pending": "En attente",

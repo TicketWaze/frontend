@@ -11,6 +11,20 @@ export interface Country {
   };
 }
 
+export interface OrganisationTicket extends Ticket {
+  event: Event;
+}
+
+export interface EventPerformer {
+  eventPerformerId: string;
+  performerName: string;
+  performerLink: string;
+  performerProfileUrl: string;
+  eventId: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
 export interface WaitlistMember {
   organisationId: string;
   fullName: string;
@@ -179,6 +193,7 @@ export interface Event {
   eventTicketTypes: EventTicketType[];
   eventTags: EventTag[];
   discountCodes: DiscountCode[];
+  eventPerformers: EventPerformer[];
   createdAt: DateTime;
   updatedAt: DateTime;
 }

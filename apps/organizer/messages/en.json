@@ -407,6 +407,25 @@
           }
         }
       },
+      "artist": {
+        "add": "Add Performer",
+        "description": "You can upload a photo and link to their profile, Once added, the artist will appear in your event lineup.",
+        "noArtist": "Start adding performers to see your list come to life!",
+        "name": "Performer Name",
+        "link": "Link to profile or website",
+        "thumbnail": "Drop your thumbnail here or ",
+        "browse": "browse",
+        "resize": "Resize the image",
+        "errors": {
+          "name": "Performer name cannot be blank",
+          "link": "Please enter a valid Link",
+          "image": {
+            "required": "Performer should have a profile image",
+            "max": "Max file size is 200ko.",
+            "type": ".jpg, .jpeg, .png and .webp files are accepted."
+          }
+        }
+      },
       "filters": {
         "all": "All status",
         "pending": "Pending",

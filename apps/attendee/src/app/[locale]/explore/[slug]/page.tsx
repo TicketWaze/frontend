@@ -61,6 +61,7 @@ export default async function EventPage({
   const event: Event = eventResponse.event;
   const tickets: Ticket[] = eventResponse.tickets;
   const organisation = eventResponse.organisation;
+  const eventPerformers = event.eventPerformers;
 
   const favoriteRequest = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/favorite`,
@@ -114,6 +115,26 @@ export default async function EventPage({
                 {event.eventDescription}
               </p>
             </div>
+            <Separator />
+            <ul className=" flex items-center gap-8 overflow-x-auto scroll-smooth scrollbar-hide w-full min-h-[120px]">
+              {eventPerformers &&
+                eventPerformers.map((eventPerformer) => (
+                  <Link
+                    href={eventPerformer.performerLink}
+                    target="_blank"
+                    key={eventPerformer.eventPerformerId}
+                    className="flex items-center justify-center w-[120px] h-[120px] overflow-hidden rounded-full flex-shrink-0"
+                  >
+                    <Image
+                      src={eventPerformer.performerProfileUrl}
+                      width={120}
+                      height={120}
+                      loading="eager"
+                      alt={eventPerformer.performerName}
+                    />
+                  </Link>
+                ))}
+            </ul>
             <Separator />
             <div>
               <span className="font-semibold text-[1.6rem] leading-8 text-deep-100">

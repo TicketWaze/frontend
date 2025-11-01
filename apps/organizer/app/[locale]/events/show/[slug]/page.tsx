@@ -2,10 +2,10 @@ import OrganizerLayout from "@/components/Layouts/OrganizerLayout";
 import BackButton from "@workspace/ui/components/BackButton";
 import { getTranslations } from "next-intl/server";
 import React from "react";
-import EventPageDetails from "./EventPageDetails";
+import EventPageDetails from "./components/EventPageDetails";
 import { auth } from "@/lib/auth";
 import { organisationPolicy } from "@/lib/role/organisationPolicy";
-import { Event, User } from "@workspace/typescript-config";
+import { Event, EventPerformer, User } from "@workspace/typescript-config";
 
 export default async function Page({
   params,
@@ -21,6 +21,7 @@ export default async function Page({
   const event: Event = eventResponse.event;
   const tickets = eventResponse.tickets;
   const orders = eventResponse.orders;
+  const eventPerformers: EventPerformer[] = event.eventPerformers;
 
   const organisationCheckers = eventResponse.organisationCheckers;
   const session = await auth();
@@ -43,6 +44,7 @@ export default async function Page({
         organisationCheckers={organisationCheckers}
         orders={orders}
         authorized={authorized}
+        eventPerformers={eventPerformers}
       />
     </OrganizerLayout>
   );
