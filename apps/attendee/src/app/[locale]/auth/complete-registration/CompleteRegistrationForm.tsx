@@ -2,7 +2,6 @@
 import { useRouter } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
-import { Input } from "@workspace/ui/components/Inputs";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import {
   Select,
@@ -13,23 +12,21 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { useLocale, useTranslations } from "next-intl";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { signIn } from "next-auth/react";
-import { Country } from "@workspace/typescript-config";
+import countries from "@/lib/Countries";
 
 export default function CompleteRegistrationForm({
   accessToken,
   email,
   password,
-  countries,
 }: {
   accessToken: string;
   email: string;
   password: string;
-  countries: Country[];
 }) {
   const t = useTranslations("Auth.complete");
   const CompleteRegistrationSchema = z.object({
@@ -38,8 +35,6 @@ export default function CompleteRegistrationForm({
     state: z.string().min(1, { error: t("placeholders.errors.state") }),
     dateOfBirth: z.string().min(1, { error: t("placeholders.errors.dob") }),
     gender: z.string({ error: t("placeholders.errors.gender") }),
-    phoneNumber: z.string().min(8, { error: t("placeholders.errors.phone") }),
-    // currencyId: z.string({ error: t("placeholders.errors.currency") }),
   });
   type TCompleteRegistrationSchema = z.infer<typeof CompleteRegistrationSchema>;
   const {
@@ -49,6 +44,9 @@ export default function CompleteRegistrationForm({
     formState: { errors, isSubmitting },
   } = useForm<TCompleteRegistrationSchema>({
     resolver: zodResolver(CompleteRegistrationSchema),
+    defaultValues: {
+      country: "Haiti",
+    },
   });
   const locale = useLocale();
   const router = useRouter();
@@ -76,12 +74,16 @@ export default function CompleteRegistrationForm({
       if (result?.error) {
         toast.error("Login failed");
       } else {
-        router.push("/explore");
+        router.push("/auth/onboarding");
       }
     } else {
       toast(response.message);
     }
   }
+  const availableCountries = countries.map((country) => country.name);
+  const availableState = countries.map((country) => country.state).flat();
+  const [selectedState, setSelectedState] = useState<string>("Sud");
+  const cities = availableState.filter((state) => state.name === selectedState);
   return (
     <form
       onSubmit={handleSubmit(submitHandler)}
@@ -100,21 +102,24 @@ export default function CompleteRegistrationForm({
             </div>
             <div className=" w-full flex flex-col gap-6">
               <div>
-                <Select onValueChange={(e) => setValue("country", e)}>
+                <Select
+                  defaultValue="Haiti"
+                  onValueChange={(e) => setValue("country", e)}
+                >
                   <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
                     <SelectValue placeholder={t("placeholders.country")} />
                   </SelectTrigger>
                   <SelectContent className={"bg-neutral-100 text-[1.4rem]"}>
                     <SelectGroup>
                       {countries &&
-                        countries?.map((country, i) => {
+                        availableCountries.map((country, i) => {
                           return (
                             <SelectItem
                               className={"text-[1.4rem] text-deep-100"}
                               key={i}
-                              value={country.name.common}
+                              value={country}
                             >
-                              {country.name.common}
+                              {country}
                             </SelectItem>
                           );
                         })}
@@ -128,20 +133,65 @@ export default function CompleteRegistrationForm({
                 )}
               </div>
               <div className={"flex gap-[1.5rem]"}>
-                <Input
-                  {...register("state")}
-                  type="text"
-                  error={errors.state?.message}
-                >
-                  {t("placeholders.state")}
-                </Input>
-                <Input
-                  {...register("city")}
-                  type="text"
-                  error={errors.city?.message}
-                >
-                  {t("placeholders.city")}
-                </Input>
+                <div className="flex-1">
+                  <Select
+                    onValueChange={(e) => {
+                      setValue("state", e);
+                      setSelectedState(e);
+                    }}
+                  >
+                    <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
+                      <SelectValue placeholder={t("placeholders.state")} />
+                    </SelectTrigger>
+                    <SelectContent className={"bg-neutral-100 text-[1.4rem]"}>
+                      <SelectGroup>
+                        {availableState.map((state, i) => {
+                          return (
+                            <SelectItem
+                              className={"text-[1.4rem] text-deep-100"}
+                              key={i}
+                              value={state.name}
+                            >
+                              {state.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.state && (
+                    <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
+                      {errors.state.message}
+                    </span>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <Select onValueChange={(e) => setValue("city", e)}>
+                    <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
+                      <SelectValue placeholder={t("placeholders.city")} />
+                    </SelectTrigger>
+                    <SelectContent className={"bg-neutral-100 text-[1.4rem]"}>
+                      <SelectGroup>
+                        {cities[0].cities.map((city, i) => {
+                          return (
+                            <SelectItem
+                              className={"text-[1.4rem] text-deep-100"}
+                              key={i}
+                              value={city}
+                            >
+                              {city}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.city && (
+                    <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
+                      {errors.city.message}
+                    </span>
+                  )}
+                </div>
               </div>
               <div>
                 <div
@@ -164,13 +214,6 @@ export default function CompleteRegistrationForm({
                   </span>
                 )}
               </div>
-              <Input
-                {...register("phoneNumber")}
-                type="text"
-                error={errors.phoneNumber?.message}
-              >
-                {t("placeholders.phone")}
-              </Input>
               <div>
                 <Select onValueChange={(e) => setValue("gender", e)}>
                   <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
@@ -205,34 +248,6 @@ export default function CompleteRegistrationForm({
                   </span>
                 )}
               </div>
-              {/* CURRENCY */}
-              {/* <div>
-                <Select onValueChange={(e) => setValue("currencyId", e)}>
-                  <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
-                    <SelectValue placeholder={t("placeholders.currency")} />
-                  </SelectTrigger>
-                  <SelectContent className={"bg-neutral-100 text-[1.4rem]"}>
-                    <SelectGroup>
-                      {currencies?.map((currency) => {
-                        return (
-                          <SelectItem
-                            key={currency.currencyId}
-                            className={"text-[1.4rem] text-deep-100"}
-                            value={currency.currencyId}
-                          >
-                            {currency.isoCode} - {currency.currencyName}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                {errors.currencyId && (
-                  <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
-                    {errors.currencyId.message}
-                  </span>
-                )}
-              </div> */}
             </div>
             <div className="w-full hidden lg:block">
               <ButtonPrimary

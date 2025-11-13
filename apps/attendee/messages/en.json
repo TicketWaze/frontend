@@ -139,6 +139,49 @@
       },
       "cta": "Complete"
     },
+    "onboarding": {
+      "title": "Welcome to TicketWaze",
+      "description": "Let’s get to know you better so we can personalize your experience.",
+      "previous": "Previous",
+      "next": "Next",
+      "submit": "Submit",
+      "error": "Please select an option",
+      "onboarded": "User already onboarded",
+      "first": {
+        "question": "How do you plan to use Ticketwaze",
+        "1": "To buy tickets",
+        "2": "To sell or manage tickets",
+        "3": "Both"
+      },
+      "second": {
+        "question": "What types of tickets are you most interested in?",
+        "1": "Concerts & Festivals",
+        "2": "Sports & Competitions",
+        "3": "Movies & Entertainment",
+        "4": "Conferences & Seminars"
+      },
+      "third": {
+        "question": "Which currency do you prefer?",
+        "1": "USD - United States Dollar",
+        "2": "HTG - Haitian Gourde"
+      },
+      "fourth": {
+        "question": "Would you like to receive notifications about trending activities and exclusive offers?",
+        "1": "Yes",
+        "2": "No"
+      },
+      "fith": {
+        "question": "How would you like to receive updates",
+        "1": "Email notifications",
+        "2": "Whatsapp notifications",
+        "3": "None"
+      },
+      "sixth": {
+        "question": "Are you representing an organisation or business? (ex: Sumfest, Banj...)",
+        "1": "Yes",
+        "2": "No, I am an individual"
+      }
+    },
     "forgot": {
       "title": "Reset Password",
       "description": "Please enter you account details to continue",
@@ -407,6 +450,12 @@
       "upcoming": "Notify me about upcoming events I’ve purchased tickets for.",
       "preferred": "Notify me about new events in my preferred categories.",
       "follow": "Notify me when a followed organizer adds new events."
+    },
+    "user": {
+      "title": "App Preferences",
+      "currency": "Preferred Currency",
+      "notifications": "Preferred notification provider",
+      "none": "None"
     }
   },
   "Settings": {

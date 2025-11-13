@@ -43,6 +43,12 @@ export interface UserPreference {
   upcomingEvents: boolean;
   newEventsPreferredCategories: boolean;
   newEventsFollowedOrganizer: boolean;
+  intent: "buyer" | "seller" | "both";
+  interest: string[];
+  currency: "HTG" | "USD";
+  recommendation: boolean;
+  isOnboarded: boolean;
+  notifications: "email" | "whatsapp" | "none";
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -205,7 +211,7 @@ export interface User {
   lastName: string;
   email: string;
   gender: string;
-  phoneNumber: string;
+  whatsappPhoneNumber: string | undefined;
   profileImageUrl: string | undefined;
   country: string;
   state: string;
@@ -219,6 +225,7 @@ export interface User {
   createdAt: DateTime;
   updatedAt: DateTime;
   organisations: Organisation[];
+  isOnboarded: boolean;
 }
 
 export interface Currency {

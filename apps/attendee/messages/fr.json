@@ -139,6 +139,49 @@
       },
       "cta": "Terminer"
     },
+    "onboarding": {
+      "title": "Bienvenue sur TicketWaze",
+      "description": "Apprenons à mieux vous connaître pour personnaliser votre expérience.",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "submit": "Valider",
+      "error": "Veuillez sélectionner une option",
+      "onboarded": "Utilisateur déjà intégré",
+      "first": {
+        "question": "Comment comptez-vous utiliser TicketWaze ?",
+        "1": "Pour acheter des billets",
+        "2": "Pour vendre ou gérer des billets",
+        "3": "Les deux"
+      },
+      "second": {
+        "question": "Quels types de billets vous intéressent le plus ?",
+        "1": "Concerts et festivals",
+        "2": "Sports et compétitions",
+        "3": "Cinéma et divertissement",
+        "4": "Conférences et séminaires"
+      },
+      "third": {
+        "question": "Quelle devise préférez-vous ?",
+        "1": "USD - Dollar américain",
+        "2": "HTG - Gourde haïtienne"
+      },
+      "fourth": {
+        "question": "Souhaitez-vous recevoir des notifications sur les activités tendance et les offres exclusives ?",
+        "1": "Oui",
+        "2": "Non"
+      },
+      "fith": {
+        "question": "Comment souhaitez-vous recevoir les mises à jour ?",
+        "1": "Notifications par e-mail",
+        "2": "Notifications par WhatsApp",
+        "3": "Aucune"
+      },
+      "sixth": {
+        "question": "Représentez-vous une organisation ou une entreprise ? (ex: Sumfest, Banj...)",
+        "1": "Oui",
+        "2": "Non, je suis un particulier"
+      }
+    },
     "forgot": {
       "title": "Réinitialiser le mot de passe",
       "description": "Veuillez saisir les détails de votre compte pour continuer",

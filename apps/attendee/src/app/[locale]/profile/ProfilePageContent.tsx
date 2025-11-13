@@ -29,12 +29,6 @@ export default function ProfilePageContent({
   const EditProfileSchema = z.object({
     firstName: z.string().min(2, { error: t("errors.firstname_length") }),
     lastName: z.string().min(2, { error: t("errors.lastname_length") }),
-    // country: z.string({ error: t('errors.country') }),
-    // city: z.string().min(1, { error: t('errors.city') }),
-    // state: z.string().min(1, { error: t('errors.state') }),
-    // dateOfBirth: z.string().min(1, { error: t('errors.dob') }),
-    // phoneNumber: z.string().min(8, { error: t('errors.phone') }),
-    // currencyId: z.string({ error: t('placeholders.errors.currency') })
   });
   type TEditProfileSchema = z.infer<typeof EditProfileSchema>;
 
@@ -47,24 +41,14 @@ export default function ProfilePageContent({
     values: {
       firstName: user.firstName,
       lastName: user.lastName,
-      // city : user.city,
-      // country : user.country,
-      // state : user.state,
-      // dateOfBirth : FormatDate(user.dateOfBirth),
-      // phoneNumber : user.phoneNumber
     },
   });
-
   async function submitHandler(data: TEditProfileSchema) {
-    const results = await UpdateUserProfile(accessToken, {
-      ...data,
-      phoneNumber: user.phoneNumber,
-    });
+    const results = await UpdateUserProfile(accessToken, data);
     if (results.status === "failed") {
       toast.error(results.error);
     }
   }
-
   return (
     <>
       <PageLoader isLoading={isSubmitting} />
@@ -134,9 +118,6 @@ export default function ProfilePageContent({
               readOnly
             >
               {t("placeholders.dob")}
-            </Input>
-            <Input defaultValue={user.phoneNumber} disabled readOnly>
-              {t("placeholders.phone")}
             </Input>
           </form>
         </div>
