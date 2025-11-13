@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 
 const nextAuthResult = NextAuth({
   session: {
@@ -17,34 +17,36 @@ const nextAuthResult = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password
-          })
-        })
-        const user = await response.json()
-        if (!user.status || user.status != 'success') {
-          throw new Error(user.message)
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          }
+        );
+        const user = await response.json();
+        if (!user.status || user.status != "success") {
+          throw new Error(user.message);
         }
-        return user.user
+        return user.user;
       },
     }),
-
   ],
   pages: {
     signIn: `/auth/login`,
-    error: `/auth/login`
+    error: `/auth/login`,
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         // first login
-        return { ...token, ...user }
+        return { ...token, ...user };
       }
       return token;
     },
@@ -53,11 +55,11 @@ const nextAuthResult = NextAuth({
       session.user = token as any;
       return session;
     },
-    redirect({url, baseUrl}){
-      return url
-    }
+    redirect({ url, baseUrl }) {
+      return url;
+    },
   },
-},);
+});
 
 export const handlers: typeof nextAuthResult.handlers = nextAuthResult.handlers;
 export const signIn: typeof nextAuthResult.signIn = nextAuthResult.signIn;

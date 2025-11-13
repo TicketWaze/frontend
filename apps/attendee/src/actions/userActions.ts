@@ -77,13 +77,19 @@ export async function UpdateUserProfileImage(
   }
 }
 
-export async function UpdateUserProfile(accessToken: string, body: unknown) {
+export async function UpdateUserProfile(
+  accessToken: string,
+  body: unknown,
+  locale: string
+) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
+        "Accept-Language": locale,
+        Origin: process.env.NEXT_PUBLIC_APP_URL!,
       },
       body: JSON.stringify(body),
     });

@@ -1,11 +1,11 @@
 "use client";
 import { LinkAccent } from "@/components/Links";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import { Input, PasswordInput } from "@workspace/ui/components/Inputs";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +30,7 @@ export default function LoginPage() {
     resolver: zodResolver(LoginSchema),
   });
   const [isLoading, setIsloading] = useState(false);
-  const router = useRouter();
+  const { update } = useSession();
   async function submitHandler(data: TLoginSchema) {
     setIsloading(true);
     const result = await signIn("credentials", {
@@ -39,13 +39,13 @@ export default function LoginPage() {
       redirect: false,
       callbackUrl: process.env.NEXT_PUBLIC_APP_URL,
     });
-
     if (result?.error) {
       toast.error("Login failed");
     } else {
-      router.push("/explore");
+      const data = await update();
+      const locale = data?.user.userPreference.appLanguage;
+      window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore`;
     }
-
     setIsloading(false);
   }
   return (

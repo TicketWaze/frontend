@@ -225,6 +225,7 @@ export interface User {
   createdAt: DateTime;
   updatedAt: DateTime;
   organisations: Organisation[];
+  userPreference: UserPreference;
   isOnboarded: boolean;
 }
 

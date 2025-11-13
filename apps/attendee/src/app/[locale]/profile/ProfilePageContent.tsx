@@ -1,7 +1,7 @@
 "use client";
 import { TopBar } from "@/components/Layouts/Topbars";
 import { ButtonPrimary, ButtonRed } from "@workspace/ui/components/buttons";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import ProfileImage from "./ProfileImage";
 import { Input } from "@workspace/ui/components/Inputs";
@@ -43,9 +43,10 @@ export default function ProfilePageContent({
       lastName: user.lastName,
     },
   });
+  const locale = useLocale();
   async function submitHandler(data: TEditProfileSchema) {
-    const results = await UpdateUserProfile(accessToken, data);
-    if (results.status === "failed") {
+    const results = await UpdateUserProfile(accessToken, data, locale);
+    if (results.status !== "success") {
       toast.error(results.error);
     }
   }
