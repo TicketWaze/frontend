@@ -125,11 +125,12 @@ export default function NewPasswordPage() {
           </motion.div>
         </div>
       </div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 w-full">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.7 }}
+          className="w-full"
         >
           <ButtonPrimary
             type="submit"
@@ -144,7 +145,7 @@ export default function NewPasswordPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
           className={
-            "flex items-center  gap-[1.8rem] border border-neutral-100 p-6 rounded-[10rem] mb-8"
+            "flex items-center justify-center  gap-[1.8rem] border border-neutral-100 p-6 rounded-[10rem] mb-8"
           }
         >
           <p
@@ -154,7 +155,6 @@ export default function NewPasswordPage() {
           >
             <span className={"text-primary-500"}>2</span>/2
           </p>
-          {/* <LinkAccent href='/auth/login'>{t('back')}</LinkAccent> */}
         </motion.div>
       </div>
     </form>

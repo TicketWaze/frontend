@@ -279,7 +279,7 @@ export default function RegisterPage() {
           <Link
             href={`/auth/login`}
             className={
-              "border-2 border-primary-500 px-[1rem] lg:px-[3rem] py-6 rounded-[10rem] font-normal text-primary-500 text-[1.5rem] leading-[20px] bg-primary-100"
+              "border-2 border-primary-500 px-[2rem] lg:px-[3rem] py-6 rounded-[10rem] font-normal text-primary-500 text-[1.5rem] leading-[20px] bg-primary-100"
             }
           >
             {t("choice.footer.cta")}
