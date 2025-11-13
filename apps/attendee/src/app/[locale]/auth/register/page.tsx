@@ -18,6 +18,7 @@ import * as z from "zod";
 import US from "@/assets/flags/us.svg";
 import FR from "@/assets/flags/fr.svg";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function RegisterPage() {
   const t = useTranslations("Auth.register");
@@ -85,101 +86,154 @@ export default function RegisterPage() {
         <div className="flex-1 flex lg:justify-center flex-col w-full pt-[4.5rem]">
           <div className="flex flex-col gap-16 items-center">
             <div className="flex flex-col gap-8 items-center">
-              <h3 className="font-medium font-primary text-[3.2rem] leading-[3.5rem] text-black">
+              <motion.h3
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="font-medium font-primary text-[3.2rem] leading-[3.5rem] text-black"
+              >
                 {t("organizer")}
-              </h3>
-              <p className="text-[1.8rem] text-center leading-[2.5rem] text-neutral-700">
+              </motion.h3>
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="text-[1.8rem] text-center leading-[2.5rem] text-neutral-700"
+              >
                 {t("description")}
-              </p>
+              </motion.p>
             </div>
             <div className=" w-full flex flex-col gap-6">
-              <Select onValueChange={(e) => switchLocale(e)}>
-                <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
-                  {locale === "en" ? (
-                    <>
-                      <Image src={US} alt={"us flag"} width={30} height={30} />
-                      <span
-                        className={
-                          "text-[1.4rem] leading-[20px] font-medium text-deep-100"
-                        }
-                      >
-                        English
-                      </span>
-                    </>
-                  ) : (
-                    <>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                <Select onValueChange={(e) => switchLocale(e)}>
+                  <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
+                    {locale === "en" ? (
+                      <>
+                        <Image
+                          src={US}
+                          alt={"us flag"}
+                          width={30}
+                          height={30}
+                        />
+                        <span
+                          className={
+                            "text-[1.4rem] leading-[20px] font-medium text-deep-100"
+                          }
+                        >
+                          English
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Image
+                          src={FR}
+                          alt={"french flag"}
+                          width={30}
+                          height={30}
+                        />
+                        <span
+                          className={
+                            "text-[1.4rem] leading-[20px] font-medium text-deep-100"
+                          }
+                        >
+                          Francais
+                        </span>
+                      </>
+                    )}
+                  </SelectTrigger>
+                  <SelectContent className={"bg-neutral-100"}>
+                    <SelectItem
+                      className={`flex items-center gap-4`}
+                      value="fr"
+                    >
                       <Image
                         src={FR}
                         alt={"french flag"}
                         width={30}
                         height={30}
                       />
-                      <span
-                        className={
-                          "text-[1.4rem] leading-[20px] font-medium text-deep-100"
-                        }
-                      >
-                        Francais
-                      </span>
-                    </>
-                  )}
-                </SelectTrigger>
-                <SelectContent className={"bg-neutral-100"}>
-                  <SelectItem className={`flex items-center gap-4`} value="fr">
-                    <Image
-                      src={FR}
-                      alt={"french flag"}
-                      width={30}
-                      height={30}
-                    />
-                    <span>Français</span>
-                  </SelectItem>
-                  <SelectItem className={`flex items-center gap-4`} value="en">
-                    <Image src={US} alt={"us flag"} width={30} height={30} />
-                    <span>English</span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <div>
-                <div className={"flex gap-[1.5rem]"}>
-                  <Input
-                    {...register("firstName")}
-                    type="text"
-                    error={errors.firstName?.message}
-                  >
-                    {t("placeholders.firstname")}
-                  </Input>
-                  <Input
-                    {...register("lastName")}
-                    type="text"
-                    error={errors.lastName?.message}
-                  >
-                    {t("placeholders.lastname")}
-                  </Input>
-                </div>
-              </div>
-              <Input
-                {...register("email")}
-                type="email"
-                error={errors.email?.message}
+                      <span>Français</span>
+                    </SelectItem>
+                    <SelectItem
+                      className={`flex items-center gap-4`}
+                      value="en"
+                    >
+                      <Image src={US} alt={"us flag"} width={30} height={30} />
+                      <span>English</span>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className={"flex gap-[1.5rem]"}
               >
-                {t("placeholders.email")}
-              </Input>
+                <Input
+                  {...register("firstName")}
+                  type="text"
+                  error={errors.firstName?.message}
+                >
+                  {t("placeholders.firstname")}
+                </Input>
+                <Input
+                  {...register("lastName")}
+                  type="text"
+                  error={errors.lastName?.message}
+                >
+                  {t("placeholders.lastname")}
+                </Input>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+              >
+                <Input
+                  {...register("email")}
+                  type="email"
+                  error={errors.email?.message}
+                >
+                  {t("placeholders.email")}
+                </Input>
+              </motion.div>
               {/* </div> */}
-              <PasswordInput
-                error={errors.password?.message}
-                {...register("password")}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
               >
-                {t("placeholders.password")}
-              </PasswordInput>
-              <PasswordInput
-                error={errors.password_confirmation?.message}
-                {...register("password_confirmation")}
+                <PasswordInput
+                  error={errors.password?.message}
+                  {...register("password")}
+                >
+                  {t("placeholders.password")}
+                </PasswordInput>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.9 }}
               >
-                {t("placeholders.confirm")}
-              </PasswordInput>
+                <PasswordInput
+                  error={errors.password_confirmation?.message}
+                  {...register("password_confirmation")}
+                >
+                  {t("placeholders.confirm")}
+                </PasswordInput>
+              </motion.div>
             </div>
-            <div className="w-full hidden lg:block">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1 }}
+              className="w-full hidden lg:block"
+            >
               <ButtonPrimary
                 disabled={isSubmitting}
                 type={"submit"}
@@ -189,19 +243,28 @@ export default function RegisterPage() {
               >
                 {isSubmitting ? <LoadingCircleSmall /> : t("cta.submit")}
               </ButtonPrimary>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-6 w-full">
-        <ButtonPrimary
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full lg:hidden disabled:opacity-50 disabled:cursor-not-allowed"
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1 }}
         >
-          {isSubmitting ? <LoadingCircleSmall /> : t("cta.submit")}
-        </ButtonPrimary>
-        <div
+          <ButtonPrimary
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full lg:hidden disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? <LoadingCircleSmall /> : t("cta.submit")}
+          </ButtonPrimary>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.1 }}
           className={
             "flex items-center justify-between gap-[1.8rem] border border-neutral-100  p-2 lg:p-4 rounded-[10rem] mb-8"
           }
@@ -221,7 +284,7 @@ export default function RegisterPage() {
           >
             {t("choice.footer.cta")}
           </Link>
-        </div>
+        </motion.div>
       </div>
     </form>
   );

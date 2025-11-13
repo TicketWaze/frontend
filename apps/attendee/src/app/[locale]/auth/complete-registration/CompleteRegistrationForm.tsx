@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { signIn } from "next-auth/react";
 import countries from "@/lib/Countries";
+import { motion } from "framer-motion";
 
 export default function CompleteRegistrationForm({
   accessToken,
@@ -93,15 +94,29 @@ export default function CompleteRegistrationForm({
         <div className="flex-1 flex lg:justify-center flex-col w-full pt-[4.5rem]">
           <div className="flex flex-col gap-16 items-center">
             <div className="flex flex-col gap-8 items-center">
-              <h3 className="font-medium font-primary text-center text-[3.2rem] leading-[3.5rem] text-black">
+              <motion.h3
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="font-medium font-primary text-center text-[3.2rem] leading-[3.5rem] text-black"
+              >
                 {t("title")}
-              </h3>
-              <p className="text-[1.8rem] text-center leading-[2.5rem] text-neutral-700">
+              </motion.h3>
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="text-[1.8rem] text-center leading-[2.5rem] text-neutral-700"
+              >
                 {t("description")}
-              </p>
+              </motion.p>
             </div>
             <div className=" w-full flex flex-col gap-6">
-              <div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
                 <Select
                   defaultValue="Haiti"
                   onValueChange={(e) => setValue("country", e)}
@@ -131,8 +146,13 @@ export default function CompleteRegistrationForm({
                     {errors.country.message}
                   </span>
                 )}
-              </div>
-              <div className={"flex gap-[1.5rem]"}>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className={"flex gap-[1.5rem]"}
+              >
                 <div className="flex-1">
                   <Select
                     onValueChange={(e) => {
@@ -192,8 +212,12 @@ export default function CompleteRegistrationForm({
                     </span>
                   )}
                 </div>
-              </div>
-              <div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+              >
                 <div
                   className={
                     "bg-neutral-100 w-full rounded-[5rem] py-4 px-8 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500"
@@ -213,8 +237,12 @@ export default function CompleteRegistrationForm({
                     {errors.dateOfBirth.message}
                   </span>
                 )}
-              </div>
-              <div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+              >
                 <Select onValueChange={(e) => setValue("gender", e)}>
                   <SelectTrigger className="bg-neutral-100 cursor-pointer rounded-[3rem] px-8 border-none w-full py-12 text-[1.4rem] text-neutral-700 leading-[20px]">
                     <SelectValue placeholder={t("placeholders.gender")} />
@@ -247,9 +275,14 @@ export default function CompleteRegistrationForm({
                     {errors.gender.message}
                   </span>
                 )}
-              </div>
+              </motion.div>
             </div>
-            <div className="w-full hidden lg:block">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.9 }}
+              className="w-full hidden lg:block"
+            >
               <ButtonPrimary
                 disabled={isSubmitting}
                 type={"submit"}
@@ -259,21 +292,31 @@ export default function CompleteRegistrationForm({
               >
                 {isSubmitting ? <LoadingCircleSmall /> : t("cta")}
               </ButtonPrimary>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-6 w-full">
-        <ButtonPrimary
-          disabled={isSubmitting}
-          type={"submit"}
-          className={
-            "w-full lg:hidden disabled:opacity-50 disabled:cursor-not-allowed "
-          }
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
         >
-          {isSubmitting ? <LoadingCircleSmall /> : t("cta")}
-        </ButtonPrimary>
-        <div
+          <ButtonPrimary
+            disabled={isSubmitting}
+            type={"submit"}
+            className={
+              "w-full lg:hidden disabled:opacity-50 disabled:cursor-not-allowed "
+            }
+          >
+            {isSubmitting ? <LoadingCircleSmall /> : t("cta")}
+          </ButtonPrimary>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1 }}
           className={
             "flex items-center self-center  gap-[1.8rem] border border-neutral-100 p-6 rounded-[10rem] mb-8"
           }
@@ -285,7 +328,7 @@ export default function CompleteRegistrationForm({
           >
             <span className={"text-primary-500"}>2</span>/2
           </p>
-        </div>
+        </motion.div>
       </div>
     </form>
   );
