@@ -450,6 +450,12 @@
       "upcoming": "Me notifier des événements à venir pour lesquels j'ai acheté des billets.",
       "preferred": "Me notifier des nouveaux événements dans mes catégories préférées.",
       "follow": "Me notifier quand un organisateur que je suis ajoute de nouveaux événements."
+    },
+    "user": {
+      "title": "Préférences de l'application",
+      "currency": "Devise préférée",
+      "notifications": "Fournisseur de notifications préféré",
+      "none": "Aucun"
     }
   },
   "Settings": {
