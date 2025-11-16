@@ -89,7 +89,8 @@ export default function MobileNavigation({
       path.startsWith("/history") ||
       path.startsWith("/organizers") ||
       path.startsWith("/preferences") ||
-      path.startsWith("/settings")
+      path.startsWith("/settings") ||
+      path.startsWith("/wallet")
     );
   }
   function isActive(path: string) {
