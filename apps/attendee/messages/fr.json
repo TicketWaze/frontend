@@ -427,6 +427,7 @@
     "payment": {
       "title": "Paiement",
       "payment": "Effectuer le paiement",
+      "wallet": "Payer avec votre portefeuille Ticketwaze",
       "card": "Payer par carte",
       "paypal": "Payer avec PayPal",
       "moncash": "Payer avec MonCash",
