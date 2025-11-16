@@ -4,7 +4,8 @@ import NoAuthDialog from "@/components/Layouts/NoAuthDialog";
 import { Link } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
-import { Event } from "@workspace/typescript-config";
+import TruncateUrl from "@/lib/TruncateUrl";
+import { Event, UserWallet } from "@workspace/typescript-config";
 import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog";
 import {
   Tooltip,
@@ -12,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import {
+  AddCircle,
   CloseCircle,
   Heart,
   Money3,
@@ -22,7 +24,13 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
-export default function ExplorePageContent({ events }: { events: Event[] }) {
+export default function ExplorePageContent({
+  events,
+  wallet,
+}: {
+  events: Event[];
+  wallet: UserWallet;
+}) {
   const t = useTranslations("Explore");
   const [query, setQuery] = useState("");
   const filteredEvents = events.filter((event) => {
@@ -99,6 +107,8 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
                 <SearchNormal size="20" color="#737c8a" variant="Bulk" />
               </button>
             )}
+            {/* Liked */}
+            {/* <div className="hidden lg:block"> */}
             {session?.user ? (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -122,6 +132,32 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
                 </DialogTrigger>
                 <NoAuthDialog />
               </Dialog>
+            )}
+            {/* </div> */}
+            {/* Wallet */}
+            {session?.user && (
+              <Link
+                href={"/wallet"}
+                className="bg-neutral-200 text-black text-[1.4rem] hidden lg:flex gap-4 px-3 py-[6px] rounded-[3rem] items-center"
+              >
+                {TruncateUrl(
+                  `${
+                    session?.user?.userPreference?.currency === "USD"
+                      ? wallet.usdAvailableBalance
+                      : wallet.htgAvailableBalance
+                  }`,
+                  4
+                )}
+                <span className="font-medium text-primary-500">
+                  {session.user.userPreference.currency}
+                </span>
+                <AddCircle
+                  size="24"
+                  color="#E45B00"
+                  variant="Bulk"
+                  className="hidden lg:block"
+                />
+              </Link>
             )}
           </div>
         </div>

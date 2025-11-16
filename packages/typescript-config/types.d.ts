@@ -15,6 +15,17 @@ export interface OrganisationTicket extends Ticket {
   event: Event;
 }
 
+export interface UserWallet {
+  walletId: string;
+  userId: string;
+  usdPendingBalance: number;
+  usdAvailableBalance: number;
+  htgPendingBalance: number;
+  htgAvailableBalance: number;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
 export interface EventPerformer {
   eventPerformerId: string;
   performerName: string;
@@ -131,6 +142,7 @@ export interface Order {
   orderName: string;
   provider: string;
   status: "PENDING" | "SUCCESSFUL";
+  tickets: Ticket[];
   createdAt: DateTime;
   updatedAt: DateTime;
 }

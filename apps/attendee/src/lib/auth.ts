@@ -43,11 +43,17 @@ const nextAuthResult = NextAuth({
     error: `/auth/login`,
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         // first login
         return { ...token, ...user };
       }
+
+      // Handle session updates (when you call update())
+      if (trigger === "update" && session) {
+        return { ...token, ...session.user };
+      }
+
       return token;
     },
     async session({ session, token }) {

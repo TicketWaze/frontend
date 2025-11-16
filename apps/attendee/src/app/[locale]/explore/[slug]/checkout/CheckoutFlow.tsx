@@ -10,6 +10,7 @@ import {
   Card,
   InfoCircle,
   MinusCirlce,
+  MoneyRecive,
   ShieldSecurity,
   Warning2,
 } from "iconsax-react";
@@ -210,7 +211,33 @@ export default function CheckoutFlow({
       setCurrentStep((step) => step - 1);
     }
   };
-  const [paymentType, setPaymentType] = useState<"" | "moncash" | "card">("");
+  const [paymentType, setPaymentType] = useState<
+    "" | "moncash" | "card" | "wallet"
+  >("");
+
+  async function BuyFreeTicket() {
+    setIsLoading(true);
+    const values = getValues();
+
+    // Filter out attendees who haven't filled in their info (when "someone else" is checked)
+    const validAttendees = values.attendees.filter((attendee: any) => {
+      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
+    });
+
+    // Send the flat attendees array: [{ticketTypeId, name, email}, ...]
+    const result = await FreeEventTicket(
+      user.accessToken,
+      event.eventId,
+      validAttendees
+    );
+    if (result.status === "failed") {
+      setIsLoading(false);
+      toast.error(result.message);
+      return;
+    }
+    router.push(`/upcoming/${Slugify(event.eventName)}`);
+    setIsLoading(false);
+  }
 
   async function MoncashPayment() {
     setIsLoading(true);
@@ -272,11 +299,39 @@ export default function CheckoutFlow({
     setIsLoading(false);
   }
 
+  async function WalletPayment() {
+    setIsLoading(true);
+    const values = getValues();
+    const validAttendees = values.attendees.filter((attendee: any) => {
+      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
+    });
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/payments/wallet`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(validAttendees),
+      }
+    );
+    const response = await request.json();
+    if (response.status === "success") {
+      router.push(`/upcoming/${Slugify(event.eventName)}`);
+    } else {
+      setIsLoading(false);
+      toast.error(response.message);
+    }
+  }
+
   const processForm: SubmitHandler<any> = async (data) => {
     if (paymentType === "moncash") {
       await MoncashPayment();
     } else if (paymentType === "card") {
       await CardPayment();
+    } else if (paymentType === "wallet") {
+      await WalletPayment();
     } else {
       toast.error(t("payment.paymentType"));
     }
@@ -382,31 +437,6 @@ export default function CheckoutFlow({
   }
 
   const router = useRouter();
-
-  async function BuyFreeTicket() {
-    setIsLoading(true);
-    const values = getValues();
-
-    // Filter out attendees who haven't filled in their info (when "someone else" is checked)
-    const validAttendees = values.attendees.filter((attendee: any) => {
-      return !attendee.isForSomeoneElse || (attendee.name && attendee.email);
-    });
-
-    // Send the flat attendees array: [{ticketTypeId, name, email}, ...]
-    const result = await FreeEventTicket(
-      user.accessToken,
-      event.eventId,
-      validAttendees
-    );
-    if (result.status === "failed") {
-      setIsLoading(false);
-      toast.error(result.message);
-      return;
-    }
-    router.push(`/upcoming/${Slugify(event.eventName)}`);
-    setIsLoading(false);
-  }
-
   return (
     <>
       <PageLoader isLoading={isLoading} />
@@ -699,6 +729,23 @@ export default function CheckoutFlow({
                   </div>
                 ) : (
                   <div className="flex flex-col gap-8">
+                    {/* Wallet */}
+                    <button
+                      className={`flex items-center justify-between cursor-pointer p-[15px] rounded-[15px] border border-neutral-100 hover:border-primary-500 transition-all ease-in-out duration-300 ${paymentType === "wallet" && "border-2 border-primary-500"}`}
+                      onClick={() => setPaymentType("wallet")}
+                    >
+                      <div className={"flex items-center gap-4"}>
+                        <MoneyRecive size="20" color="#0d0d0d" variant="Bulk" />
+                        <span
+                          className={
+                            "font-semibold text-[1.6rem] leading-[22px] text-deep-100"
+                          }
+                        >
+                          {t("payment.wallet")}
+                        </span>
+                      </div>
+                      <ArrowRight2 size="20" color="#0d0d0d" variant="Bulk" />
+                    </button>
                     {/* MONCASH */}
                     <button
                       className={`flex items-center justify-between cursor-pointer p-[15px] rounded-[15px] border border-neutral-100 hover:border-primary-500 transition-all ease-in-out duration-300 ${paymentType === "moncash" && "border-2 border-primary-500"}`}

@@ -17,7 +17,7 @@ export default function UserPreferences({
   userPreferences: UserPreference;
 }) {
   const t = useTranslations("Preferences.user");
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const locale = useLocale();
 
@@ -34,6 +34,16 @@ export default function UserPreferences({
     if (response.status !== "success") {
       toast.error(response.message);
     }
+    await update({
+      ...session,
+      user: {
+        ...session?.user,
+        userPreference: {
+          ...session?.user.userPreference,
+          currency,
+        },
+      },
+    });
     setIsLoading(false);
   }
   async function updateNotification(notifications: string) {

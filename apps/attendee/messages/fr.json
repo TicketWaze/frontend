@@ -230,6 +230,7 @@
         "title1": "Événements",
         "explore": "Explorer",
         "upcoming": "À venir",
+        "liked": "Portefeuille",
         "history": "Historique",
         "organizers": "Organisateurs",
         "title2": "Utilisateur",
@@ -276,6 +277,67 @@
           "3": "Le mois prochain",
           "4": "Cette année"
         }
+      }
+    }
+  },
+  "Wallet": {
+    "title": "Portefeuille",
+    "subtitle": "Bon retour",
+    "amounts": {
+      "available": "Solde disponible",
+      "pending": "Solde en attente"
+    },
+    "filters": {
+      "all": "Tous les statuts",
+      "pending": "En attente",
+      "successful": "Réussi"
+    },
+    "search": "Rechercher un identifiant de transaction",
+    "transactions": {
+      "title": "Transactions récentes",
+      "description": "Vos commandes apparaîtront ici dès que les transactions commenceront à arriver.",
+      "table": {
+        "id": "ID de transaction",
+        "provider": "Fournisseur",
+        "class": "Billets",
+        "amount": "Montant payé",
+        "status": "Statut de la transaction",
+        "date": "Date d'achat"
+      },
+      "more": "Voir tout",
+      "details": {
+        "title": "Détails de la transaction",
+        "name": "Nom du participant",
+        "email": "E-mail",
+        "event_name": "Nom de l'événement",
+        "date": "Date",
+        "time": "Heure",
+        "location": "Lieu",
+        "ticket_class": "Nombre de billets",
+        "price": "Prix",
+        "ticket_id": "ID du billet",
+        "total": "Total",
+        "transaction_id": "ID de transaction",
+        "payment_method": "Méthode de paiement",
+        "payment_date": "Créé le",
+        "transaction_status": "Statut de la transaction",
+        "check_status": "Statut",
+        "check_time": "Heure de validation",
+        "close": "Fermer",
+        "resend": "Renvoyer le billet"
+      }
+    },
+    "withdrawal": {
+      "title": "Historique des retraits",
+      "description": "Votre historique de retraits s'affichera ici une fois que vous aurez effectué une demande de retrait.",
+      "table": {
+        "id": "ID de retrait",
+        "name": "Nom de la banque",
+        "provider": "Fournisseur",
+        "account": "Numéro de compte",
+        "amount": "Montant",
+        "status": "Statut de la transaction",
+        "date": "Date d'achat"
       }
     }
   },

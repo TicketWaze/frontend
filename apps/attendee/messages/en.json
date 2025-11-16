@@ -230,6 +230,7 @@
         "title1": "Events",
         "explore": "Explore",
         "upcoming": "Upcoming",
+        "wallet": "Wallet",
         "history": "History",
         "organizers": "Organizers",
         "title2": "User",
@@ -276,6 +277,67 @@
           "3": "Next month",
           "4": "This Year"
         }
+      }
+    }
+  },
+  "Wallet": {
+    "title": "Wallet",
+    "subtitle": "Welcome Back ",
+    "amounts": {
+      "available": "Available Balance",
+      "pending": "Pending Balance"
+    },
+    "filters": {
+      "all": "All status",
+      "pending": "Pending",
+      "successful": "Successful"
+    },
+    "search": "Search for transaction id",
+    "transactions": {
+      "title": "Recent Transactions",
+      "description": "Your orders will appear here once transactions start rolling in.",
+      "table": {
+        "id": "Transaction ID",
+        "provider": "Provider",
+        "class": "Tickets",
+        "amount": "Amount paid",
+        "status": "Transaction Status",
+        "date": "Date Purchased"
+      },
+      "more": "View all",
+      "details": {
+        "title": "Transaction Details",
+        "name": "Attendee Name",
+        "email": "Email",
+        "event_name": "Event Name",
+        "date": "Date",
+        "time": "Time",
+        "location": "Location",
+        "ticket_class": "Tickets Amount",
+        "price": "Price",
+        "ticket_id": "Ticket ID",
+        "total": "Total",
+        "transaction_id": "Transaction ID",
+        "payment_method": "Payment Method",
+        "payment_date": "Created At",
+        "transaction_status": "Transaction Status",
+        "check_status": " Status",
+        "check_time": "Check-In Time",
+        "close": "Close",
+        "resend": "Resend Ticket"
+      }
+    },
+    "withdrawal": {
+      "title": "Withdrawal history",
+      "description": "Your withdrawal history will show up here once you've made a withdrawal request.",
+      "table": {
+        "id": "Withdrawal ID",
+        "name": "Bank Name",
+        "provider": "Provider",
+        "account": "Account Number",
+        "amount": "Amount",
+        "status": "Transaction Status",
+        "date": "Date Purchased"
       }
     }
   },
@@ -365,6 +427,7 @@
     "payment": {
       "title": "Payment",
       "payment": "Make payment",
+      "wallet": "Pay with Ticketwaze wallet",
       "card": "Pay with card",
       "paypal": "Pay with PayPal",
       "moncash": "Pay with MonCash",
