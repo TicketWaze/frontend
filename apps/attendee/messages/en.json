@@ -29,6 +29,7 @@
       "title": "Create an Account",
       "organizer": "Create an Account",
       "description": "Please complete the form below to continue.",
+      "referral": " thought you might like it here.",
       "choice": {
         "title": "Create Account",
         "description": "Choose an option to continue and set up your account.",
@@ -82,6 +83,7 @@
     "complete": {
       "title": "Complete Account Set-up",
       "description": "Please fill the form below to complete your account set-up.",
+      "referral": " thought you might like it here.",
       "becoming": {
         "subtitle": "Create An Organisation",
         "description": "Please fill the form below create a new organisation.",
@@ -287,6 +289,13 @@
       "available": "Available Balance",
       "pending": "Pending Balance"
     },
+    "ticketwazeToken": "Ticketwaze token",
+    "token": "token(s)",
+    "invitedUser": "Invited User",
+    "user": "user(s)",
+    "referralTitle": "Invite Friends",
+    "referralDescription": "Grow Our Community Together Help your friends discover amazing tickets and experiences, and earn 5 points for each successful referral!",
+    "copy": "Copy",
     "filters": {
       "all": "All status",
       "pending": "Pending",

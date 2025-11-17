@@ -22,6 +22,8 @@ export interface UserWallet {
   usdAvailableBalance: number;
   htgPendingBalance: number;
   htgAvailableBalance: number;
+  userInvited: number;
+  ticketwazeToken: number;
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -233,6 +235,7 @@ export interface User {
   tokenExpiresAt: DateTime;
   resendCount: number;
   lastResendAt: DateTime;
+  referralCode: string;
   isVerified: boolean;
   createdAt: DateTime;
   updatedAt: DateTime;

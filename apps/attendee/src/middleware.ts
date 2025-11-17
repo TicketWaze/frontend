@@ -1,11 +1,14 @@
 import createMiddleware from "next-intl/middleware";
-import { type NextFetchEvent } from "next/server";
+import { type NextFetchEvent, NextResponse } from "next/server";
 import { getLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 
 const middleware = auth(async (req, event: NextFetchEvent) => {
   const locale = await getLocale();
+
+  // Handle referral code if present
+  const referralCode = req.nextUrl.searchParams.get("referral");
 
   // Define paths that don't require authentication
   const publicPaths = [
@@ -26,7 +29,21 @@ const middleware = auth(async (req, event: NextFetchEvent) => {
     return Response.redirect(newUrl);
   }
 
-  return createMiddleware(routing)(req);
+  // Get the response from next-intl middleware
+  const response = createMiddleware(routing)(req);
+
+  // Set referral cookie if ref parameter exists
+  if (referralCode && response) {
+    response.cookies.set("referral_code", referralCode, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 30, // 7 days
+      path: "/",
+      sameSite: "lax",
+    });
+  }
+
+  return response;
 });
 
 export default middleware;

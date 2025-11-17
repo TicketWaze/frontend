@@ -23,7 +23,7 @@ export default function OnboardingPageComponent() {
   const [notifications, setNotifications] = useState<string | undefined>();
   const [isOrganisation, setIsorganisation] = useState<boolean | undefined>();
   const locale = useLocale();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -110,8 +110,14 @@ export default function OnboardingPageComponent() {
     );
     setIsLoading(false);
     const response = await request.json();
-
     if (response.status === "success") {
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          userPreference: response.userPreference,
+        },
+      });
       router.push("/explore");
     } else {
       toast.error(response.message);

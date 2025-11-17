@@ -29,6 +29,7 @@
       "title": "Créer un compte",
       "organizer": "Créer un compte",
       "description": "Veuillez compléter le formulaire ci-dessous pour continuer.",
+      "referral": " a pensée que vous aimeriez être ici.",
       "choice": {
         "title": "Créer un compte",
         "description": "Choisissez une option pour continuer et configurer votre compte.",
@@ -82,6 +83,7 @@
     "complete": {
       "title": "Finaliser la configuration du compte",
       "description": "Veuillez remplir le formulaire ci-dessous pour finaliser la configuration de votre compte.",
+      "referral": " a pensée que vous aimeriez être ici.",
       "becoming": {
         "subtitle": "Créer une organisation",
         "description": "Veuillez remplir le formulaire ci-dessous pour créer une nouvelle organisation.",
@@ -288,6 +290,13 @@
       "available": "Solde disponible",
       "pending": "Solde en attente"
     },
+    "ticketwazeToken": "Jeton Ticketwaze",
+    "token": "jeton(s)",
+    "invitedUser": "Utilisateur invité",
+    "user": "utilisateur(s)",
+    "referralTitle": "Invitez des amis",
+    "referralDescription": "Faisons grandir notre communauté ensemble. Aidez vos amis à découvrir des billets et des expériences exceptionnels, et gagnez 5 points pour chaque recommandation réussie !",
+    "copy": "Copier",
     "filters": {
       "all": "Tous les statuts",
       "pending": "En attente",
