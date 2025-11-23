@@ -12,6 +12,7 @@ import {
   Google,
   Location,
   RouteSquare,
+  SecurityUser,
   Sms,
 } from "iconsax-react";
 import FormatDate from "@/lib/FormatDate";
@@ -63,6 +64,50 @@ export default async function EventPage({
   const tickets: Ticket[] = eventResponse.tickets;
   const organisation = eventResponse.organisation;
   const eventPerformers = event.eventPerformers;
+  const t = await getTranslations("Event");
+
+  if (event.eventType === "private") {
+    return (
+      <AttendeeLayout title={event.eventName}>
+        <div className="flex flex-col gap-8 h-full min-h-0">
+          <BackButton text={t("back")} />
+          <span className="font-primary font-medium text-[2.6rem] leading-12 text-black mb-4">
+            {event.eventName}
+          </span>
+          <div
+            className={
+              "w-[330px] lg:w-[460px] mx-auto h-full justify-center flex flex-col items-center gap-[5rem]"
+            }
+          >
+            <div
+              className={
+                "w-[120px] h-[120px] rounded-full flex items-center justify-center bg-neutral-100"
+              }
+            >
+              <div
+                className={
+                  "w-[90px] h-[90px] rounded-full flex items-center justify-center bg-neutral-200"
+                }
+              >
+                <SecurityUser size="50" color="#0d0d0d" variant="Bulk" />
+              </div>
+            </div>
+            <div
+              className={"flex flex-col gap-[3rem] items-center text-center"}
+            >
+              <p
+                className={
+                  "text-[1.8rem] leading-[25px] text-neutral-600 max-w-[330px] lg:max-w-[422px]"
+                }
+              >
+                {t("notInvited")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </AttendeeLayout>
+    );
+  }
 
   const favoriteRequest = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/favorite`,
@@ -83,8 +128,6 @@ export default async function EventPage({
   const isFollowing = organisation.followers.filter(
     (follower: any) => follower.userId === session?.user.userId
   );
-
-  const t = await getTranslations("Event");
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${event.latitude},${event.longitude}`;
 
