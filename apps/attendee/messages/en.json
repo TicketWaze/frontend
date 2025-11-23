@@ -370,6 +370,7 @@
     "from": "From",
     "free": "Free",
     "back": "Back",
+    "notInvited": "Access Restricted: This is a private activity visible only to invited participants.",
     "share": "Share event",
     "share_text": "Spread the word and invite your friends! Share this event on social media or via direct message.",
     "copy": "Copy",

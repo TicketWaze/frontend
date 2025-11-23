@@ -9,6 +9,7 @@ import {
 import {
   HambergerMenu,
   MoreCircle,
+  Profile2User,
   ScanBarcode,
   SecurityUser,
   TicketDiscount,
@@ -159,6 +160,17 @@ export default function MoreComponent({
               {t("more")}
             </span>
             <div className={"flex flex-col gap-4"}>
+              {event.eventType === "private" && (
+                <li>
+                  <Link
+                    href={`${slug}/attendees`}
+                    className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                  >
+                    <span>{t("attendees.title")}</span>
+                    <Profile2User size="20" variant="Bulk" color={"#2E3237"} />
+                  </Link>
+                </li>
+              )}
               {/* {!event.isFree && ( */}
               {daysLeft !== null && daysLeft > 0 && !isFree && (
                 <li>

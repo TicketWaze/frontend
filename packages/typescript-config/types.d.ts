@@ -14,6 +14,14 @@ export interface Country {
 export interface OrganisationTicket extends Ticket {
   event: Event;
 }
+export interface EventAttendee {
+  eventAttendeeId: string;
+  eventId: string;
+  fullName: string;
+  email: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
 
 export interface UserWallet {
   walletId: string;
@@ -216,6 +224,7 @@ export interface Event {
   eventTags: EventTag[];
   discountCodes: DiscountCode[];
   eventPerformers: EventPerformer[];
+  eventAttendees: EventAttendee[];
   createdAt: DateTime;
   updatedAt: DateTime;
 }

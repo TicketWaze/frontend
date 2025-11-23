@@ -95,7 +95,10 @@ export default function EventPageDetails({
     const search = query.toLowerCase();
     return ticket.ticketName.toLowerCase().includes(search);
   });
-  const eventLink = `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`;
+  const eventLink =
+    event.eventType === "private"
+      ? `https://app.ticketwaze.com/${locale}/explore/private/${Slugify(event.eventName)}`
+      : `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`;
   return (
     <div className={"flex flex-col gap-[3rem] overflow-y-scroll"}>
       <TopBar title={event.eventName}>

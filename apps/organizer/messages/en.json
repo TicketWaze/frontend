@@ -407,6 +407,17 @@
           }
         }
       },
+      "attendees": {
+        "back": "Back",
+        "subtitle": "Add Attendee",
+        "title": "Attendees",
+        "fullName": "Full name",
+        "email": "Email Address",
+        "close": "Close",
+        "add": "Add",
+        "more": "More",
+        "remove": "Remove access"
+      },
       "artist": {
         "add": "Add Performer",
         "description": "You can upload a photo and link to their profile, Once added, the artist will appear in your event lineup.",
@@ -456,6 +467,10 @@
         "meet": {
           "title": "Google Meet",
           "description": "Attend virtually with Google Meet — distance doesn’t matter."
+        },
+        "private": {
+          "title": "Private Activity",
+          "description": "Exclusive invitation-only activity with restricted access for select guests."
         }
       },
       "date_time": "Date & Time",

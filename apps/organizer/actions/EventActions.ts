@@ -36,6 +36,41 @@ export async function CreateInPersonEvent(
   }
 }
 
+export async function CreatePrivateEvent(
+  organisationId: string,
+  accessToken: string,
+  body: FormData,
+  locale: string
+) {
+  try {
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events/private/${organisationId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL!,
+        },
+        body: body,
+      }
+    );
+    const response = await request.json();
+    if (response.status === "success") {
+      revalidatePath("/events");
+      return {
+        status: "success",
+      };
+    } else {
+      throw new Error(response.message);
+    }
+  } catch (error: any) {
+    return {
+      error: error?.message ?? "An unknown error occurred",
+    };
+  }
+}
+
 export async function UpdateTicketTypes(
   organisationId: string,
   eventId: string,
@@ -94,6 +129,81 @@ export async function CreateDiscountCode(
           origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
         },
         body: JSON.stringify(data),
+      }
+    );
+    const response = await request.json();
+
+    if (response.status === "success") {
+      revalidatePath(pathname);
+      return {
+        status: "success",
+      };
+    } else {
+      throw new Error(response.message);
+    }
+  } catch (error: any) {
+    return {
+      error: error?.message ?? "An unknown error occurred",
+    };
+  }
+}
+
+export async function AddAttendee(
+  eventId: string,
+  accessToken: string,
+  data: unknown,
+  pathname: string,
+  locale: string
+) {
+  try {
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/attendees`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    const response = await request.json();
+
+    if (response.status === "success") {
+      revalidatePath(pathname);
+      return {
+        status: "success",
+      };
+    } else {
+      throw new Error(response.message);
+    }
+  } catch (error: any) {
+    return {
+      error: error?.message ?? "An unknown error occurred",
+    };
+  }
+}
+
+export async function RemoveAttendeeAccess(
+  eventId: string,
+  eventAttendeeId: string,
+  accessToken: string,
+  pathname: string,
+  locale: string
+) {
+  try {
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/attendees/${eventAttendeeId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        },
       }
     );
     const response = await request.json();

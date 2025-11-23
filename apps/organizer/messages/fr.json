@@ -407,6 +407,17 @@
           }
         }
       },
+      "attendees": {
+        "back": "Retour",
+        "subtitle": "Ajouter un participant",
+        "title": "Participants",
+        "fullName": "Nom complet",
+        "email": "Adresse e-mail",
+        "close": "Fermer",
+        "add": "Ajouter",
+        "more": "Plus",
+        "remove": "Retirer l'accès"
+      },
       "artist": {
         "add": "Ajouter un intervenant",
         "description": "Vous pouvez téléverser une photo et ajouter un lien vers leur profil. Une fois ajouté, l’intervenant apparaîtra dans la programmation de votre événement.",
@@ -456,6 +467,10 @@
         "meet": {
           "title": "Google Meet",
           "description": "Participez virtuellement avec Google Meet — la distance n’a pas d’importance."
+        },
+        "private": {
+          "title": "Activité privée",
+          "description": "Activité exclusive sur invitation uniquement, avec accès restreint pour des invités sélectionnés."
         }
       },
       "date_time": "Date et heure",
