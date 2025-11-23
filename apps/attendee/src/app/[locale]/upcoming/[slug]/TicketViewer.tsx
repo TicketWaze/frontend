@@ -384,10 +384,12 @@ export default function TicketViewer({
               </div>
             </div>
           </div>
-          <span className="text-warning flex gap-4 items-center">
-            <Warning2 size="16" color="#ea961c" variant="TwoTone" />
-            {t("ticketWarning")}
-          </span>
+          {!event.eventTicketTypes[0].isRefundable && (
+            <span className="text-warning flex gap-4 items-center">
+              <Warning2 size="16" color="#ea961c" variant="TwoTone" />
+              {t("ticketWarning")}
+            </span>
+          )}
           <QRCodeCanvas
             value={tickets[currentIndex].ticketId}
             size={128}

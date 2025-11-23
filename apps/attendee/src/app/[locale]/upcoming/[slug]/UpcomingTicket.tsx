@@ -89,10 +89,12 @@ export default function UpcomingTicket({
             </div>
           </div>
         </div>
-        <span className="text-warning flex gap-4 items-center">
-          <Warning2 size="16" color="#ea961c" variant="TwoTone" />
-          {t("ticketWarning")}
-        </span>
+        {!event.eventTicketTypes[0].isRefundable && (
+          <span className="text-warning flex gap-4 items-center">
+            <Warning2 size="16" color="#ea961c" variant="TwoTone" />
+            {t("ticketWarning")}
+          </span>
+        )}
         {/* Your ticket is unique and linked to your personal access. Please do not
         share it with others, as it may compromise your entry or benefits. Keep
         it safe and secure. */}

@@ -46,6 +46,7 @@ export default function CreateInPersonEventForm({
   const organisation = session?.activeOrganisation;
   const countries = UseCountries();
   const [isFree, setIsfree] = useState(false);
+  const [isRefundable, setIsRefundable] = useState(false);
 
   // create schema using factory (depends on isFree)
   const FormDataSchema = makeCreateInPersonSchema(isFree, (k: string) => t(k));
@@ -123,6 +124,7 @@ export default function CreateInPersonEventForm({
     formData.append("eventImage", data.eventImage);
     formData.append("eventDays", JSON.stringify(data.eventDays));
     formData.append("eventCurrency", data.eventCurrency);
+    formData.append("isRefundable", JSON.stringify(isRefundable));
     if (isFree) {
       formData.append(
         "ticketTypes",
@@ -426,6 +428,8 @@ export default function CreateInPersonEventForm({
               setTicketClasses={setTicketClasses}
               isFree={isFree}
               setIsFree={setIsfree}
+              isRefundable={isRefundable}
+              setIsRefundable={setIsRefundable}
               setValue={setValue}
               t={(k) => t(k)}
             />

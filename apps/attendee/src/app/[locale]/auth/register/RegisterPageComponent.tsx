@@ -63,10 +63,14 @@ export default function RegisterPageComponent({
       firstName: z.string().min(2, { error: t("errors.firstname_length") }),
       lastName: z.string().min(2, { error: t("errors.lastname_length") }),
       email: z.string().min(1, { error: t("errors.email") }),
-      password: z.string().min(8, { error: t("errors.password_length") }),
-      password_confirmation: z
+      password: z
         .string()
-        .min(8, { error: t("errors.password_length") }),
+        .min(8, { message: t("errors.password_length") })
+        .refine((password) => /[A-Z]/.test(password))
+        .refine((password) =>
+          /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        ),
+      password_confirmation: z.string(),
     })
     .refine((data) => data.password === data.password_confirmation, {
       message: t("errors.password_match"),
@@ -259,10 +263,7 @@ export default function RegisterPageComponent({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
               >
-                <PasswordInput
-                  error={errors.password?.message}
-                  {...register("password")}
-                >
+                <PasswordInput t={t} validate={true} {...register("password")}>
                   {t("placeholders.password")}
                 </PasswordInput>
               </motion.div>

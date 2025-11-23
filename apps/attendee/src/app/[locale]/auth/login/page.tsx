@@ -1,6 +1,6 @@
 "use client";
 import { LinkAccent } from "@/components/Links";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import { Input, PasswordInput } from "@workspace/ui/components/Inputs";
@@ -17,7 +17,7 @@ export default function LoginPage() {
   const t = useTranslations("Auth.login");
   const LoginSchema = z.object({
     email: z.email(t("errors.email")),
-    password: z.string().min(1, t("errors.password")),
+    password: z.string(),
   });
 
   type TLoginSchema = z.infer<typeof LoginSchema>;
@@ -31,6 +31,7 @@ export default function LoginPage() {
   });
   const [isLoading, setIsloading] = useState(false);
   const { update } = useSession();
+  const router = useRouter();
   async function submitHandler(data: TLoginSchema) {
     setIsloading(true);
     const result = await signIn("credentials", {
@@ -43,8 +44,12 @@ export default function LoginPage() {
       toast.error("Login failed");
     } else {
       const data = await update();
-      const locale = data?.user.userPreference.appLanguage;
-      window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore`;
+      if (!data?.user.userPreference) {
+        router.push("/auth/onboarding");
+      } else {
+        const locale = data?.user.userPreference.appLanguage;
+        window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore`;
+      }
     }
     setIsloading(false);
   }

@@ -57,6 +57,9 @@
         "confirm": "Confirmer le mot de passe"
       },
       "errors": {
+        "characters": "Au moins 8 caractères",
+        "capital": "Au moins une lettre majuscule",
+        "special": "Au moins un caractère spécial",
         "password_length": "Le mot de passe doit contenir au moins 8 caractères",
         "password_match": "Les mots de passe ne correspondent pas",
         "firstname_length": "Le prénom doit contenir au moins 2 caractères",
@@ -426,6 +429,8 @@
       "quantity": "Quantité",
       "summary": "Résumé",
       "select": "Sélectionnez un type de billet pour continuer",
+      "left": "tickets restant",
+      "soldout": "Rupture de stock",
       "platform": "Frais + taxes / ticket",
       "discount": "Appliquer un code de réduction",
       "discount_code": "Code de réduction",
@@ -543,11 +548,20 @@
     "password": {
       "title": "Changer le mot de passe",
       "cta": "Changer le mot de passe",
+      "tips": {
+        "title": "Conseil de sécurité",
+        "description": "Après avoir mis à jour votre mot de passe, vous devrez vous reconnecter sur tous vos appareils pour des raisons de sécurité."
+      },
       "errors": {
         "blank": "Le champ ne peut pas être vide",
         "password": "Le mot de passe doit contenir au moins 8 caractères",
         "confirm": "Le mot de passe doit être identique"
       }
+    },
+    "errors": {
+      "characters": "Au moins 8 caractères",
+      "capital": "Au moins une lettre majuscule",
+      "special": "Au moins un caractère spécial"
     },
     "placeholders": {
       "password": "Mot de passe actuel",

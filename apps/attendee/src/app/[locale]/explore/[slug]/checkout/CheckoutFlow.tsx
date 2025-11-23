@@ -494,16 +494,30 @@ export default function CheckoutFlow({
                 {fields.map((field, index) => {
                   const ticketType = ticketTypes[index];
                   const quantity = watch(`tickets.${index}.quantity`) || 0;
-
+                  const ticketLeft =
+                    ticketType.ticketTypeQuantity -
+                    ticketType.ticketTypeQuantitySold;
                   return (
                     <li
                       key={field.id}
                       className="border border-neutral-100 rounded-[15px] p-[15px] flex flex-col gap-4"
                     >
                       <div className="flex flex-col gap-4">
-                        <span className="font-semibold text-[1.6rem] leading-10 text-deep-100">
-                          {Capitalize(ticketType.ticketTypeName)}
-                        </span>
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-[1.6rem] leading-10 text-deep-100">
+                            {Capitalize(ticketType.ticketTypeName)}
+                          </span>
+                          {ticketLeft <= 10 && (
+                            <span className="text-[1.2rem] text-warning">
+                              {ticketLeft} {t("ticket.left")}
+                            </span>
+                          )}
+                          {ticketLeft === 0 && (
+                            <span className="text-[1.2rem] text-failure">
+                              {t("ticket.soldout")}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-[1.5rem] leading-12 text-neutral-700">
                           {ticketType.ticketTypeDescription}
                         </p>
@@ -948,10 +962,12 @@ function TicketSummaryCard({
             </div>
           </div>
         </div>
-        <span className="text-warning flex gap-4 items-center">
-          <Warning2 size="16" color="#ea961c" variant="TwoTone" />
-          {t("ticket.ticketWarning")}
-        </span>
+        {!ticketTypes[0].isRefundable && (
+          <span className="text-warning flex gap-4 items-center">
+            <Warning2 size="16" color="#ea961c" variant="TwoTone" />
+            {t("ticket.ticketWarning")}
+          </span>
+        )}
       </div>
       <div className="absolute bottom-[7%] h-[83px] left-[50%] -translate-x-[50%] flex flex-col gap-8">
         {selectedWithIndex.length > 0 && (

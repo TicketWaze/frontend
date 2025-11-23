@@ -300,8 +300,10 @@ export default function TicketClasses({ event }: { event: Event }) {
                       eventId: event.eventId,
                       eventTicketTypeId: "",
                       organisationId: "",
-                      currency: event.eventTicketTypes[0]?.currency ?? "",
-                      usdPrice: 2,
+                      currency: event.eventTicketTypes[0]?.currency!,
+                      usdPrice: 0,
+                      isRefundable: event.eventTicketTypes[0]?.isRefundable!,
+                      ticketTypeQuantitySold: 0,
                     },
                   ])
                 }

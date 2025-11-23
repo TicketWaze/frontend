@@ -108,7 +108,6 @@ export default function OnboardingPageComponent() {
         }),
       }
     );
-    setIsLoading(false);
     const response = await request.json();
     if (response.status === "success") {
       await update({
@@ -122,6 +121,7 @@ export default function OnboardingPageComponent() {
     } else {
       toast.error(response.message);
     }
+    setIsLoading(false);
   }
   return (
     <div className="pt-[4.5rem] h-full flex flex-col justify-between">

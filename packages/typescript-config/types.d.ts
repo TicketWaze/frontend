@@ -170,6 +170,8 @@ export interface EventTicketType {
   usdPrice: number;
   // currencyId: string;
   ticketTypeQuantity: number;
+  ticketTypeQuantitySold: number;
+  isRefundable: number;
   createdAt?: DateTime;
   updatedAt?: DateTime;
 }

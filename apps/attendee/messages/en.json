@@ -57,6 +57,9 @@
         "confirm": "Confirm Password"
       },
       "errors": {
+        "characters": "At least 8 characters",
+        "capital": "At least one capital letter",
+        "special": "At least one special character",
         "password_length": "Password must be at least 8 characters long",
         "password_match": "Passwords don't match",
         "firstname_length": "First name must be at least 2 characters",
@@ -425,6 +428,8 @@
       "quantity": "Quantity",
       "summary": "Summary",
       "select": "Select a ticket type to continue",
+      "left": "tickets left",
+      "soldout": "Sold out",
       "platform": "fees + tax / ticket",
       "discount": "Apply discount code",
       "discount_code": "Discount Code",
@@ -542,11 +547,20 @@
     "password": {
       "title": "Change Password",
       "cta": "Change Password",
+      "tips": {
+        "title": "Security tip",
+        "description": "After updating your password, you'll need to sign in again on all you devices for security puposes."
+      },
       "errors": {
         "blank": "Field cannot be blank",
         "password": "Password must me at least 8 characters",
         "confirm": "Password must be the same"
       }
+    },
+    "errors": {
+      "characters": "At least 8 characters",
+      "capital": "At least one capital letter",
+      "special": "At least one special character"
     },
     "placeholders": {
       "password": "Current Password",
