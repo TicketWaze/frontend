@@ -24,8 +24,8 @@ export default function EventPageContent({ events }: { events: Event[] }) {
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
-        <TabsContent value="all">
-          <ul className="list pt-4">
+        <TabsContent value="all" className="overflow-y-scroll">
+          <ul className="list pt-4 overflow-y-scroll">
             {events.map((event) => {
               const date = TimesTampToDateTime(
                 event.eventDays[0]?.startDate ?? ""

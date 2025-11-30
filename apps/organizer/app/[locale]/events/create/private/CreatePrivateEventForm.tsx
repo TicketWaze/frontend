@@ -275,7 +275,9 @@ export default function CreatePrivateEventForm({ tags }: { tags: EventTag[] }) {
           <div className="text-[2.2rem] text-neutral-600">
             <span className="text-primary-500">{currentStep + 1}</span>/3
           </div>
-          <ButtonPrimary onClick={next}>{t("proceed")}</ButtonPrimary>
+          <ButtonPrimary onClick={next}>
+            {isSubmitting ? <LoadingCircleSmall /> : t("proceed")}
+          </ButtonPrimary>
         </div>
       </div>
 
