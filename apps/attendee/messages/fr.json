@@ -1,8 +1,8 @@
 {
   "Auth": {
     "layout": {
-      "title": "Découvrez les événements, connectez-vous à la culture, vivez Haïti.",
-      "description": "Explorez, partagez et profitez facilement des meilleurs événements qu'Haïti a à offrir. Rejoignez-nous aujourd'hui et commencez votre voyage !"
+      "title": "La billetterie simplifiée. Des moments qui marquent à jamais.",
+      "description": "Gagnez du temps et vivez pleinement vos passions. Accédez facilement aux activités qui vous inspirent, avec une expérience fluide et sans accroc, du premier clic jusqu’au souvenir inoubliable."
     },
     "login": {
       "title": "Se connecter",
@@ -416,7 +416,8 @@
     "ticketId": "ID du billet",
     "name": "Nom complet",
     "email": "E-mail",
-    "ticketWarning": "Votre billet est personnel — ne le partagez pas. Ce billet est non remboursable",
+    "ticketWarning1": "Votre billet est personnel — ne le partagez pas.",
+    "ticketWarning2": "Ce billet est non remboursable",
     "liked": "Événements aimés"
   },
   "Checkout": {
@@ -583,27 +584,27 @@
     }
   },
   "Organizers": {
-    "title": "Organisateurs",
+    "title": "Organisation",
     "subtitle": "Bon retour ",
     "back": "Retour",
-    "search": "Rechercher des organisateurs",
+    "search": "Rechercher des organisations",
     "filters": {
       "all": "Tous",
       "popular": "Populaires",
       "following": "Suivis"
     },
-    "event": "événements",
+    "event": "activités",
     "follow": "Suivre",
     "unfollow": "Ne plus suivre",
     "profile": {
-      "upcoming": "Événements à venir",
-      "noUpcoming": "Aucun événement à venir",
+      "upcoming": "Activités à venir",
+      "noUpcoming": "Aucune activité à venir",
       "rating": "note",
       "followers": "abonnés",
-      "events": "Événements",
+      "events": "Activités",
       "follow": "Suivre",
       "unfollow": "Ne plus suivre",
-      "about": "À propos de l'organisateur",
+      "about": "À propos de l'organisation",
       "contact": "Informations de contact",
       "noResult": "Il n'y a aucun résultat pour "
     }

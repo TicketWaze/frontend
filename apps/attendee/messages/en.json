@@ -1,8 +1,8 @@
 {
   "Auth": {
     "layout": {
-      "title": "Discover Events, Connect with Culture, Experience Haiti.",
-      "description": "Easily explore, share, and enjoy the best events Haiti has to offer. Join us today and start your journey!"
+      "title": "Ticketing Made Simple. Experiences Made Unforgettable.",
+      "description": "Your time, your passion and  your adventures made more accessible than ever. Connects to activities you care about, with a seamless experience from start to finish."
     },
     "login": {
       "title": "Sign In",
@@ -232,12 +232,12 @@
       "logout": "Logout",
       "verified": "This is a verified organisation",
       "links": {
-        "title1": "Events",
+        "title1": "Activites",
         "explore": "Explore",
         "upcoming": "Upcoming",
         "wallet": "Wallet",
         "history": "History",
-        "organizers": "Organizers",
+        "organizers": "Organisations",
         "title2": "User",
         "more": "More",
         "profile": "Profile",
@@ -253,18 +253,18 @@
     },
     "noAuth": {
       "title": "You are not Logged in",
-      "description": "Access your account to securely manage tickets, complete actions, and enjoy a seamless event experience.",
+      "description": "Access your account to securely manage tickets, complete actions, and enjoy a seamless experience.",
       "cancel": "Cancel",
       "proceed": "Proceed"
     }
   },
   "Explore": {
-    "title": "Explore Events",
+    "title": "Explore Activities",
     "subtitle": "Welcome Back ",
-    "search": "Search for event",
+    "search": "Search for activity",
     "noResult": "There's no result for ",
-    "noEvent": "Looks like there are no upcoming events at the moment. Check back later or explore other categories to discover exciting events near you!",
-    "liked": "Liked events",
+    "noEvent": "Looks like there are no upcoming activities at the moment. Check back later or explore other categories to discover exciting activities near you!",
+    "liked": "Liked activities",
     "filters": {
       "first": {
         "1": "All",
@@ -321,7 +321,7 @@
         "title": "Transaction Details",
         "name": "Attendee Name",
         "email": "Email",
-        "event_name": "Event Name",
+        "event_name": "Activity Name",
         "date": "Date",
         "time": "Time",
         "location": "Location",
@@ -354,46 +354,46 @@
     }
   },
   "Upcoming": {
-    "title": "Upcoming Events",
+    "title": "Upcoming Activities",
     "subtitle": "Welcome Back ",
-    "search": "Search for upcoming event",
-    "description": "There are no upcoming events right now. Stay tuned to discover and book the next ones!",
+    "search": "Search for upcoming activity",
+    "description": "There are no upcoming activity right now. Stay tuned to discover and book the next ones!",
     "noResult": "There's no result for "
   },
   "History": {
-    "title": "Events history",
+    "title": "Activities history",
     "subtitle": "Welcome Back ",
-    "search": "Search for event",
-    "description": "You haven’t attended any events yet. Once you join an event, it will appear here for you to revisit your past experiences."
+    "search": "Search for activity",
+    "description": "You haven’t attended any activities yet. Once you join an activity, it will appear here for you to revisit your past experiences."
   },
   "Event": {
     "from": "From",
     "free": "Free",
     "back": "Back",
     "notInvited": "Access Restricted: This is a private activity visible only to invited participants.",
-    "share": "Share event",
-    "share_text": "Spread the word and invite your friends! Share this event on social media or via direct message.",
+    "share": "Share activity",
+    "share_text": "Spread the word and invite your friends! Share this activity on social media or via direct message.",
     "copy": "Copy",
     "buy": "Buy ticket",
     "buy_more": "Buy more ticket",
     "about": "About event",
     "contact": "Contact Information",
-    "details": "Event details",
+    "details": "Activity details",
     "followers": "Followers",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "viewProfile": "View profile",
     "more": "More",
-    "reportEvent": "Report Event",
+    "reportEvent": "Report activity",
     "reportOrganisation": "Report Organisation",
-    "reportEventDescription": "Help us keep the platform safe. Share details about any issues with this Event.",
+    "reportEventDescription": "Help us keep the platform safe. Share details about any issues with this activity.",
     "reportOrganisationDescription": "Help us keep the platform safe. Share details about any issues with this organisation.",
     "inappropriateContent": "Inappropriate Content",
     "misleadingInformation": "Misleading Information",
     "fraud": "Fraud or Scam Concerns",
     "venue": "Venue or Date Issues",
     "other": "Other",
-    "question": "What issue do you have with this event?",
+    "question": "What issue do you have with this activity?",
     "question2": "What issue do you have with this organisation?",
     "message": "Message",
     "pleaseSpecifyReason": "Please Specify a valid reason",
@@ -406,7 +406,7 @@
     "time": "Time",
     "location": "Location",
     "download": "Download ticket",
-    "rate": "Rate event",
+    "rate": "Rate activity",
     "feedback": "Write feedback",
     "send": "Send feedback",
     "use": "Ticket used",
@@ -415,15 +415,16 @@
     "ticketId": "Ticket ID",
     "name": "Full Name",
     "email": "Email",
-    "ticketWarning": "Your ticket is personal—don’t share it. This ticket is non-refundable",
-    "liked": "Liked events"
+    "ticketWarning1": "Your ticket is personal—don’t share it.",
+    "ticketWarning2": "This ticket is non-refundable",
+    "liked": "Liked activities"
   },
   "Checkout": {
     "back": "Back",
     "free": "Free",
     "purchased": "Ticket purchased",
-    "purchased_cta": "Opening upcoming events ...",
-    "purchased_text": "Your purchase is confirmed! Access it anytime in Upcoming Events or check your email for a copy",
+    "purchased_cta": "Opening upcoming activities ...",
+    "purchased_text": "Your purchase is confirmed! Access it anytime in upcoming activities or check your email for a copy",
     "ticket": {
       "title": "Buy Ticket",
       "quantity": "Quantity",
@@ -453,7 +454,7 @@
       "card": "Pay with card",
       "paypal": "Pay with PayPal",
       "moncash": "Pay with MonCash",
-      "nopayment": "This event is completely free of charge. No payment is required to complete your registration. Just continue to confirm your ticket and you’re all set.",
+      "nopayment": "This activity is completely free of charge. No payment is required to complete your registration. Just continue to confirm your ticket and you’re all set.",
       "secured": "Your security matters to us. Every transaction is processed through encrypted channels and monitored in real time to prevent fraud and ensure your personal information remains protected. Our systems are supervised by trusted partners and comply with the highest industry standards for data and payment security.",
       "paymentType": "Select a payment provider",
       "placeholders": {
@@ -470,9 +471,9 @@
     }
   },
   "Liked": {
-    "title": "Like Events",
+    "title": "Like activities",
     "back": "Back",
-    "noEvent": "You haven’t liked any events yet. Browse upcoming events and tap the ❤️ to save your favorites!",
+    "noEvent": "You haven’t liked any activities yet. Browse upcoming activities and tap the ❤️ to save your favorites!",
     "filters": {
       "saved": "Saved",
       "liked": "Liked"
@@ -502,9 +503,9 @@
     },
     "event": {
       "title": "Event",
-      "attended": "Number of events attended",
+      "attended": "Number of activities attended",
       "tickets": "Number of tickets bought",
-      "missed": "Number of events missed"
+      "missed": "Number of activities missed"
     },
     "account": {
       "title": "Account",
@@ -532,9 +533,9 @@
     },
     "email": {
       "title": "Email Notifications",
-      "upcoming": "Notify me about upcoming events I’ve purchased tickets for.",
-      "preferred": "Notify me about new events in my preferred categories.",
-      "follow": "Notify me when a followed organizer adds new events."
+      "upcoming": "Notify me about upcoming activities I’ve purchased tickets for.",
+      "preferred": "Notify me about new activities in my preferred categories.",
+      "follow": "Notify me when a followed organizer adds new activities."
     },
     "user": {
       "title": "App Preferences",
@@ -582,27 +583,27 @@
     }
   },
   "Organizers": {
-    "title": "Organizers",
+    "title": "Organisations",
     "subtitle": "Welcome Back ",
     "back": "Back",
-    "search": "Search for organizers",
+    "search": "Search for organisations",
     "filters": {
       "all": "All",
       "popular": "Popular",
       "following": "Following"
     },
-    "event": "events",
+    "event": "activity",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "profile": {
-      "upcoming": "Upcoming events",
-      "noUpcoming": "No upcoming events",
+      "upcoming": "Upcoming activities",
+      "noUpcoming": "No upcoming activity",
       "rating": "rating",
       "followers": "followers",
-      "events": "Events",
+      "events": "Activities",
       "follow": "Follow",
       "unfollow": "Unfollow",
-      "about": "About organizer",
+      "about": "About organisation",
       "contact": "Contact Information",
       "noResult": "There's no result for "
     }

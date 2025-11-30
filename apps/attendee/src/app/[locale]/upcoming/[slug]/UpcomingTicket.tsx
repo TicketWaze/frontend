@@ -18,7 +18,6 @@ export default function UpcomingTicket({
   const t = useTranslations("Event");
   const isFree = event.eventTicketTypes[0].ticketTypePrice == 0;
   return (
-    // <div className='lg:overflow-y-auto min-h-0 flex flex-col gap-20 p-4 pt-0 '>
     <div className=" flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]">
       <Image src={ticketBG} alt={"ticket bg"} className="h-full" />
       <div
@@ -89,12 +88,11 @@ export default function UpcomingTicket({
             </div>
           </div>
         </div>
-        {!event.eventTicketTypes[0].isRefundable && (
-          <span className="text-warning flex gap-4 items-center">
-            <Warning2 size="16" color="#ea961c" variant="TwoTone" />
-            {t("ticketWarning")}
-          </span>
-        )}
+        <span className="text-warning flex gap-4 items-center">
+          <Warning2 size="16" color="#ea961c" variant="TwoTone" />
+          {t("ticketWarning1")}{" "}
+          {!event.eventTicketTypes[0].isRefundable && t("ticketWarning2")}
+        </span>
         {/* Your ticket is unique and linked to your personal access. Please do not
         share it with others, as it may compromise your entry or benefits. Keep
         it safe and secure. */}
@@ -124,6 +122,5 @@ export default function UpcomingTicket({
         </div>
       </div>
     </div>
-    // </div>
   );
 }

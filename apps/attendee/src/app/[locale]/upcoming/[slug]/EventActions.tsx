@@ -23,7 +23,7 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
 import { Copy, Heart, MoreCircle, Send2 } from "iconsax-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import ReportEventComponent from "../../explore/[slug]/ReportEventComponent";
@@ -45,6 +45,7 @@ export default function EventActions({
     setCurrentUrl(window.location.href);
   }, []);
   const pathname = usePathname();
+  const locale = useLocale();
   const [isLoading, setIsLoading] = useState(false);
   async function AddToFavorite() {
     setIsLoading(true);
@@ -120,19 +121,32 @@ export default function EventActions({
                     "lg:hidden text-neutral-700 text-[1.8rem] max-w-[335px]"
                   }
                 >
-                  {TruncateUrl(currentUrl, 22)}
+                  {TruncateUrl(
+                    event.eventType === "private"
+                      ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore/private/${Slugify(event.eventName)}`
+                      : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore/${Slugify(event.eventName)}`,
+                    22
+                  )}
                 </span>
                 <span
                   className={
                     "hidden lg:block text-neutral-700 text-[1.8rem] max-w-[335px]"
                   }
                 >
-                  {TruncateUrl(currentUrl)}
+                  {TruncateUrl(
+                    event.eventType === "private"
+                      ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore/private/${Slugify(event.eventName)}`
+                      : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore/${Slugify(event.eventName)}`
+                  )}
                 </span>
                 <button
                   onClick={async () => {
                     try {
-                      await navigator.clipboard.writeText(currentUrl);
+                      await navigator.clipboard.writeText(
+                        event.eventType === "private"
+                          ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore/private/${Slugify(event.eventName)}`
+                          : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore/${Slugify(event.eventName)}`
+                      );
                       toast.success("Url copied to clipboard");
                     } catch (e) {
                       toast.error("Failed to copy url");
