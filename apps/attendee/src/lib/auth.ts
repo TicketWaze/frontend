@@ -16,9 +16,11 @@ const nextAuthResult = NextAuth({
 
   providers: [
     Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
       authorization: {
         params: {
-          redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/google`,
+          redirect_uri: `${process.env.APP_URL}/api/auth/callback/google`,
         },
       },
     }),
