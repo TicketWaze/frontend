@@ -1,5 +1,5 @@
 "use client";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { Drawer, DrawerTrigger } from "@workspace/ui/components/drawer";
 import {
   Popover,
@@ -13,6 +13,7 @@ import {
   ScanBarcode,
   SecurityUser,
   TicketDiscount,
+  Trash,
 } from "iconsax-react";
 import { useLocale, useTranslations } from "next-intl";
 import React, { useRef, useState } from "react";
@@ -29,18 +30,20 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
-import { ButtonPrimary } from "@workspace/ui/components/buttons";
+import { ButtonPrimary, ButtonRed } from "@workspace/ui/components/buttons";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { Event, User } from "@workspace/typescript-config";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  DeleteEvent,
   MarkAsActive,
   MarkAsInactive,
   UpdateCheckersListAction,
 } from "@/actions/EventActions";
 import { toast } from "sonner";
 import PageLoader from "@/components/Loaders/PageLoader";
+import { Input } from "@workspace/ui/components/Inputs";
 
 export default function MoreComponent({
   event,
@@ -90,8 +93,10 @@ export default function MoreComponent({
     defaultValues: eventCheckers,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [eventName, setEventName] = useState<string>();
   const pathname = usePathname();
   const locale = useLocale();
+  const router = useRouter();
   async function UpdateCheckers(data: TaddCheckersSchema) {
     const result = await UpdateCheckersListAction(
       event.eventId,
@@ -128,6 +133,21 @@ export default function MoreComponent({
     );
     if (result.status !== "success") {
       toast.error(result.error);
+    }
+    setIsLoading(false);
+  }
+  async function deleteEvent() {
+    setIsLoading(true);
+    const result = await DeleteEvent(
+      event.eventId,
+      user.accessToken,
+      pathname,
+      locale
+    );
+    if (result.status !== "success") {
+      toast.error(result.error);
+    } else {
+      router.push("/events");
     }
     setIsLoading(false);
   }
@@ -334,6 +354,63 @@ export default function MoreComponent({
                   )}
                 </>
               )}
+              <li>
+                <Dialog>
+                  <DialogTrigger className="w-full">
+                    <div
+                      className={`font-normal cursor-pointer group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                    >
+                      <span className={"text-failure"}>{t("delete")}</span>
+                      <Trash size="20" variant="Bulk" color={"#DE0028"} />
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className={"w-[360px] lg:w-[520px] "}>
+                    <DialogHeader>
+                      <DialogTitle
+                        className={
+                          "font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary"
+                        }
+                      >
+                        {t("delete")}
+                      </DialogTitle>
+                      <DialogDescription className={"sr-only"}>
+                        <span>Share event</span>
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div
+                      className={
+                        "flex flex-col w-auto justify-center items-center gap-[30px]"
+                      }
+                    >
+                      <p
+                        className={
+                          "font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full"
+                        }
+                      >
+                        {t("deleteWarning")}
+                      </p>
+                      <div className="w-full">
+                        <Input onChange={(e) => setEventName(e.target.value)}>
+                          {t("type")}
+                        </Input>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <ButtonRed
+                        onClick={deleteEvent}
+                        disabled={isSubmitting || eventName !== event.eventName}
+                        className="w-full"
+                      >
+                        {isSubmitting ? <LoadingCircleSmall /> : t("delete")}
+                      </ButtonRed>
+                      <DialogClose
+                        ref={closeRef}
+                        className="sr-only"
+                      ></DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </li>
 
               {/*<li className={''}>*/}
               {/*  <button*/}
