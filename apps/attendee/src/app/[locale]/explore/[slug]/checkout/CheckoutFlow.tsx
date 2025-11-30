@@ -15,16 +15,10 @@ import {
   Warning2,
 } from "iconsax-react";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
-import {
-  Event,
-  EventTicketType,
-  Ticket,
-  User,
-} from "@workspace/typescript-config";
+import { Event, EventTicketType, User } from "@workspace/typescript-config";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import Image from "next/image";
 import ticketBG from "./ticket-bg.svg";
-import z from "zod";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ToggleIcon from "@workspace/ui/components/ToggleIcon";
@@ -37,12 +31,10 @@ import Slugify from "@/lib/Slugify";
 
 export default function CheckoutFlow({
   event,
-  tickets,
   ticketTypes,
   user,
 }: {
   event: Event;
-  tickets: Ticket[];
   ticketTypes: EventTicketType[];
   user: User;
 }) {

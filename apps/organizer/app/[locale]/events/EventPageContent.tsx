@@ -119,7 +119,11 @@ function UpcomingContent({ events }: { events: Event[] }) {
                 date={date}
                 country={event.country ?? ""}
                 city={event.city ?? ""}
-                price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
+                price={
+                  event.currency === "USD"
+                    ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
+                    : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
+                }
                 currency={event.currency}
                 tags={event.eventTags}
                 eventType={event.eventType}
@@ -187,7 +191,11 @@ function HistoryContent({ events }: { events: Event[] }) {
                 date={date}
                 country={event.country ?? ""}
                 city={event.city ?? ""}
-                price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
+                price={
+                  event.currency === "USD"
+                    ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
+                    : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
+                }
                 currency={event.currency}
                 tags={event.eventTags}
                 eventType={event.eventType}
