@@ -1,16 +1,21 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 
 const nextAuthResult = NextAuth({
   session: {
     strategy: "jwt",
-    maxAge: 2 * 60 * 60,
+    maxAge: 2 * 60 * 60, // 2 hours
   },
+
   jwt: {
     maxAge: 2 * 60 * 60,
   },
+
   trustHost: true,
+
   providers: [
+    Google,
     Credentials({
       credentials: {
         email: {},
@@ -21,47 +26,99 @@ const nextAuthResult = NextAuth({
           `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               email: credentials.email,
               password: credentials.password,
             }),
           }
         );
-        const user = await response.json();
-        if (!user.status || user.status != "success") {
-          throw new Error(user.message);
+
+        const data = await response.json();
+
+        if (data.status !== "success") {
+          throw new Error(data.message || "Invalid credentials");
         }
-        return user.user;
+
+        /**
+         * Return user to JWT callback
+         */
+        return data.user;
       },
     }),
   ],
+
   pages: {
-    signIn: `/auth/login`,
-    error: `/auth/login`,
+    signIn: "/auth/login",
+    error: "/auth/login",
   },
+
   callbacks: {
+    /**
+     * SIGN IN — handle Google automated user creation via API
+     */
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login/google`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: user.email,
+                name: user.name,
+                avatar: user.image,
+              }),
+            }
+          );
+
+          const data = await res.json();
+          if (data.status !== "success") {
+            throw new Error(
+              encodeURIComponent(data.message || "Google authentication failed")
+            );
+          }
+          // Map userId to id and attach to user
+          Object.assign(user, {
+            ...data.user,
+            id: data.user.userId,
+          });
+          return true;
+        } catch (error) {
+          throw error;
+        }
+      }
+
+      return true;
+    },
+
+    /**
+     * JWT CALLBACK
+     */
     async jwt({ token, user, trigger, session }) {
+      // First login (credentials or google)
       if (user) {
-        // first login
         return { ...token, ...user };
       }
 
-      // Handle session updates (when you call update())
-      if (trigger === "update" && session) {
+      // Manual update() call
+      if (trigger === "update" && session?.user) {
         return { ...token, ...session.user };
       }
 
       return token;
     },
+
+    /**
+     * SESSION CALLBACK
+     */
     async session({ session, token }) {
-      // copy token into session
       session.user = token as any;
       return session;
     },
-    redirect({ url, baseUrl }) {
+
+    redirect({ url }) {
       return url;
     },
   },

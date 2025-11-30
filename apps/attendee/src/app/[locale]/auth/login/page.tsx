@@ -2,16 +2,19 @@
 import { LinkAccent } from "@/components/Links";
 import { Link, useRouter } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ButtonPrimary } from "@workspace/ui/components/buttons";
+import { ButtonBlack, ButtonPrimary } from "@workspace/ui/components/buttons";
 import { Input, PasswordInput } from "@workspace/ui/components/Inputs";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { signIn, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod/v4";
 import { motion } from "framer-motion";
+import Google from "@workspace/ui/assets/icons/google.svg";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const t = useTranslations("Auth.login");
@@ -19,6 +22,10 @@ export default function LoginPage() {
     email: z.email(t("errors.email")),
     password: z.string(),
   });
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+  const errorMessage = error ? decodeURIComponent(error) : null;
+  if (errorMessage) toast.error("AccessDenied");
 
   type TLoginSchema = z.infer<typeof LoginSchema>;
 
@@ -51,6 +58,14 @@ export default function LoginPage() {
         window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/explore`;
       }
     }
+    setIsloading(false);
+  }
+  async function googleLogin() {
+    setIsloading(true);
+    await signIn("google", {
+      redirect: true,
+      callbackUrl: process.env.NEXT_PUBLIC_APP_URL,
+    });
     setIsloading(false);
   }
   return (
@@ -124,7 +139,8 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
-            className="w-full hidden lg:block"
+            className="w-full hidden lg:flex flex-col gap-8
+          "
           >
             <ButtonPrimary
               type="submit"
@@ -133,6 +149,24 @@ export default function LoginPage() {
             >
               {isLoading ? <LoadingCircleSmall /> : t("cta.submit")}
             </ButtonPrimary>
+            <span className="text-neutral-700 text-center text-[1.8rem] leading-8">
+              {t("cta.or")}
+            </span>
+            <ButtonBlack
+              type="button"
+              onClick={googleLogin}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-4"
+            >
+              {isLoading ? (
+                <LoadingCircleSmall />
+              ) : (
+                <>
+                  <Image src={Google} alt="google login" />
+                  {t("cta.google")}
+                </>
+              )}
+            </ButtonBlack>
           </motion.div>
         </div>
       </div>
@@ -141,6 +175,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
+          className="lg:hidden"
         >
           <ButtonPrimary
             type="submit"
@@ -150,11 +185,41 @@ export default function LoginPage() {
             {isLoading ? <LoadingCircleSmall /> : t("cta.submit")}
           </ButtonPrimary>
         </motion.div>
-
+        <motion.span
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.85 }}
+          className="text-neutral-700 lg:hidden text-center text-[1.8rem] leading-8"
+        >
+          {t("cta.or")}
+        </motion.span>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.9 }}
+          className="lg:hidden"
+        >
+          <ButtonBlack
+            type="button"
+            onClick={googleLogin}
+            disabled={isLoading}
+            className="flex items-center w-full justify-center gap-4"
+          >
+            {isLoading ? (
+              <LoadingCircleSmall />
+            ) : (
+              <>
+                <Image src={Google} alt="google login" />
+                {t("cta.google")}
+              </>
+            )}
+          </ButtonBlack>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1 }}
           className="border border-neutral-100 w-full lg:w-auto p-4 pl-6 flex items-center justify-between gap-4 lg:gap-[1.8rem] rounded-[100px]"
         >
           <span className="text-[1.8rem] leading-[2.5rem] text-neutral-700">
