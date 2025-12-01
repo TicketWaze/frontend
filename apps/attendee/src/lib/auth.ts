@@ -126,7 +126,16 @@ const nextAuthResult = NextAuth({
       return session;
     },
 
-    redirect({ url }) {
+    redirect({ url, baseUrl }) {
+      if (
+        process.env.NODE_ENV === "production" &&
+        baseUrl.includes("localhost:8080")
+      ) {
+        return url.replace(
+          "http://localhost:8080",
+          process.env.NEXT_PUBLIC_APP_URL!
+        );
+      }
       return url;
     },
   },
