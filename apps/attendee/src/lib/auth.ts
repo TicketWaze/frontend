@@ -15,15 +15,7 @@ const nextAuthResult = NextAuth({
   trustHost: true,
 
   providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
-      authorization: {
-        params: {
-          redirect_uri: `${process.env.APP_URL}/api/auth/callback/google`,
-        },
-      },
-    }),
+    Google,
     Credentials({
       credentials: {
         email: {},
@@ -127,16 +119,7 @@ const nextAuthResult = NextAuth({
     },
 
     redirect({ url, baseUrl }) {
-      if (
-        process.env.NODE_ENV === "production" &&
-        baseUrl.includes("localhost:8080")
-      ) {
-        return url.replace(
-          "http://localhost:8080",
-          process.env.NEXT_PUBLIC_APP_URL!
-        );
-      }
-      return url;
+      return process.env.APP_URL!;
     },
   },
 });
