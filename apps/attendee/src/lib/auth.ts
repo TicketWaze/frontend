@@ -11,8 +11,7 @@ const nextAuthResult = NextAuth({
   jwt: {
     maxAge: 2 * 60 * 60,
   },
-
-  trustHost: true,
+  redirectProxyUrl: process.env.NEXT_PUBLIC_APP_URL!,
 
   providers: [
     Google({
@@ -20,7 +19,7 @@ const nextAuthResult = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
       authorization: {
         params: {
-          redirect_uri: `${process.env.APP_URL}/api/auth/callback/google`,
+          redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/google`,
         },
       },
     }),
