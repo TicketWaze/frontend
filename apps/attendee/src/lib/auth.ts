@@ -15,7 +15,15 @@ const nextAuthResult = NextAuth({
   trustHost: true,
 
   providers: [
-    Google,
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+      authorization: {
+        params: {
+          redirect_uri: `${process.env.APP_URL}/api/auth/callback/google`,
+        },
+      },
+    }),
     Credentials({
       credentials: {
         email: {},
