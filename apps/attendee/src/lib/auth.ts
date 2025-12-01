@@ -127,7 +127,7 @@ const nextAuthResult = NextAuth({
     },
 
     redirect({ url, baseUrl }) {
-      return process.env.APP_URL!;
+      return process.env.NEXT_PUBLIC_APP_URL!;
     },
   },
 });
