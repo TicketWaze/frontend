@@ -11,7 +11,6 @@ const nextConfig: import("next").NextConfig = {
       },
     ],
   },
-  env: { NEXTAUTH_URL: process.env.APP_URL },
 };
 
 const withNextIntl = createNextIntlPlugin();
