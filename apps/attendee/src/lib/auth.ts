@@ -11,8 +11,6 @@ const nextAuthResult = NextAuth({
   jwt: {
     maxAge: 2 * 60 * 60,
   },
-  debug: true,
-  redirectProxyUrl: process.env.NEXT_PUBLIC_APP_URL!,
 
   providers: [
     Google({
