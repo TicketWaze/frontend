@@ -14,11 +14,11 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/Inputs";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
-import { Scanner, Camera } from "iconsax-react";
+import { Scanner } from "iconsax-react";
 import { useTranslations } from "next-intl";
 import React, { useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
-import { BrowserMultiFormatReader } from "@zxing/browser";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 export default function CheckingDialog({
   event,
@@ -29,107 +29,65 @@ export default function CheckingDialog({
 }) {
   const t = useTranslations("Events.single_event");
   const closeRef = useRef<HTMLButtonElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-
   const [isLoading, setIsLoading] = useState(false);
   const [ticketID, setTicketID] = useState("");
   const [ticketIdError, setTicketIdError] = useState("");
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanError, setScanError] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
-  // Cleanup scanner on unmount or when scanning stops
+  // Initialize scanner when dialog opens
   useEffect(() => {
-    return () => {
-      stopScanning();
-    };
-  }, []);
-
-  const stopScanning = () => {
-    // Stop all video tracks
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
+    if (!isDialogOpen) {
+      // Clean up scanner when dialog closes
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(console.error);
+        scannerRef.current = null;
+      }
+      return;
     }
 
-    // Clear video element
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
+    // Wait a bit for dialog to fully render
+    const timer = setTimeout(() => {
+      if (scannerRef.current) return;
 
-    codeReaderRef.current = null;
-    setIsScanning(false);
-    setScanError("");
-  };
-
-  const startScanning = async () => {
-    try {
-      setScanError("");
-      setIsScanning(true);
-
-      // Initialize the code reader
-      const codeReader = new BrowserMultiFormatReader();
-      codeReaderRef.current = codeReader;
-
-      // Use undefined to let browser choose default, or use constraints
-      // On mobile, this will prefer the back camera
-      await codeReader.decodeFromVideoDevice(
-        undefined, // Let browser choose default camera
-        videoRef.current!,
-        (result, error) => {
-          if (result) {
-            const scannedText = result.getText();
-            setTicketID(scannedText);
-            stopScanning();
-
-            if (navigator.vibrate) {
-              navigator.vibrate(200);
-            }
-
-            toast.success("QR code scanned successfully!");
-          }
-
-          if (error && error.name !== "NotFoundException") {
-            console.error("Scan error:", error);
-          }
-        }
+      const scanner = new Html5QrcodeScanner(
+        "reader",
+        {
+          qrbox: { width: 250, height: 250 },
+          fps: 5,
+        },
+        false
       );
 
-      // Store the stream for cleanup
-      if (videoRef.current && videoRef.current.srcObject) {
-        streamRef.current = videoRef.current.srcObject as MediaStream;
-      }
-    } catch (error) {
-      console.error("Failed to start scanner:", error);
+      scannerRef.current = scanner;
 
-      if (error instanceof Error) {
-        if (error.name === "NotAllowedError") {
-          setScanError(
-            "Camera permission denied. Please enable camera access."
-          );
-        } else if (error.name === "NotFoundError") {
-          setScanError("No camera found.");
-        } else if (error.name === "NotReadableError") {
-          setScanError("Camera is in use by another app.");
-        } else if (error.name === "NotSupportedError") {
-          setScanError(
-            "Camera not supported. Please ensure you're using HTTPS."
-          );
-        } else {
-          setScanError("Failed to access camera: " + error.message);
-        }
+      function success(result: string) {
+        CheckQrCode(result);
+        // scanner.clear().catch(console.error);
+        scannerRef.current = null;
       }
 
-      setIsScanning(false);
-    }
-  };
+      function error(err: any) {
+        console.warn(err);
+      }
 
-  async function CheckTicketID() {
+      scanner.render(success, error);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(console.error);
+        scannerRef.current = null;
+      }
+    };
+  }, [isDialogOpen]);
+
+  async function CheckTicketID(id: string) {
     setIsLoading(true);
-    if (ticketID.trim()) {
+    if (id.trim()) {
       const request = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/checking/event/${event.eventId}/ticket-id/${ticketID}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/checking/event/${event.eventId}/ticket-id/${id}`,
         {
           method: "GET",
           headers: {
@@ -142,6 +100,7 @@ export default function CheckingDialog({
       if (response.status === "success") {
         toast.success("success");
         setTicketID("");
+        closeRef.current?.click(); // Close dialog on success
       } else {
         toast.error(response.message);
       }
@@ -150,15 +109,31 @@ export default function CheckingDialog({
     }
     setIsLoading(false);
   }
+  async function CheckQrCode(id: string) {
+    setIsLoading(true);
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/checking/event/${event.eventId}/qr/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+      }
+    );
+    const response = await request.json();
+    if (response.status === "success") {
+      toast.success("success");
+    } else {
+      toast.error(response.message);
+    }
+    setIsLoading(false);
+  }
 
   return (
     <>
       <PageLoader isLoading={isLoading} />
-      <Dialog
-        onOpenChange={(open) => {
-          if (!open) stopScanning();
-        }}
-      >
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger>
           <span className="px-[15px] py-[7.5px] border-2 border-transparent rounded-[100px] text-center font-medium text-[1.5rem] h-auto leading-[20px] cursor-pointer transition-all duration-400 flex items-center justify-center gap-4 bg-neutral-100 text-neutral-700">
             <Scanner variant={"Bulk"} color={"#737C8A"} size={20} />
@@ -190,76 +165,48 @@ export default function CheckingDialog({
             >
               {t("check_in_description")}
             </p>
-
-            {/* QR Scanner Section */}
-            {isScanning ? (
-              <div className="w-full flex flex-col gap-4">
-                <div className="relative w-full aspect-square bg-black rounded-lg overflow-hidden">
-                  <video
-                    ref={videoRef}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 border-4 border-blue-500 pointer-events-none">
-                    <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-white"></div>
-                    <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-white"></div>
-                    <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-white"></div>
-                    <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-white"></div>
-                  </div>
-                </div>
-                {scanError && (
-                  <p className="text-red-500 text-center text-sm">
-                    {scanError}
-                  </p>
-                )}
-                <button
-                  onClick={stopScanning}
-                  className="w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                >
-                  Stop Scanning
-                </button>
-              </div>
-            ) : (
-              <>
-                <button
-                  onClick={startScanning}
-                  disabled={isLoading}
-                  className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <Camera size={20} />
-                  Scan QR Code
-                </button>
-
-                <div className="w-full relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-neutral-200"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-neutral-500">
-                      or enter manually
-                    </span>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <Input
-                    value={ticketID}
-                    onChange={(e) => setTicketID(e.target.value)}
-                    error={ticketIdError}
-                  >
-                    {t("ticketID")}
-                  </Input>
-                </div>
-              </>
-            )}
+            <div
+              id="reader"
+              className="w-[250px] h-[250px]
+                  [&>div]:!border-0
+                  [&>div]:!shadow-none
+                  [&_video]:!rounded-lg
+                  [&_#qr-shaded-region]:!border-2
+                  [&_#qr-shaded-region]:!border-neutral-300
+                  [&_#qr-shaded-region]:!rounded-lg
+                  [&_button]:!bg-neutral-700
+                  [&_button]:!text-white
+                  [&_button]:!rounded-lg
+                  [&_button]:!px-4
+                  [&_button]:!py-2
+                  [&_button]:!font-medium
+                  [&_button]:hover:!bg-neutral-800
+                  [&_button]:!transition-colors
+                  [&_select]:!rounded-lg
+                  [&_select]:!border-neutral-300
+                  [&_select]:!px-3
+                  [&_select]:!py-2
+                "
+            ></div>
+            {/* <div className="w-full">
+              <Input
+                autoFocus={false}
+                value={ticketID}
+                onChange={(e) => setTicketID(e.target.value)}
+                error={ticketIdError}
+              >
+                {t("ticketID")}
+              </Input>
+            </div> */}
           </div>
           <DialogFooter>
-            <ButtonPrimary
-              onClick={CheckTicketID}
-              disabled={isLoading || isScanning}
+            {/* <ButtonPrimary
+              onClick={() => CheckTicketID(ticketID)}
+              disabled={isLoading}
               className="w-full"
             >
               {isLoading ? <LoadingCircleSmall /> : t("check_in")}
-            </ButtonPrimary>
+            </ButtonPrimary> */}
             <DialogClose ref={closeRef} className="sr-only"></DialogClose>
           </DialogFooter>
         </DialogContent>

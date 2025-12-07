@@ -351,7 +351,7 @@
       "delete": "Supprimer l'activité",
       "deleteWarning": "Vous êtes sur le point de supprimer définitivement cette activité. Cette action est irréversible et toutes les informations associées seront perdues. Voulez-vous continuer ?",
       "type": "Saisissez le nom de l’activité pour confirmer",
-      "check_in_description": "Saisissez l'ID du ticket ci-dessous pour vérifier et enregistrer un participant.",
+      "check_in_description": "Scanner le code Qr ou saisissez l'ID du ticket ci-dessous pour vérifier et enregistrer un participant.",
       "ticketID": "ID du billet",
       "revenue": "Revenus totaux",
       "sold": "Billets vendus",
