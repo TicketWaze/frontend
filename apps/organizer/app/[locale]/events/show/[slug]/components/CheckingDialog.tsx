@@ -12,7 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@workspace/ui/components/dialog";
-import { Input } from "@workspace/ui/components/Inputs";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { Scanner } from "iconsax-react";
 import { useTranslations } from "next-intl";
@@ -30,23 +29,56 @@ export default function CheckingDialog({
   const t = useTranslations("Events.single_event");
   const closeRef = useRef<HTMLButtonElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [ticketID, setTicketID] = useState("");
-  const [ticketIdError, setTicketIdError] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scannerKey, setScannerKey] = useState(0);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const isCleaningRef = useRef(false);
 
-  // Initialize scanner when dialog opens
+  // Cleanup scanner
+  const cleanupScanner = async () => {
+    // Prevent multiple cleanup calls
+    if (isCleaningRef.current) return;
+    isCleaningRef.current = true;
+
+    if (scannerRef.current) {
+      try {
+        await scannerRef.current.clear();
+      } catch (error) {
+        // Silently handle transition errors
+        if (
+          !(error instanceof Error && error.toString().includes("transition"))
+        ) {
+          console.error("Error clearing scanner:", error);
+        }
+      }
+      scannerRef.current = null;
+    }
+
+    // Remove the entire reader container
+    setTimeout(() => {
+      const readerContainer = document.getElementById("reader-container");
+      if (readerContainer) {
+        readerContainer.innerHTML = "";
+      }
+      isCleaningRef.current = false;
+    }, 100);
+  };
+
+  // Initialize scanner when scanning starts
   useEffect(() => {
     if (!isDialogOpen) {
-      // Clean up scanner when dialog closes
-      if (scannerRef.current) {
-        scannerRef.current.clear().catch(console.error);
-        scannerRef.current = null;
-      }
+      cleanupScanner();
+      setIsScanning(false);
       return;
     }
 
-    // Wait a bit for dialog to fully render
+    if (!isScanning) {
+      cleanupScanner();
+      return;
+    }
+
+    // Wait for DOM to be ready
     const timer = setTimeout(() => {
       if (scannerRef.current) return;
 
@@ -61,54 +93,24 @@ export default function CheckingDialog({
 
       scannerRef.current = scanner;
 
-      function success(result: string) {
-        CheckQrCode(result);
-        // scanner.clear().catch(console.error);
-        scannerRef.current = null;
+      async function success(result: string) {
+        // Don't cleanup immediately, let it finish
+        setIsScanning(false);
+        await CheckQrCode(result);
+        setScannerKey((prev) => prev + 1);
       }
 
-      function error(err: any) {
-        console.warn(err);
-      }
+      function error(err: any) {}
 
       scanner.render(success, error);
-    }, 100);
+    }, 150);
 
     return () => {
       clearTimeout(timer);
-      if (scannerRef.current) {
-        scannerRef.current.clear().catch(console.error);
-        scannerRef.current = null;
-      }
+      cleanupScanner();
     };
-  }, [isDialogOpen]);
+  }, [isDialogOpen, isScanning, scannerKey]);
 
-  async function CheckTicketID(id: string) {
-    setIsLoading(true);
-    if (id.trim()) {
-      const request = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/checking/event/${event.eventId}/ticket-id/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-        }
-      );
-      const response = await request.json();
-      if (response.status === "success") {
-        toast.success("success");
-        setTicketID("");
-        closeRef.current?.click(); // Close dialog on success
-      } else {
-        toast.error(response.message);
-      }
-    } else {
-      setTicketIdError("Enter TicketID");
-    }
-    setIsLoading(false);
-  }
   async function CheckQrCode(id: string) {
     setIsLoading(true);
     const request = await fetch(
@@ -124,10 +126,21 @@ export default function CheckingDialog({
     const response = await request.json();
     if (response.status === "success") {
       toast.success("success");
+      setIsDialogOpen(false);
     } else {
       toast.error(response.message);
     }
     setIsLoading(false);
+  }
+
+  function startScanning() {
+    setScannerKey((prev) => prev + 1);
+    setIsScanning(true);
+  }
+
+  function stopScanning() {
+    setIsScanning(false);
+    setScannerKey((prev) => prev + 1);
   }
 
   return (
@@ -165,48 +178,69 @@ export default function CheckingDialog({
             >
               {t("check_in_description")}
             </p>
-            <div
-              id="reader"
-              className="w-[250px] h-[250px]
-                  [&>div]:!border-0
-                  [&>div]:!shadow-none
-                  [&_video]:!rounded-lg
-                  [&_#qr-shaded-region]:!border-2
-                  [&_#qr-shaded-region]:!border-neutral-300
-                  [&_#qr-shaded-region]:!rounded-lg
-                  [&_button]:!bg-neutral-700
-                  [&_button]:!text-white
-                  [&_button]:!rounded-lg
-                  [&_button]:!px-4
-                  [&_button]:!py-2
-                  [&_button]:!font-medium
-                  [&_button]:hover:!bg-neutral-800
-                  [&_button]:!transition-colors
-                  [&_select]:!rounded-lg
-                  [&_select]:!border-neutral-300
-                  [&_select]:!px-3
-                  [&_select]:!py-2
-                "
-            ></div>
-            {/* <div className="w-full">
-              <Input
-                autoFocus={false}
-                value={ticketID}
-                onChange={(e) => setTicketID(e.target.value)}
-                error={ticketIdError}
-              >
-                {t("ticketID")}
-              </Input>
-            </div> */}
+
+            <div className="w-full max-w-[350px] min-h-[280px] flex items-center justify-center">
+              {!isScanning ? (
+                <div className="w-full h-[280px] border-2 border-dashed border-neutral-300 rounded-lg flex items-center justify-center">
+                  <div className="text-center">
+                    <Scanner
+                      variant={"Bulk"}
+                      color={"#737C8A"}
+                      size={48}
+                      className="mx-auto mb-4"
+                    />
+                    <p className="text-neutral-500 text-[1.6rem] font-medium">
+                      Ready to scan
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div id="reader-container" key={scannerKey} className="w-full">
+                  <div
+                    id="reader"
+                    className="w-full
+                      [&>div]:!border-0
+                      [&>div]:!shadow-none
+                      [&_video]:!rounded-lg
+                      [&_#qr-shaded-region]:!border-2
+                      [&_#qr-shaded-region]:!border-neutral-300
+                      [&_#qr-shaded-region]:!rounded-lg
+                      [&_button]:!bg-neutral-700
+                      [&_button]:!text-white
+                      [&_button]:!rounded-lg
+                      [&_button]:!px-4
+                      [&_button]:!py-2
+                      [&_button]:!font-medium
+                      [&_button]:hover:!bg-neutral-800
+                      [&_button]:!transition-colors
+                      [&_select]:!rounded-lg
+                      [&_select]:!border-neutral-300
+                      [&_select]:!px-3
+                      [&_select]:!py-2
+                    "
+                  />
+                </div>
+              )}
+            </div>
           </div>
-          <DialogFooter>
-            {/* <ButtonPrimary
-              onClick={() => CheckTicketID(ticketID)}
-              disabled={isLoading}
-              className="w-full"
-            >
-              {isLoading ? <LoadingCircleSmall /> : t("check_in")}
-            </ButtonPrimary> */}
+          <DialogFooter className="flex gap-2">
+            {isScanning ? (
+              <ButtonPrimary
+                onClick={stopScanning}
+                disabled={isLoading}
+                className="w-full bg-red-600 hover:bg-red-700"
+              >
+                {isLoading ? <LoadingCircleSmall /> : "Stop Scanning"}
+              </ButtonPrimary>
+            ) : (
+              <ButtonPrimary
+                onClick={startScanning}
+                disabled={isLoading}
+                className="w-full"
+              >
+                {isLoading ? <LoadingCircleSmall /> : "Start Scanning"}
+              </ButtonPrimary>
+            )}
             <DialogClose ref={closeRef} className="sr-only"></DialogClose>
           </DialogFooter>
         </DialogContent>
