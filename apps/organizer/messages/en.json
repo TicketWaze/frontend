@@ -1,13 +1,17 @@
 {
   "Auth": {
     "layout": {
-      "title": "Empowering events across Your Country & beyond",
-      "description": "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place"
+      "title": "Selling tickets made simple — nationwide & beyond",
+      "description": "Launch activities in minutes, sell tickets effortlessly, track sales, and manage attendees — all in one place"
     },
     "onboarding": {
       "title": "Organisation Invitation",
       "description": "You've been invited to join and organisation on TicketWaze — a platform for managing and selling event tickets with ease.",
-      "join": "Join"
+      "join": "Join",
+      "title2": "Get ready to sell tickets",
+      "description2": "Create activities, manage attendees, and track sales — everything starts here",
+      "alert": "We’ve set up a default organisation to get you started. Don’t worry — you’ll be able to change its information and customise it once it’s created.",
+      "action": "Get started"
     },
     "register": {
       "title": "Create an Account",
@@ -126,7 +130,7 @@
       "cta": "Complete"
     },
     "login": {
-      "title": "Sign In",
+      "title": "Sign in your organisation",
       "description": "Please enter you account details to continue",
       "placeholders": {
         "email": "Email Address",

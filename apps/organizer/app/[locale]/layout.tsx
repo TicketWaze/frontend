@@ -54,10 +54,7 @@ export default async function RootLayout({
         className={`${bricolageGrotesque.variable} ${dmMono.variable} ${dmSans.className} `}
       >
         <NextIntlClientProvider>
-          <AuthProvider>
-            {/* <OrganisationProvider/> */}
-            {children}
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
           <TopLoader />
           <Toaster richColors position="top-right" />
         </NextIntlClientProvider>

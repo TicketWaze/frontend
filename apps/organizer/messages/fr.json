@@ -1,13 +1,17 @@
 {
   "Auth": {
     "layout": {
-      "title": "Donnez du pouvoir aux événements à travers votre pays et au-delà",
-      "description": "Créez des événements en quelques minutes, vendez des billets, gérez les participants et suivez vos revenus — le tout en un seul endroit"
+      "title": "La billetterie simplifiée partout dans votre pays et au‑delà",
+      "description": "Lancez vos activités en quelques minutes, vendez vos billets sans effort, suivez vos ventes et gérez vos participants — tout en un seul endroit"
     },
     "onboarding": {
       "title": "Organisation Invitation",
       "description": "Vous avez été invité à rejoindre une organisation sur TicketWaze — une plateforme permettant de gérer et de vendre des billets d'événements en toute simplicité.",
-      "join": "Rejoindre"
+      "join": "Rejoindre",
+      "title2": "Préparez-vous à vendre vos billets",
+      "description2": "Créez des activités, gérez vos participants et suivez vos ventes — tout commence ici",
+      "alert": "Nous avons créé une organisation par défaut pour vous lancer. Pas d’inquiétude — vous pourrez modifier ses informations et la personnaliser une fois créée.",
+      "action": "Commencer"
     },
     "register": {
       "title": "Créer un compte",
@@ -126,7 +130,7 @@
       "cta": "Terminer"
     },
     "login": {
-      "title": "Se connecter",
+      "title": "Se connecter à votre organisation",
       "description": "Veuillez saisir les détails de votre compte pour continuer",
       "placeholders": {
         "email": "Adresse e-mail",

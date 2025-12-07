@@ -14,12 +14,12 @@ export default async function OnboardingPage() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.user.accessToken}`,
         "Accept-Language": locale,
-        Origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        Origin: process.env.NEXT_PUBLIC_APP_URL!,
       },
     }
   );
   const response = await request.json();
-  const responseType: "invite" | "login" = response.type;
+  const responseType: "invite" | "login" | "create" = response.type;
   const user = response.user;
   const organisations = response.organisations;
   return (

@@ -156,7 +156,7 @@ export default function LoginPage() {
               type="button"
               onClick={googleLogin}
               disabled={isLoading}
-              className="flex items-center justify-center gap-4"
+              className="flex items-center justify-center gap-4 mb-10"
             >
               {isLoading ? (
                 <LoadingCircleSmall />

@@ -4,6 +4,19 @@
       "title": "Ticketing Made Simple. Experiences Made Unforgettable.",
       "description": "Your time, your passion and  your adventures made more accessible than ever. Connects to activities you care about, with a seamless experience from start to finish."
     },
+    "choice": {
+      "title": "Welcome to TicketWaze",
+      "description": "Choose an option to continue and set up your account.",
+      "cta": "Continue",
+      "attendee": {
+        "title": "Attendee",
+        "description": "Easily browse, discover, and purchase tickets for a wide variety of events."
+      },
+      "organisation": {
+        "title": "Organisation",
+        "description": "Create and manage activities effortlessly. Track ticket sales & monitor attendee data."
+      }
+    },
     "login": {
       "title": "Sign In",
       "description": "Please enter you account details to continue",

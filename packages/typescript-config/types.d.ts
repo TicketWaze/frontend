@@ -248,6 +248,7 @@ export interface User {
   lastResendAt: DateTime;
   referralCode: string;
   isVerified: boolean;
+  mfaEnabled: boolean;
   createdAt: DateTime;
   updatedAt: DateTime;
   organisations: Organisation[];
