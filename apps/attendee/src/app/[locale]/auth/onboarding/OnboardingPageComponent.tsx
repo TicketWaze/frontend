@@ -16,7 +16,9 @@ export default function OnboardingPageComponent() {
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
   const delta = currentStep - previousStep;
-  const [intent, setIntent] = useState<string | undefined>();
+  const [intent, setIntent] = useState<
+    "buyer" | "seller" | "both" | undefined
+  >();
   const [interest, setInterest] = useState<string[] | undefined>();
   const [currency, setCurrency] = useState<string | undefined>();
   const [recommendations, setRecommendations] = useState<boolean | undefined>();
@@ -117,7 +119,11 @@ export default function OnboardingPageComponent() {
           userPreference: response.userPreference,
         },
       });
-      router.push("/explore");
+      if (intent === "buyer") {
+        router.push("/explore");
+      } else {
+        router.push("/auth/onboarding/choice");
+      }
     } else {
       toast.error(response.message);
     }
