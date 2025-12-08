@@ -20,14 +20,7 @@ export function makeCreateOnlineSchema(isFree: boolean, t: TranslateFn) {
       .string()
       .min(150, t("errors.basicDetails.description.min"))
       .max(350, t("errors.basicDetails.description.max")),
-    eventTags: z
-      .array(z.object({ tagId: z.string(), tagName: z.string() }), {
-        error: (issue) =>
-          issue.input === undefined
-            ? t("errors.basicDetails.tags")
-            : t("errors.basicDetails.tags"),
-      })
-      .min(1, t("errors.basicDetails.tags")),
+    eventTagId: z.string().min(1, t("errors.basicDetails.tags")),
     eventImage: z
       .file({
         error: (issue) =>

@@ -1,10 +1,17 @@
 "use client";
 import React, { useState } from "react";
 import { Controller, UseFormRegister, Control } from "react-hook-form";
-import Select from "react-select";
 import { Input } from "@workspace/ui/components/Inputs";
-import type { CreateInPersonFormValues, EventTag } from "./types";
-import { useTranslations } from "next-intl";
+import type { CreateInPersonFormValues } from "./types";
+import { useLocale, useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+} from "@workspace/ui/components/select";
+import { englishEventTags, frenchEventTags } from "@/lib/EventTags";
 
 type Props = {
   register: UseFormRegister<CreateInPersonFormValues>;
@@ -13,7 +20,6 @@ type Props = {
   organisationCountry?: string;
   imagePreview: string | null;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  tags: EventTag[];
 };
 
 export default function BasicDetails({
@@ -23,13 +29,14 @@ export default function BasicDetails({
   organisationCountry,
   imagePreview,
   handleFileChange,
-  tags,
 }: Props) {
   const t = useTranslations("Events.create_event");
   const [wordCount, setWordCount] = useState(0);
   function handleWordCount(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setWordCount(e.target.value.length);
   }
+  const locale = useLocale();
+  const eventTags = locale === "fr" ? frenchEventTags : englishEventTags;
   return (
     <div className="flex flex-col gap-12">
       {/* Event details */}
@@ -79,27 +86,33 @@ export default function BasicDetails({
         <div>
           <Controller
             control={control}
-            name="eventTags"
+            name="eventTagId"
             render={({ field }) => (
               <Select
                 {...field}
-                isMulti
-                options={tags}
-                placeholder={t("event_tags")}
-                styles={{
-                  control: () => ({
-                    borderColor: "transparent",
-                    display: "flex",
-                  }),
-                }}
-                getOptionLabel={(option) => option.tagName}
-                getOptionValue={(option) => option.tagId}
-                className="bg-neutral-100 w-full rounded-[5rem] p-4 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500"
-              />
+                value={field.value}
+                onValueChange={field.onChange}
+                defaultValue={organisationCountry}
+              >
+                <SelectTrigger className="bg-neutral-100 w-full rounded-[5rem] p-12 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500 z">
+                  <SelectValue placeholder={t("select_tags")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {eventTags.map((tag, i) => (
+                    <SelectItem
+                      key={tag.id}
+                      value={tag.id}
+                      className="text-[1.5rem] leading-[20px] border-b border-neutral-100 mb-3 pb-3"
+                    >
+                      {tag.tag}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
           />
           <span className="text-[1.2rem] px-8 py-2 text-failure">
-            {errors.eventTags?.message}
+            {errors.eventTagId?.message}
           </span>
         </div>
       </div>

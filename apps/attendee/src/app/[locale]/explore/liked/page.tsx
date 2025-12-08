@@ -3,7 +3,6 @@ import AttendeeLayout from "@/components/Layouts/AttendeeLayout";
 import { redirect } from "@/i18n/navigation";
 import { auth } from "@/lib/auth";
 import Slugify from "@/lib/Slugify";
-import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event } from "@workspace/typescript-config";
 import BackButton from "@workspace/ui/components/BackButton";
 import { Heart } from "iconsax-react";
@@ -39,22 +38,10 @@ export default async function LikedPage() {
       </div>
       <ul className="list pt-4">
         {events.map((event) => {
-          const date = TimesTampToDateTime(event.eventDays[0]?.startDate ?? "");
           const slug = Slugify(event.eventName);
           return (
             <li key={event.eventId}>
-              <EventCard
-                href={`/explore/${slug}`}
-                image={event.eventImageUrl}
-                name={event.eventName}
-                date={date}
-                country={event.country ?? ""}
-                city={event.city ?? ""}
-                price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
-                currency={event.currency}
-                tags={event.eventTags}
-                eventType={event.eventType}
-              />
+              <EventCard href={`/explore/${slug}`} event={event} />
             </li>
           );
         })}

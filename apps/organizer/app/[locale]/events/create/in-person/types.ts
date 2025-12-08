@@ -1,11 +1,3 @@
-// forms/CreateInPersonEvent.types.ts
-import { z } from "zod";
-
-export type EventTag = {
-  tagId: string;
-  tagName: string;
-};
-
 // Mirror of what your component expects for the form result
 export type TicketType = {
   ticketTypeName: string;
@@ -29,7 +21,7 @@ export type CreateInPersonFormValues = {
   country: string;
   longitude: string;
   latitude: string;
-  eventTags: EventTag[];
+  eventTagId: string;
   eventImage: File;
   eventDays: EventDay[];
   ticketTypes: TicketType[];

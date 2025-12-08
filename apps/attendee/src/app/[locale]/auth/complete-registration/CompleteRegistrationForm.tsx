@@ -35,11 +35,7 @@ export default function CompleteRegistrationForm({
   const [isInvited, setIsInvited] = useState(false);
   const [invitedBy, setInvitedBy] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
-  const [host, setHost] = useState<string>("");
   useEffect(function () {
-    if (typeof window !== "undefined") {
-      setHost(window.location.host);
-    }
     if (referralCode && referralCode !== "") {
       setIsLoading(true);
       fetch(
@@ -95,7 +91,7 @@ export default function CompleteRegistrationForm({
           headers: {
             "Content-Type": "application/json",
             "Accept-Language": locale,
-            Origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
+            Origin: process.env.NEXT_PUBLIC_APP_URL!,
           },
           body: JSON.stringify({ ...data, referralCode }),
         }

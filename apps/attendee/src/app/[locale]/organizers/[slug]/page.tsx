@@ -137,15 +137,7 @@ export default async function OrganizerProfile({
                     <EventCard
                       aside={true}
                       href={`/explore/${slug}`}
-                      image={event.eventImageUrl}
-                      name={event.eventName}
-                      date={date}
-                      country={event.country ?? ""}
-                      city={event.city ?? ""}
-                      price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
-                      currency={event.currency}
-                      tags={event.eventTags}
-                      eventType={event.eventType}
+                      event={event}
                     />
                   </li>
                 );
@@ -181,19 +173,7 @@ export default async function OrganizerProfile({
                   <EventCard
                     aside={true}
                     href={`/explore/${slug}`}
-                    image={event.eventImageUrl}
-                    name={event.eventName}
-                    date={date}
-                    country={event.country ?? ""}
-                    city={event.city ?? ""}
-                    price={
-                      event.currency === "USD"
-                        ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
-                        : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
-                    }
-                    currency={event.currency}
-                    tags={event.eventTags}
-                    eventType={event.eventType}
+                    event={event}
                   />
                 </li>
               );

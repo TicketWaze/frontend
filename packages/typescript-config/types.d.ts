@@ -195,14 +195,6 @@ export interface EventDay {
   updatedAt: DateTime;
 }
 
-export interface EventTag {
-  tagId: string;
-  tagName: string;
-  tagDescription: string;
-  createdAt: DateTime;
-  updatedAt: DateTime;
-}
-
 export interface Event {
   eventId: string;
   organisationId: string;
@@ -221,7 +213,7 @@ export interface Event {
   currency: string;
   eventDays: EventDay[];
   eventTicketTypes: EventTicketType[];
-  eventTags: EventTag[];
+  eventTagId: string;
   discountCodes: DiscountCode[];
   eventPerformers: EventPerformer[];
   eventAttendees: EventAttendee[];

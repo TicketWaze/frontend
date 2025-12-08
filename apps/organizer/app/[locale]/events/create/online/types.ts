@@ -1,9 +1,3 @@
-export type EventTag = {
-  tagId: string;
-  tagName: string;
-};
-
-// Mirror of what your component expects for the form result
 export type TicketType = {
   ticketTypeName: string;
   ticketTypeDescription: string;
@@ -20,7 +14,7 @@ export type EventDay = {
 export type CreateInPersonFormValues = {
   eventName: string;
   eventDescription: string;
-  eventTags: EventTag[];
+  eventTagId: string;
   eventImage: File;
   eventDays: EventDay[];
   ticketTypes: TicketType[];

@@ -33,14 +33,7 @@ export function makeCreateInPersonSchema(isFree: boolean, t: TranslateFn) {
       .min(1, t("errors.basicDetails.country")),
     longitude: z.string().min(3, t("errors.basicDetails.longitude")),
     latitude: z.string(),
-    eventTags: z
-      .array(z.object({ tagId: z.string(), tagName: z.string() }), {
-        error: (issue) =>
-          issue.input === undefined
-            ? t("errors.basicDetails.tags")
-            : t("errors.basicDetails.tags"),
-      })
-      .min(1, t("errors.basicDetails.tags")),
+    eventTagId: z.string().min(1, t("errors.basicDetails.tags")),
     eventImage: z
       .file({
         error: (issue) =>

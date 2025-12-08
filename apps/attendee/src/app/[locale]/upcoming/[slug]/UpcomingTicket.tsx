@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import ticketBG from "./ticket-bg.svg";
+import Logo from "@workspace/ui/assets/images/logo-simple-orange.svg";
 import { useTranslations } from "next-intl";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import FormatDate from "@/lib/FormatDate";
@@ -34,10 +35,20 @@ export default function UpcomingTicket({
         </span>
         <div
           className={
-            "w-full h-[250px] lg:h-[296px]  bg-neutral-100 p-[15px] text-center font-mono text-[1.4rem] flex flex-col justify-between items-center "
+            "w-full h-[250px] lg:h-[296px] relative  bg-neutral-100 p-[15px] pt-0 text-center font-mono text-[1.4rem] flex flex-col justify-between items-center "
           }
         >
-          <div className={"flex items-center justify-between gap-4 w-full"}>
+          <Image
+            src={Logo}
+            alt="Ticketwaze"
+            className="absolute w-full h-full opacity-10"
+          />
+
+          <div
+            className={
+              "flex items-center justify-between pt-[15px] gap-4 w-full"
+            }
+          >
             <span className="text-neutral-600">
               1x {Capitalize(ticket.ticketType)}
             </span>

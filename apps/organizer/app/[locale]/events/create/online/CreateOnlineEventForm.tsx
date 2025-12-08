@@ -30,9 +30,8 @@ import StepBasic from "./BasicDetails";
 import StepDateTime from "./EventDays";
 import StepTicket from "./TicketClasses";
 import { makeCreateOnlineSchema } from "./schema";
-import type { EventTag } from "./types";
 
-export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
+export default function CreateOnlineEventForm() {
   const t = useTranslations("Events.create_event");
   const searchParams = useSearchParams();
   const locale = useLocale();
@@ -48,7 +47,7 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
   const steps = [
     {
       name: t("basic"),
-      fields: ["eventName", "eventDescription", "eventTags", "eventImage"],
+      fields: ["eventName", "eventDescription", "eventTagId", "eventImage"],
     },
     { name: t("date_time"), fields: ["eventDays"] },
     { name: t("ticket"), fields: ["ticketTypes"] },
@@ -70,7 +69,7 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
     values: {
       eventName: "",
       eventDescription: "",
-      eventTags: [],
+      eventTagId: "",
       eventImage: undefined as unknown as File,
       eventDays: [{ startTime: "", endTime: "" }],
       ticketTypes: [
@@ -90,7 +89,7 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
     const formData = new FormData();
     formData.append("eventName", data.eventName);
     formData.append("eventDescription", data.eventDescription);
-    formData.append("eventTags", JSON.stringify(data.eventTags));
+    formData.append("eventTagId", data.eventTagId);
     formData.append("eventImage", data.eventImage);
     formData.append("eventDays", JSON.stringify(data.eventDays));
     formData.append("eventCurrency", data.eventCurrency);
@@ -200,10 +199,10 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
 
   return (
     <div className="relative flex flex-col gap-8 overflow-hidden h-full ">
-      <div className="absolute bottom-4 z-[99999999999] w-full hidden lg:block">
+      <div className="absolute bottom-4 z-[9999] w-full hidden lg:block">
         <ButtonPrimary
           onClick={next}
-          className=" w-full max-w-[530px] z-[99999999999] mx-auto  "
+          className=" w-full max-w-[530px] mx-auto  "
           disabled={isSubmitting}
         >
           {isSubmitting ? <LoadingCircleSmall /> : t("proceed")}
@@ -327,7 +326,6 @@ export default function CreateOnlineEventForm({ tags }: { tags: EventTag[] }) {
               organisationCountry={Capitalize(organisation?.country ?? "")}
               imagePreview={imagePreview}
               handleFileChange={handleFileChange}
-              tags={tags}
             />
           </motion.div>
         )}
