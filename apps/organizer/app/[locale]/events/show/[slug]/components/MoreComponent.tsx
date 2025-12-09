@@ -159,22 +159,6 @@ export default function MoreComponent({
                   </Link>
                 </li>
               )}
-              {/* {!event.isFree && ( */}
-              {daysLeft !== null && daysLeft > 0 && !isFree && (
-                <li>
-                  <Link
-                    href={`${slug}/discount-codes`}
-                    className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                  >
-                    <span>{t("discount.subtitle")}</span>
-                    <TicketDiscount
-                      size="20"
-                      variant="Bulk"
-                      color={"#2E3237"}
-                    />
-                  </Link>
-                </li>
-              )}
               <li className={""}>
                 <Drawer direction={"right"}>
                   <DrawerTrigger className={"w-full"}>
@@ -192,6 +176,21 @@ export default function MoreComponent({
                   <EventDrawerContent event={event} />
                 </Drawer>
               </li>
+              {daysLeft !== null && daysLeft > 0 && !isFree && (
+                <li>
+                  <Link
+                    href={`${slug}/discount-codes`}
+                    className={`cursor-pointer font-normal group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                  >
+                    <span>{t("discount.subtitle")}</span>
+                    <TicketDiscount
+                      size="20"
+                      variant="Bulk"
+                      color={"#2E3237"}
+                    />
+                  </Link>
+                </li>
+              )}
               {event.eventType !== "meet" && authorized && (
                 <li>
                   <Dialog>

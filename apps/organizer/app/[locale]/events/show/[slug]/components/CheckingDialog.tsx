@@ -78,7 +78,6 @@ export default function CheckingDialog({
       return;
     }
 
-    // Wait for DOM to be ready
     const timer = setTimeout(() => {
       if (scannerRef.current) return;
 
@@ -87,6 +86,10 @@ export default function CheckingDialog({
         {
           qrbox: { width: 250, height: 250 },
           fps: 5,
+          aspectRatio: 1.0,
+          videoConstraints: {
+            facingMode: { ideal: "environment" },
+          },
         },
         false
       );
@@ -156,9 +159,7 @@ export default function CheckingDialog({
         <DialogContent className={"w-[360px] lg:w-[520px] "}>
           <DialogHeader>
             <DialogTitle
-              className={
-                "font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary"
-              }
+              className={`font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary ${isScanning && "hidden"}`}
             >
               {t("check_in")}
             </DialogTitle>
@@ -172,9 +173,7 @@ export default function CheckingDialog({
             }
           >
             <p
-              className={
-                "font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full"
-              }
+              className={`font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full ${isScanning && "hidden"}`}
             >
               {t("check_in_description")}
             </p>
