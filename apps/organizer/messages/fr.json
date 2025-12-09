@@ -340,6 +340,7 @@
     "free": "Gratuit",
     "single_event": {
       "close": "Fermer",
+      "edit": "Modifier",
       "check_in": "Enregistrement",
       "back": "Retour",
       "share": "Partager",

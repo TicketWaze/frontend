@@ -10,7 +10,6 @@ import {
   HambergerMenu,
   MoreCircle,
   Profile2User,
-  ScanBarcode,
   SecurityUser,
   TicketDiscount,
   Trash,
@@ -35,12 +34,7 @@ import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { Event, User } from "@workspace/typescript-config";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  DeleteEvent,
-  MarkAsActive,
-  MarkAsInactive,
-  UpdateCheckersListAction,
-} from "@/actions/EventActions";
+import { DeleteEvent, UpdateCheckersListAction } from "@/actions/EventActions";
 import { toast } from "sonner";
 import PageLoader from "@/components/Loaders/PageLoader";
 import { Input } from "@workspace/ui/components/Inputs";
@@ -109,32 +103,6 @@ export default function MoreComponent({
       toast.error(result.error);
     }
     closeRef.current?.click();
-  }
-  async function MarkEventAsActive() {
-    setIsLoading(true);
-    const result = await MarkAsActive(
-      event.eventId,
-      user.accessToken,
-      pathname,
-      locale
-    );
-    if (result.status !== "success") {
-      toast.error(result.error);
-    }
-    setIsLoading(false);
-  }
-  async function MarkEventAsInactive() {
-    setIsLoading(true);
-    const result = await MarkAsInactive(
-      event.eventId,
-      user.accessToken,
-      pathname,
-      locale
-    );
-    if (result.status !== "success") {
-      toast.error(result.error);
-    }
-    setIsLoading(false);
   }
   async function deleteEvent() {
     setIsLoading(true);
@@ -225,134 +193,99 @@ export default function MoreComponent({
                 </Drawer>
               </li>
               {event.eventType !== "meet" && authorized && (
-                <>
-                  <li>
-                    <Dialog>
-                      <DialogTrigger className="w-full">
-                        <div
-                          className={`font-normal cursor-pointer group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                        >
-                          <span className={""}>{t("checkers")}</span>
-                          <SecurityUser
-                            size="20"
-                            variant="Bulk"
-                            color={"#2E3237"}
-                          />
-                        </div>
-                      </DialogTrigger>
-                      <DialogContent className={"w-[360px] lg:w-[520px] "}>
-                        <DialogHeader>
-                          <DialogTitle
-                            className={
-                              "font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary"
-                            }
-                          >
-                            {t("checkers")}
-                          </DialogTitle>
-                          <DialogDescription className={"sr-only"}>
-                            <span>Share event</span>
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div
+                <li>
+                  <Dialog>
+                    <DialogTrigger className="w-full">
+                      <div
+                        className={`font-normal cursor-pointer group text-[1.5rem] border-b-[1px] border-neutral-200 py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
+                      >
+                        <span className={""}>{t("checkers")}</span>
+                        <SecurityUser
+                          size="20"
+                          variant="Bulk"
+                          color={"#2E3237"}
+                        />
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className={"w-[360px] lg:w-[520px] "}>
+                      <DialogHeader>
+                        <DialogTitle
                           className={
-                            "flex flex-col w-auto justify-center items-center gap-[30px]"
+                            "font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary"
                           }
                         >
-                          <p
-                            className={
-                              "font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full"
-                            }
-                          >
-                            {t("checkers_description")}
-                          </p>
-                          <div className="w-full">
-                            <Controller
-                              control={control}
-                              name="eventCheckers"
-                              defaultValue={eventCheckers}
-                              render={({ field }) => (
-                                <Select
-                                  {...field}
-                                  isMulti
-                                  options={organisationCheckers}
-                                  placeholder={t("select_checkers")}
-                                  styles={{
-                                    control: () => ({
-                                      borderColor: "transparent",
-                                      display: "flex",
-                                    }),
-                                  }}
-                                  getOptionLabel={(option) =>
-                                    `${option.firstName} ${option.lastName}`
-                                  }
-                                  getOptionValue={(option) => option.userId}
-                                  className={
-                                    "bg-neutral-100 w-full rounded-[5rem] p-4 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500"
-                                  }
-                                />
-                              )}
-                            />
-                            <span
-                              className={"text-[1.2rem] px-8 py-2 text-failure"}
-                            >
-                              {errors.eventCheckers?.message}
-                            </span>
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <ButtonPrimary
-                            onClick={handleSubmit(UpdateCheckers)}
-                            disabled={isSubmitting}
-                            className="w-full"
-                          >
-                            {isSubmitting ? (
-                              <LoadingCircleSmall />
-                            ) : (
-                              t("update_checker")
+                          {t("checkers")}
+                        </DialogTitle>
+                        <DialogDescription className={"sr-only"}>
+                          <span>Share event</span>
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div
+                        className={
+                          "flex flex-col w-auto justify-center items-center gap-[30px]"
+                        }
+                      >
+                        <p
+                          className={
+                            "font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full"
+                          }
+                        >
+                          {t("checkers_description")}
+                        </p>
+                        <div className="w-full">
+                          <Controller
+                            control={control}
+                            name="eventCheckers"
+                            defaultValue={eventCheckers}
+                            render={({ field }) => (
+                              <Select
+                                {...field}
+                                isMulti
+                                options={organisationCheckers}
+                                placeholder={t("select_checkers")}
+                                styles={{
+                                  control: () => ({
+                                    borderColor: "transparent",
+                                    display: "flex",
+                                  }),
+                                }}
+                                getOptionLabel={(option) =>
+                                  `${option.firstName} ${option.lastName}`
+                                }
+                                getOptionValue={(option) => option.userId}
+                                className={
+                                  "bg-neutral-100 w-full rounded-[5rem] p-4 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500"
+                                }
+                              />
                             )}
-                          </ButtonPrimary>
-                          <DialogClose
-                            ref={closeRef}
-                            className="sr-only"
-                          ></DialogClose>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </li>
-                  {event.isActive ? (
-                    <li>
-                      <button
-                        onClick={MarkEventAsInactive}
-                        className={`cursor-pointer font-normal group text-[1.5rem]  py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                      >
-                        <span className={"text-failure"}>
-                          {t("stopChecking")}
-                        </span>
-                        <ScanBarcode
-                          size="20"
-                          variant="Bulk"
-                          color={"#DE0028"}
-                        />
-                      </button>
-                    </li>
-                  ) : (
-                    <li>
-                      <button
-                        onClick={MarkEventAsActive}
-                        className={`cursor-pointer font-normal group text-[1.5rem] py-4 leading-[20px] text-neutral-700 hover:text-primary-500 flex items-center justify-between w-full`}
-                      >
-                        <span className={"text-primary-500"}>
-                          {t("startChecking")}
-                        </span>
-                        <ScanBarcode
-                          size="20"
-                          variant="Bulk"
-                          color={"#E45B00"}
-                        />
-                      </button>
-                    </li>
-                  )}
-                </>
+                          />
+                          <span
+                            className={"text-[1.2rem] px-8 py-2 text-failure"}
+                          >
+                            {errors.eventCheckers?.message}
+                          </span>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <ButtonPrimary
+                          onClick={handleSubmit(UpdateCheckers)}
+                          disabled={isSubmitting}
+                          className="w-full"
+                        >
+                          {isSubmitting ? (
+                            <LoadingCircleSmall />
+                          ) : (
+                            t("update_checker")
+                          )}
+                        </ButtonPrimary>
+                        <DialogClose
+                          ref={closeRef}
+                          className="sr-only"
+                        ></DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </li>
               )}
               <li>
                 <Dialog>

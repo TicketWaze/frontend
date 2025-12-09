@@ -24,7 +24,7 @@ import {
 } from "@workspace/ui/components/tabs";
 import TopBar from "@workspace/ui/components/TopBar";
 import Capitalize from "@workspace/ui/lib/Capitalize";
-import { Copy, Money3, SearchNormal, Send2 } from "iconsax-react";
+import { Copy, Money3, ScanBarcode, SearchNormal, Send2 } from "iconsax-react";
 import { useLocale, useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -50,7 +50,10 @@ import Twitter from "@workspace/ui/assets/icons/twitter.svg";
 import Tiktok from "@workspace/ui/assets/icons/tiktok.svg";
 import Linkedin from "@workspace/ui/assets/icons/linkedIn.svg";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { ButtonPrimary, ButtonRed } from "@workspace/ui/components/buttons";
+import { MarkAsActive, MarkAsInactive } from "@/actions/EventActions";
+import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 
 export default function EventPageDetails({
   event,
@@ -91,6 +94,8 @@ export default function EventPageDetails({
   const roundedDays = Math.ceil(daysLeft && daysLeft > 0 ? daysLeft : 0);
 
   const [query, setQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const pathname = usePathname();
   const filteredtickets = tickets.filter((ticket) => {
     const search = query.toLowerCase();
     return ticket.ticketName.toLowerCase().includes(search);
@@ -99,6 +104,33 @@ export default function EventPageDetails({
     event.eventType === "private"
       ? `https://app.ticketwaze.com/${locale}/explore/private/${Slugify(event.eventName)}`
       : `https://app.ticketwaze.com/${locale}/explore/${Slugify(event.eventName)}`;
+
+  async function MarkEventAsActive() {
+    setIsLoading(true);
+    const result = await MarkAsActive(
+      event.eventId,
+      user.accessToken,
+      pathname,
+      locale
+    );
+    if (result.status !== "success") {
+      toast.error(result.error);
+    }
+    setIsLoading(false);
+  }
+  async function MarkEventAsInactive() {
+    setIsLoading(true);
+    const result = await MarkAsInactive(
+      event.eventId,
+      user.accessToken,
+      pathname,
+      locale
+    );
+    if (result.status !== "success") {
+      toast.error(result.error);
+    }
+    setIsLoading(false);
+  }
   return (
     <div className={"flex flex-col gap-[3rem] overflow-y-scroll"}>
       <TopBar title={event.eventName}>
@@ -211,13 +243,25 @@ export default function EventPageDetails({
               </DialogContent>
             </Dialog>
           )}
-
-          {daysLeft !== null &&
-            daysLeft > 0 &&
-            !isFree &&
-            authorized &&
-            !(event.eventType === "meet") && <TicketClasses event={event} />}
-          {/* more */}
+          {event.isActive ? (
+            <ButtonRed
+              disabled={isLoading}
+              onClick={MarkEventAsInactive}
+              className="px-[15px] py-[7.5px] flex items-center gap-4"
+            >
+              <ScanBarcode size="20" variant="Bulk" color={"#de0028"} />
+              {isLoading ? <LoadingCircleSmall /> : t("stopChecking")}
+            </ButtonRed>
+          ) : (
+            <ButtonPrimary
+              disabled={isLoading}
+              onClick={MarkEventAsActive}
+              className="px-[15px] py-[7.5px] flex items-center gap-4"
+            >
+              <ScanBarcode size="20" variant="Bulk" color={"#fff"} />
+              {isLoading ? <LoadingCircleSmall /> : t("startChecking")}
+            </ButtonPrimary>
+          )}
           <MoreComponent
             authorized={authorized}
             daysLeft={daysLeft}
@@ -309,10 +353,25 @@ export default function EventPageDetails({
       </ul>
 
       <div className="flex lg:hidden items-center justify-between">
-        {daysLeft !== null &&
-          daysLeft > 0 &&
-          !isFree &&
-          !(event.eventType === "meet") && <TicketClasses event={event} />}
+        {event.isActive ? (
+          <ButtonRed
+            disabled={isLoading}
+            onClick={MarkEventAsInactive}
+            className="px-[15px] py-[7.5px] flex items-center gap-4"
+          >
+            <ScanBarcode size="20" variant="Bulk" color={"#de0028"} />
+            {isLoading ? <LoadingCircleSmall /> : t("stopChecking")}
+          </ButtonRed>
+        ) : (
+          <ButtonPrimary
+            disabled={isLoading}
+            onClick={MarkEventAsActive}
+            className="px-[15px] py-[7.5px] flex items-center gap-4"
+          >
+            <ScanBarcode size="20" variant="Bulk" color={"#fff"} />
+            {isLoading ? <LoadingCircleSmall /> : t("startChecking")}
+          </ButtonPrimary>
+        )}
         {!(event.eventType === "meet") ? (
           <CheckingDialog event={event} user={user} />
         ) : (

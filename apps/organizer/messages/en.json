@@ -340,6 +340,7 @@
     "free": "Free",
     "single_event": {
       "close": "Close",
+      "edit": "Edit",
       "check_in": "Check In",
       "back": "Back",
       "share": "Share Event",

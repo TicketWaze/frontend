@@ -1,4 +1,6 @@
 "use client";
+import { LinkPrimary } from "@/components/Links";
+import Slugify from "@/lib/Slugify";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event } from "@workspace/typescript-config";
 import {
@@ -8,14 +10,13 @@ import {
   DrawerFooter,
   DrawerTitle,
 } from "@workspace/ui/components/drawer";
-import { Calendar2, Clock, Location } from "iconsax-react";
+import { Calendar2, Clock, Edit2, Location } from "iconsax-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 export default function EventDrawerContent({ event }: { event: Event }) {
   const t = useTranslations("Events.single_event");
   const startDate = new Date(event.eventDays?.[0]?.startDate ?? "");
-  // const [edit, setEdit] = useState(false);
   return (
     <DrawerContent className={"my-6 p-[30px] rounded-[30px]  lg:w-[580px]"}>
       <div className={"w-full flex flex-col items-center overflow-y-scroll"}>
@@ -32,13 +33,6 @@ export default function EventDrawerContent({ event }: { event: Event }) {
         <div className={"w-full"}>
           <div className={"w-full gap-[30px] flex flex-col"}>
             <div className={"w-full flex flex-col gap-[1.5rem] justify-start"}>
-              {/* <span
-                className={
-                  "font-primary text-deep-100 font-medium text-[1.8rem]"
-                }
-              >
-                {t("thumbnail")}
-              </span> */}
               <Image
                 alt={event.eventName}
                 src={event.eventImageUrl}
@@ -56,39 +50,6 @@ export default function EventDrawerContent({ event }: { event: Event }) {
                 >
                   {t("about")}
                 </span>
-                {/* <button className="w-[35px] cursor-pointer h-[35px] rounded-full bg-neutral-200 flex items-center justify-center">
-                  <Edit2 variant={"Bulk"} color={"#737C8A"} size={20} />
-                </button> */}
-                {/* <Dialog>
-                  <DialogTrigger asChild>
-                    <button className='w-[35px] h-[35px] rounded-full bg-neutral-200 flex items-center justify-center'>
-                      <Edit2 variant={'Bulk'} color={'#737C8A'} size={20} />
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent className={'w-[360px] lg:w-[520px] '}>
-                    <DialogHeader>
-                      <DialogTitle
-                        className={
-                          'font-medium border-b border-neutral-100 pb-[2rem]  text-[2.6rem] leading-[30px] text-black font-primary'
-                        }
-                      >
-                        {t('share')}
-                      </DialogTitle>
-                      <DialogDescription className={'sr-only'}>
-                        <span>Share event</span>
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className={'flex flex-col w-auto justify-center items-center gap-[30px]'}>
-                      <p
-                        className={
-                          'font-sans text-[1.8rem] leading-[25px] text-[#cdcdcd] text-center w-[320px] lg:w-full'
-                        }
-                      >
-                        {t('share_text')}
-                      </p>
-                    </div>
-                  </DialogContent>
-                </Dialog> */}
               </div>
               <p className={"text-[1.5rem] text-neutral-700"}>
                 {event.eventDescription}
@@ -118,7 +79,6 @@ export default function EventDrawerContent({ event }: { event: Event }) {
                   {startDate.toDateString()}
                 </span>
               </div>
-              {/*  time*/}
               <div className={"flex items-center gap-[5px]"}>
                 <div
                   className={
@@ -137,7 +97,6 @@ export default function EventDrawerContent({ event }: { event: Event }) {
                   {`${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").hour}:${TimesTampToDateTime(event.eventDays[0]?.endTime ?? "").minute}`}
                 </span>
               </div>
-              {/*  address*/}
               <div className={"flex items-center gap-[5px] "}>
                 <div
                   className={
@@ -159,9 +118,12 @@ export default function EventDrawerContent({ event }: { event: Event }) {
         </div>
       </div>
       <DrawerFooter className="lg:flex-row">
-        {/* <ButtonPrimary onClick={() => setEdit(true)} className="flex-1 gap-4">
-          <Edit2 variant={"Bulk"} color={"#ffffff"} size={20} /> Edit
-        </ButtonPrimary> */}
+        <LinkPrimary
+          href={`${Slugify(event.eventName)}/${event.eventType}/edit`}
+          className="flex-1 gap-4"
+        >
+          <Edit2 variant={"Bulk"} color={"#ffffff"} size={20} /> {t("edit")}
+        </LinkPrimary>
         <DrawerClose className={" cursor-pointer w-full flex-1"}>
           <div
             className={

@@ -88,7 +88,7 @@ export default function TicketClasses({ event }: { event: Event }) {
       session?.activeOrganisation.organisationId ?? "",
       event.eventId,
       session?.user.accessToken ?? "",
-      { ...data, currencyId: session?.activeOrganisation.currencyId },
+      { ...data, currency: event.currency },
       pathname,
       locale
     );
@@ -232,7 +232,11 @@ export default function TicketClasses({ event }: { event: Event }) {
                         className={"outline-none"}
                         type="number"
                         placeholder={`${q("price")}`}
-                        defaultValue={t.ticketTypePrice}
+                        defaultValue={
+                          event.currency === "usd"
+                            ? t.usdPrice
+                            : t.ticketTypePrice
+                        }
                         {...register(`ticketTypes.${index}.ticketTypePrice`)}
                       />
                       <span>{event.eventTicketTypes[0]?.currency}</span>

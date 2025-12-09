@@ -1,4 +1,5 @@
 "use server";
+import Slugify from "@/lib/Slugify";
 import { revalidatePath } from "next/cache";
 
 export async function CreateInPersonEvent(
@@ -25,6 +26,43 @@ export async function CreateInPersonEvent(
       revalidatePath("/events");
       return {
         status: "success",
+      };
+    } else {
+      throw new Error(response.message);
+    }
+  } catch (error: any) {
+    return {
+      error: error?.message ?? "An unknown error occurred",
+    };
+  }
+}
+export async function UpdateInPersonEvent(
+  organisationId: string,
+  accessToken: string,
+  body: FormData,
+  locale: string,
+  eventId: string,
+  eventName: string
+) {
+  try {
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events/in-person/${organisationId}/${eventId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        },
+        body: body,
+      }
+    );
+    const response = await request.json();
+    if (response.status === "success") {
+      revalidatePath(`/events/show/${Slugify(response.event.eventName)}`);
+      return {
+        status: "success",
+        event: response.event,
       };
     } else {
       throw new Error(response.message);
