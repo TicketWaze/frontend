@@ -323,7 +323,11 @@ export default function MoreComponent({
                         {t("deleteWarning")}
                       </p>
                       <div className="w-full">
-                        <Input onChange={(e) => setEventName(e.target.value)}>
+                        <Input
+                          autoFocus={false}
+                          onChange={(e) => setEventName(e.target.value)}
+                          value={eventName}
+                        >
                           {t("type")}
                         </Input>
                       </div>

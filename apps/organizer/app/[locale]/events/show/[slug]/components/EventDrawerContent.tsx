@@ -119,7 +119,7 @@ export default function EventDrawerContent({ event }: { event: Event }) {
       </div>
       <DrawerFooter className="lg:flex-row">
         <LinkPrimary
-          href={`${Slugify(event.eventName)}/${event.eventType}/edit`}
+          href={`${Slugify(event.eventName)}/edit/${event.eventType}`}
           className="flex-1 gap-4"
         >
           <Edit2 variant={"Bulk"} color={"#ffffff"} size={20} /> {t("edit")}

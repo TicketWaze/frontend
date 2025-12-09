@@ -440,7 +440,7 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
       </Dialog>
 
       <form
-        className=" flex flex-col gap-12 h-full overflow-y-scroll"
+        className=" flex flex-col gap-12 h-full overflow-y-scroll overflow-x-hidden"
         onSubmit={handleSubmit(processForm)}
       >
         {currentStep === 0 && (

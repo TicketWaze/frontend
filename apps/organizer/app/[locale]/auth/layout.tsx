@@ -28,7 +28,7 @@ export default async function Layout({
         </p>
         <Image src={ticket} alt="Ticket auth" className=" self-center" />
       </div>
-      <main className="bg-white lg:rounded-[3rem] px-6 lg:px-32 overflow-y-scroll">
+      <main className="bg-white lg:rounded-[3rem] overflow-x-hidden px-6 lg:px-32 overflow-y-scroll">
         {children}
       </main>
     </section>

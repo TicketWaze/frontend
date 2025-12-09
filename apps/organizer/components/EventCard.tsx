@@ -53,7 +53,7 @@ function EventCard({ event, aside }: { event: Event; aside?: boolean }) {
             .map((tag) => (
               <li
                 key={tag.id}
-                className="bg-primary-50 lg:hidden py-1 px-4 rounded-[30px] text-[1rem] text-primary-500 font-primary w-auto leading-[15px]"
+                className="bg-primary-50 lg:hidden justify-self-start py-1 px-4 rounded-[30px] text-[1rem] text-primary-500 font-primary w-auto leading-[15px]"
               >
                 {tag.tag}
               </li>
