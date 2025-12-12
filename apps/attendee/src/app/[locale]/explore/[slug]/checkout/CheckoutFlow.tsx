@@ -222,12 +222,11 @@ export default function CheckoutFlow({
       event.eventId,
       validAttendees
     );
-    if (result.status === "failed") {
-      setIsLoading(false);
+    if (result.status === "success") {
+      router.push(`/upcoming/${Slugify(event.eventName)}`);
+    } else {
       toast.error(result.message);
-      return;
     }
-    router.push(`/upcoming/${Slugify(event.eventName)}`);
     setIsLoading(false);
   }
 

@@ -517,6 +517,43 @@ export async function CheckInWithTicketID(
   }
 }
 
+export async function CheckInWithQrCode(
+  eventId: string,
+  accessToken: string,
+  pathname: string,
+  ticketID: string,
+  locale: string
+) {
+  try {
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/checking/event/${eventId}/qr/${ticketID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "Accept-Language": locale,
+          origin: process.env.NEXT_PUBLIC_APP_URL!,
+        },
+      }
+    );
+    const response = await request.json();
+
+    if (response.status === "success") {
+      revalidatePath(pathname);
+      return {
+        status: "success",
+      };
+    } else {
+      throw new Error(response.message);
+    }
+  } catch (error: any) {
+    return {
+      error: error?.message ?? "An unknown error occurred",
+    };
+  }
+}
+
 export async function CreateGoogleMeetEvent(
   organisationId: string,
   accessToken: string,

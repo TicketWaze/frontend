@@ -14,10 +14,12 @@ import {
 } from "@workspace/ui/components/dialog";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { Scanner } from "iconsax-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React, { useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { CheckInWithQrCode } from "@/actions/EventActions";
+import { usePathname } from "@/i18n/navigation";
 
 export default function CheckingDialog({
   event,
@@ -113,25 +115,23 @@ export default function CheckingDialog({
       cleanupScanner();
     };
   }, [isDialogOpen, isScanning, scannerKey]);
+  const pathname = usePathname();
+  const locale = useLocale();
 
   async function CheckQrCode(id: string) {
     setIsLoading(true);
-    const request = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/checking/event/${event.eventId}/qr/${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.accessToken}`,
-        },
-      }
+    const response = await CheckInWithQrCode(
+      event.eventId,
+      user.accessToken,
+      pathname,
+      id,
+      locale
     );
-    const response = await request.json();
     if (response.status === "success") {
       toast.success("success");
       setIsDialogOpen(false);
     } else {
-      toast.error(response.message);
+      toast.error(response.error);
     }
     setIsLoading(false);
   }

@@ -344,40 +344,25 @@ export default async function EventPage({
                     </span>
                   </div>
                 )}
-                <div className={"flex items-center gap-[5px] "}>
-                  <div
-                    className={
-                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                    }
-                  >
-                    <Location size="20" color="#737c8a" variant="Bulk" />
+                {event.eventType !== "meet" && (
+                  <div className={"flex items-center gap-[5px] "}>
+                    <div
+                      className={
+                        "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                      }
+                    >
+                      <Location size="20" color="#737c8a" variant="Bulk" />
+                    </div>
+                    <span
+                      className={
+                        "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                      }
+                    >
+                      {event.address}, {event.city}, {Capitalize(event.state)},{" "}
+                      {event.country}
+                    </span>
                   </div>
-                  <span
-                    className={
-                      "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                    }
-                  >
-                    {event.address}, {event.city}, {Capitalize(event.state)},{" "}
-                    {event.country}
-                  </span>
-                </div>
-                {/*  sold*/}
-                {/* <div className={"flex items-center gap-[5px] "}>
-              <div
-                className={
-                  "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                }
-              >
-                <Ticket2 size="20" color="#737c8a" variant="Bulk" />
-              </div>
-              <span
-                className={
-                  "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                }
-              >
-                500+ {t("sold")}
-              </span>
-            </div> */}
+                )}
               </div>
               {event.eventType !== "meet" && (
                 <>
@@ -526,40 +511,25 @@ export default async function EventPage({
                   </span>
                 </div>
               )}
-              <div className={"flex items-center gap-[5px] "}>
-                <div
-                  className={
-                    "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                  }
-                >
-                  <Location size="20" color="#737c8a" variant="Bulk" />
+              {event.eventType !== "meet" && (
+                <div className={"flex items-center gap-[5px] "}>
+                  <div
+                    className={
+                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                    }
+                  >
+                    <Location size="20" color="#737c8a" variant="Bulk" />
+                  </div>
+                  <span
+                    className={
+                      "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                    }
+                  >
+                    {event.address}, {event.city}, {Capitalize(event.state)},{" "}
+                    {event.country}
+                  </span>
                 </div>
-                <span
-                  className={
-                    "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                  }
-                >
-                  {event.address}, {event.city}, {Capitalize(event.state)},{" "}
-                  {event.country}
-                </span>
-              </div>
-              {/*  sold*/}
-              {/* <div className={"flex items-center gap-[5px] "}>
-              <div
-                className={
-                  "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                }
-              >
-                <Ticket2 size="20" color="#737c8a" variant="Bulk" />
-              </div>
-              <span
-                className={
-                  "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                }
-              >
-                500+ {t("sold")}
-              </span>
-            </div> */}
+              )}
             </div>
             {event.eventType !== "meet" && (
               <>
