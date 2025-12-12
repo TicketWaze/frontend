@@ -163,7 +163,7 @@ export default function ExplorePageContent({
       </header>
       {events.length > 0 ? (
         <>
-          <ul className="list pt-4">
+          <ul className="list pt-4 overflow-y-scroll">
             {filteredEvents.map((event) => {
               const slug = Slugify(event.eventName);
               return (

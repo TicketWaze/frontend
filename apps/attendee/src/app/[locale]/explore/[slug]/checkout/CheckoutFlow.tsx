@@ -498,7 +498,7 @@ export default function CheckoutFlow({
                           <span className="font-semibold text-[1.6rem] leading-10 text-deep-100">
                             {Capitalize(ticketType.ticketTypeName)}
                           </span>
-                          {ticketLeft <= 10 && (
+                          {ticketLeft <= 100 && (
                             <span className="text-[1.2rem] text-warning">
                               {ticketLeft} {t("ticket.left")}
                             </span>

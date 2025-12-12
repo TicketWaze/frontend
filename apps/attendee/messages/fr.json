@@ -4,6 +4,19 @@
       "title": "La billetterie simplifiée. Des moments qui marquent à jamais.",
       "description": "Gagnez du temps et vivez pleinement vos passions. Accédez facilement aux activités qui vous inspirent, avec une expérience fluide et sans accroc, du premier clic jusqu’au souvenir inoubliable."
     },
+    "choice": {
+      "title": "Bienvenue sur TicketWaze",
+      "description": "Choisissez une option pour continuer et configurer votre compte.",
+      "cta": "Continuer",
+      "attendee": {
+        "title": "Participant",
+        "description": "Parcourez, découvrez et achetez facilement des billets pour une grande variété d’événements."
+      },
+      "organisation": {
+        "title": "Organisation",
+        "description": "Créez et gérez vos activités en toute simplicité. Suivez les ventes de billets et analysez les données des participants."
+      }
+    },
     "login": {
       "title": "Se connecter",
       "description": "Veuillez saisir les détails de votre compte pour continuer",

@@ -42,8 +42,12 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
   const locale = useLocale();
   const { data: session } = useSession();
   const organisation = session?.activeOrganisation;
-  const [isFree, setIsfree] = useState(false);
-  const [isRefundable, setIsRefundable] = useState(false);
+  const [isFree, setIsfree] = useState(
+    (event.eventTicketTypes[0]?.ticketTypePrice ?? 0) < 1
+  );
+  const [isRefundable, setIsRefundable] = useState(
+    event.eventTicketTypes[0]?.isRefundable ?? false
+  );
 
   // create schema using factory (depends on isFree)
   const FormDataSchema = makeCreateInPersonSchema(isFree, (k: string) => t(k));

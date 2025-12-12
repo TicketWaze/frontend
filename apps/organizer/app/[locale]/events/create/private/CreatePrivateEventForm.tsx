@@ -112,7 +112,7 @@ export default function CreatePrivateEventForm() {
     formData.append("country", data.country);
     formData.append("longitude", data.longitude);
     formData.append("latitude", data.latitude);
-    formData.append("eventTags", data.eventTagId);
+    formData.append("eventTagId", data.eventTagId);
     formData.append("eventImage", data.eventImage);
     formData.append("eventDays", JSON.stringify(data.eventDays));
     formData.append("eventCurrency", data.eventCurrency);
