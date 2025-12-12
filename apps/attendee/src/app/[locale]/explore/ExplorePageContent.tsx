@@ -107,7 +107,6 @@ export default function ExplorePageContent({
               </button>
             )}
             {/* Liked */}
-            {/* <div className="hidden lg:block"> */}
             {session?.user ? (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -132,7 +131,6 @@ export default function ExplorePageContent({
                 <NoAuthDialog />
               </Dialog>
             )}
-            {/* </div> */}
             {/* Wallet */}
             {session?.user && (
               <Link

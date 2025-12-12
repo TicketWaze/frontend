@@ -256,6 +256,8 @@ export default function CheckoutFlow({
     const response = await request.json();
     if (response.status === "success") {
       router.push(response.paymentURL);
+    } else {
+      toast.error(response.message);
     }
     setIsLoading(false);
   }
@@ -286,6 +288,8 @@ export default function CheckoutFlow({
     const response = await request.json();
     if (response.status === "success") {
       router.push(response.redirectUrl);
+    } else {
+      toast.error(response.message);
     }
     setIsLoading(false);
   }
@@ -532,8 +536,12 @@ export default function CheckoutFlow({
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
-                            disabled={isFree || event.eventType === "meet"}
-                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center"
+                            disabled={
+                              isFree ||
+                              event.eventType === "meet" ||
+                              getValues(`tickets.${index}.quantity`) === 0
+                            }
+                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center cursor-pointer"
                             onClick={() => {
                               const currentValue =
                                 getValues(`tickets.${index}.quantity`) || 0;
@@ -558,17 +566,24 @@ export default function CheckoutFlow({
 
                           <button
                             type="button"
-                            disabled={isFree || event.eventType === "meet"}
-                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center"
+                            disabled={
+                              isFree ||
+                              event.eventType === "meet" ||
+                              getValues(`tickets.${index}.quantity`) ===
+                                ticketLeft
+                            }
+                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center cursor-pointer"
                             onClick={() => {
                               const currentValue =
                                 getValues(`tickets.${index}.quantity`) || 0;
-                              const newQuantity = currentValue + 1;
-                              setValue(
-                                `tickets.${index}.quantity`,
-                                newQuantity,
-                                { shouldValidate: true }
-                              );
+                              if (currentValue < ticketLeft) {
+                                const newQuantity = currentValue + 1;
+                                setValue(
+                                  `tickets.${index}.quantity`,
+                                  newQuantity,
+                                  { shouldValidate: true }
+                                );
+                              }
                             }}
                           >
                             <AddCircle
@@ -986,7 +1001,7 @@ function TicketSummaryCard({
               </span>
             ) : (
               <span className="font-primary font-medium text-[28px] leading-[32px] text-[#000]">
-                {totalPrice} {event.currency}
+                {Number(totalPrice).toFixed(3)} {event.currency}
               </span>
             )}
           </>
