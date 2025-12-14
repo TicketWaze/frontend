@@ -4,19 +4,13 @@ import { getLocale, getTranslations } from "next-intl/server";
 import React from "react";
 import CheckoutFlow from "./CheckoutFlow";
 import { redirect } from "@/i18n/navigation";
-import {
-  Event,
-  EventTicketType,
-  Ticket,
-  User,
-} from "@workspace/typescript-config";
+import { Event, EventTicketType, User } from "@workspace/typescript-config";
 
 export default async function CheckoutPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const t = await getTranslations("Checkout");
   const { slug } = await params;
   const session = await auth();
   const eventRequest = await fetch(
@@ -24,7 +18,6 @@ export default async function CheckoutPage({
   );
   const eventResponse = await eventRequest.json();
   const event: Event = eventResponse.event;
-  const tickets: Ticket[] = eventResponse.tickets;
   const ticketTypes: EventTicketType[] = eventResponse.ticketTypes;
   const locale = await getLocale();
   if (!session) {
@@ -35,7 +28,6 @@ export default async function CheckoutPage({
     <AttendeeLayout title="Buy Tickets">
       <CheckoutFlow
         event={event}
-        tickets={tickets}
         ticketTypes={ticketTypes}
         user={session?.user as User}
       />
