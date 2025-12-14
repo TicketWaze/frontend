@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
     if (response.status === "success") {
       router.push(`/auth/forgot-password/${encodeURIComponent(data.email)}`);
     } else {
-      toast(response.message);
+      toast.error("User not found. Please Register");
     }
   }
   return (

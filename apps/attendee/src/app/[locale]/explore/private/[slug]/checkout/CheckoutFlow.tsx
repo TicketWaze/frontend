@@ -15,16 +15,10 @@ import {
   Warning2,
 } from "iconsax-react";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
-import {
-  Event,
-  EventTicketType,
-  Ticket,
-  User,
-} from "@workspace/typescript-config";
+import { Event, EventTicketType, User } from "@workspace/typescript-config";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import Image from "next/image";
 import ticketBG from "./ticket-bg.svg";
-import z from "zod";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ToggleIcon from "@workspace/ui/components/ToggleIcon";
@@ -37,12 +31,10 @@ import Slugify from "@/lib/Slugify";
 
 export default function CheckoutFlow({
   event,
-  tickets,
   ticketTypes,
   user,
 }: {
   event: Event;
-  tickets: Ticket[];
   ticketTypes: EventTicketType[];
   user: User;
 }) {
@@ -230,12 +222,11 @@ export default function CheckoutFlow({
       event.eventId,
       validAttendees
     );
-    if (result.status === "failed") {
-      setIsLoading(false);
+    if (result.status === "success") {
+      router.push(`/upcoming/${Slugify(event.eventName)}`);
+    } else {
       toast.error(result.message);
-      return;
     }
-    router.push(`/upcoming/${Slugify(event.eventName)}`);
     setIsLoading(false);
   }
 
@@ -266,7 +257,6 @@ export default function CheckoutFlow({
     if (response.status === "success") {
       router.push(response.paymentURL);
     } else {
-      setIsLoading(false);
       toast.error(response.message);
     }
     setIsLoading(false);
@@ -299,7 +289,6 @@ export default function CheckoutFlow({
     if (response.status === "success") {
       router.push(response.redirectUrl);
     } else {
-      setIsLoading(false);
       toast.error(response.message);
     }
     setIsLoading(false);
@@ -513,7 +502,7 @@ export default function CheckoutFlow({
                           <span className="font-semibold text-[1.6rem] leading-10 text-deep-100">
                             {Capitalize(ticketType.ticketTypeName)}
                           </span>
-                          {ticketLeft <= 10 && (
+                          {ticketLeft <= 100 && ticketLeft !== 0 && (
                             <span className="text-[1.2rem] text-warning">
                               {ticketLeft} {t("ticket.left")}
                             </span>
@@ -547,8 +536,12 @@ export default function CheckoutFlow({
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
-                            disabled={isFree || event.eventType === "meet"}
-                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center"
+                            disabled={
+                              isFree ||
+                              event.eventType === "meet" ||
+                              getValues(`tickets.${index}.quantity`) === 0
+                            }
+                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center cursor-pointer"
                             onClick={() => {
                               const currentValue =
                                 getValues(`tickets.${index}.quantity`) || 0;
@@ -573,17 +566,24 @@ export default function CheckoutFlow({
 
                           <button
                             type="button"
-                            disabled={isFree || event.eventType === "meet"}
-                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center"
+                            disabled={
+                              isFree ||
+                              event.eventType === "meet" ||
+                              getValues(`tickets.${index}.quantity`) ===
+                                ticketLeft
+                            }
+                            className="w-[35px] h-[35px] disabled:cursor-not-allowed rounded-full bg-black flex items-center justify-center cursor-pointer"
                             onClick={() => {
                               const currentValue =
                                 getValues(`tickets.${index}.quantity`) || 0;
-                              const newQuantity = currentValue + 1;
-                              setValue(
-                                `tickets.${index}.quantity`,
-                                newQuantity,
-                                { shouldValidate: true }
-                              );
+                              if (currentValue < ticketLeft) {
+                                const newQuantity = currentValue + 1;
+                                setValue(
+                                  `tickets.${index}.quantity`,
+                                  newQuantity,
+                                  { shouldValidate: true }
+                                );
+                              }
                             }}
                           >
                             <AddCircle
@@ -1001,7 +1001,7 @@ function TicketSummaryCard({
               </span>
             ) : (
               <span className="font-primary font-medium text-[28px] leading-[32px] text-[#000]">
-                {totalPrice} {event.currency}
+                {Number(totalPrice).toFixed(3)} {event.currency}
               </span>
             )}
           </>

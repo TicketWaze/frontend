@@ -104,7 +104,7 @@ export default function BasicDetails({
         </Input>
 
         <div className="flex flex-col lg:flex-row w-full gap-[15px] items-center justify-between">
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <Controller
               control={control}
               name="state"
@@ -138,11 +138,13 @@ export default function BasicDetails({
                 </Select>
               )}
             />
-            <span className="text-[1.2rem] px-8 py-2 text-failure">
-              {errors.state?.message}
-            </span>
+            {errors.state && (
+              <span className="text-[1.2rem] px-8 py-2 text-failure">
+                {errors.state?.message}
+              </span>
+            )}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <Controller
               control={control}
               name="city"
@@ -171,9 +173,11 @@ export default function BasicDetails({
                 </Select>
               )}
             />
-            <span className="text-[1.2rem] px-8 py-2 text-failure">
-              {errors.city?.message}
-            </span>
+            {errors.city && (
+              <span className="text-[1.2rem] px-8 py-2 text-failure">
+                {errors.city?.message}
+              </span>
+            )}
           </div>
         </div>
 

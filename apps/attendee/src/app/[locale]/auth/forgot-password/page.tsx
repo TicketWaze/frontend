@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
     if (response.status === "success") {
       router.push(`/auth/forgot-password/${encodeURIComponent(data.email)}`);
     } else {
-      toast.error(response.message);
+      toast.error("User not found. Please Register");
     }
   }
   return (
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.7 }}
           className={
-            "flex items-center  gap-[1.8rem] border border-neutral-100 p-6 rounded-[10rem] mb-8"
+            "flex items-center self-center justify-center w-auto  gap-[1.8rem] border border-neutral-100 p-6 rounded-[10rem] mb-8"
           }
         >
           <p
