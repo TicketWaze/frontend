@@ -37,6 +37,7 @@ export const englishEventTags = [
   { id: "36", tag: "Sports Match", category: "Sports" },
   { id: "37", tag: "Esports Match", category: "Online" },
   { id: "38", tag: "Matchmaking Event", category: "Community" },
+  { id: "39", tag: "Private Party", category: "Community" },
 ];
 
 export const frenchEventTags = [
@@ -78,4 +79,5 @@ export const frenchEventTags = [
   { id: "36", tag: "Match sportif", category: "Sport" },
   { id: "37", tag: "Match d'e-sport", category: "En ligne" },
   { id: "38", tag: "Événement de mise en relation", category: "Communauté" },
+  { id: "39", tag: "Événement privé", category: "Communauté" },
 ];

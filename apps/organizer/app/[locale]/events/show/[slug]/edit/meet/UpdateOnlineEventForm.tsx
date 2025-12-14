@@ -20,21 +20,19 @@ import { motion } from "framer-motion";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { UpdatePrivateEvent } from "@/actions/EventActions";
+import { UpdateOnlineEvent } from "@/actions/EventActions";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { redirect } from "next/navigation";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
 import StepBasic from "./BasicDetails";
 import StepDateTime from "./EventDays";
 import StepTicket from "./TicketClasses";
-import { makeCreateInPersonSchema } from "./schema";
+import { makeCreateOnlineSchema } from "./schema";
 import { Event } from "@workspace/typescript-config";
 import Slugify from "@/lib/Slugify";
 
-export default function CreateInPersonEventForm({ event }: { event: Event }) {
+export default function UpdateOnlineEventForm({ event }: { event: Event }) {
   const t = useTranslations("Events.create_event");
   const locale = useLocale();
   const { data: session } = useSession();
@@ -47,7 +45,7 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
   );
 
   // create schema using factory (depends on isFree)
-  const FormDataSchema = makeCreateInPersonSchema(isFree, (k: string) => t(k));
+  const FormDataSchema = makeCreateOnlineSchema(isFree, (k: string) => t(k));
   type TForm = z.infer<typeof FormDataSchema>;
 
   const steps = [
@@ -87,12 +85,6 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
     values: {
       eventName: event.eventName,
       eventDescription: event.eventDescription,
-      address: event.address,
-      state: event.state,
-      city: event.city,
-      country: event.country,
-      longitude: event.longitude,
-      latitude: event.latitude,
       eventTagId: event.eventTagId,
       eventImage: undefined as unknown as File,
       eventDays: event.eventDays.map((eventDay) => {
@@ -129,12 +121,6 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
     const formData = new FormData();
     formData.append("eventName", data.eventName);
     formData.append("eventDescription", data.eventDescription);
-    formData.append("address", data.address);
-    formData.append("state", data.state);
-    formData.append("city", data.city);
-    formData.append("country", data.country);
-    formData.append("longitude", data.longitude);
-    formData.append("latitude", data.latitude);
     formData.append("eventTagId", data.eventTagId);
     formData.append("eventImage", data.eventImage);
     formData.append("eventDays", JSON.stringify(data.eventDays));
@@ -156,12 +142,13 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
       formData.append("ticketTypes", JSON.stringify(data.ticketTypes));
     }
 
-    const result = await UpdatePrivateEvent(
+    const result = await UpdateOnlineEvent(
       organisation?.organisationId ?? "",
       session?.user.accessToken ?? "",
       formData,
       locale,
-      event.eventId
+      event.eventId,
+      event.eventName
     );
     if (result.status === "success") {
       toast.success("success");
@@ -283,52 +270,6 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
       };
     })
   );
-
-  // MAP
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<mapboxgl.Map | null>(null);
-  const markerRef = useRef<mapboxgl.Marker | null>(null);
-  const position: [number, number] = [-72.2852, 18.9712];
-
-  useEffect(() => {
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_PUBLIC_TOKEN ?? "";
-    mapRef.current = new mapboxgl.Map({
-      // @ts-ignore
-      container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: position,
-      zoom: 6,
-      attributionControl: false,
-    });
-    if (markerRef.current) {
-      markerRef.current.setLngLat([
-        Number(event.longitude),
-        Number(event.latitude),
-      ]);
-    } else {
-      markerRef.current = new mapboxgl.Marker({ color: "red" })
-        .setLngLat([Number(event.longitude), Number(event.latitude)])
-        .addTo(mapRef.current!);
-    }
-
-    mapRef.current.on("click", (e) => {
-      const { lng, lat } = e.lngLat;
-      setValue("longitude", String(lng));
-      setValue("latitude", String(lat));
-      if (markerRef.current) {
-        markerRef.current.setLngLat([lng, lat]);
-      } else {
-        markerRef.current = new mapboxgl.Marker({ color: "red" })
-          .setLngLat([lng, lat])
-          .addTo(mapRef.current!);
-      }
-    });
-    // cleanup on unmount
-    return () => {
-      mapRef.current?.remove();
-    };
-  }, [setValue]);
-
   return (
     <div className="relative flex flex-col gap-8 overflow-hidden h-full ">
       <div className="absolute bottom-4 z-[9999] w-full hidden lg:block">
@@ -457,8 +398,6 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
               errors={errors}
               imagePreview={imagePreview}
               handleFileChange={handleFileChange}
-              mapContainerRef={mapContainerRef}
-              setValue={setValue}
               event={event}
             />
           </motion.div>

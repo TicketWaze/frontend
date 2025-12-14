@@ -1,8 +1,10 @@
 "use client";
 import { LinkPrimary } from "@/components/Links";
+import { useRouter } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event } from "@workspace/typescript-config";
+import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import {
   DrawerClose,
   DrawerContent,
@@ -10,13 +12,45 @@ import {
   DrawerFooter,
   DrawerTitle,
 } from "@workspace/ui/components/drawer";
+import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { Calendar2, Clock, Edit2, Location } from "iconsax-react";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function EventDrawerContent({ event }: { event: Event }) {
   const t = useTranslations("Events.single_event");
   const startDate = new Date(event.eventDays?.[0]?.startDate ?? "");
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  async function Proceed() {
+    setIsLoading(true);
+    if (event.eventType === "meet") {
+      const request = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/events/google/callback/edit/${event.eventId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user.accessToken}`,
+          },
+        }
+      );
+      const response = await request.json();
+      if (response.status === "success") {
+        router.push(response.authorizationUrl);
+      } else {
+        toast.error(response.message);
+      }
+    } else {
+      router.push(
+        `/events/show/${Slugify(event.eventName)}/edit/${event.eventType}`
+      );
+    }
+  }
   return (
     <DrawerContent className={"my-6 p-[30px] rounded-[30px]  lg:w-[580px]"}>
       <div className={"w-full flex flex-col items-center overflow-y-scroll"}>
@@ -118,12 +152,15 @@ export default function EventDrawerContent({ event }: { event: Event }) {
         </div>
       </div>
       <DrawerFooter className="lg:flex-row">
-        <LinkPrimary
-          href={`${Slugify(event.eventName)}/edit/${event.eventType}`}
+        <ButtonPrimary
+          onClick={Proceed}
+          disabled={isLoading}
+          // href={`${Slugify(event.eventName)}/edit/${event.eventType}`}
           className="flex-1 gap-4"
         >
-          <Edit2 variant={"Bulk"} color={"#ffffff"} size={20} /> {t("edit")}
-        </LinkPrimary>
+          <Edit2 variant={"Bulk"} color={"#ffffff"} size={20} />{" "}
+          {isLoading ? <LoadingCircleSmall /> : t("edit")}
+        </ButtonPrimary>
         <DrawerClose className={" cursor-pointer w-full flex-1"}>
           <div
             className={
