@@ -20,7 +20,7 @@ import { motion } from "framer-motion";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { UpdateInPersonEvent } from "@/actions/EventActions";
+import { UpdatePrivateEvent } from "@/actions/EventActions";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
@@ -156,7 +156,7 @@ export default function CreateInPersonEventForm({ event }: { event: Event }) {
       formData.append("ticketTypes", JSON.stringify(data.ticketTypes));
     }
 
-    const result = await UpdateInPersonEvent(
+    const result = await UpdatePrivateEvent(
       organisation?.organisationId ?? "",
       session?.user.accessToken ?? "",
       formData,

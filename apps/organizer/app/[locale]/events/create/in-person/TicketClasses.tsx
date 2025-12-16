@@ -154,7 +154,7 @@ export default function StepTicket({
 
       {isFree ? (
         <div className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100">
-          <Input defaultValue={"General"} disabled readOnly>
+          <Input defaultValue={"general"} disabled readOnly>
             {t("class_name")}
           </Input>
           <textarea
