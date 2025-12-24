@@ -1,6 +1,5 @@
 "use client";
 import PageLoader from "@/components/Loaders/PageLoader";
-import { useRouter } from "@/i18n/navigation";
 import { Organisation, User } from "@workspace/typescript-config";
 import { ButtonPrimary } from "@workspace/ui/components/buttons";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
@@ -15,7 +14,7 @@ export default function OnboardingLogic({
   user,
   organisations,
 }: {
-  responseType: "invite" | "login";
+  responseType: "invite" | "login" | "create";
   user: User;
   organisations: Organisation[];
 }) {
@@ -23,29 +22,27 @@ export default function OnboardingLogic({
   const [invitedOrganisations, setInvitedOrganisation] = useState<
     Organisation[] | undefined
   >();
+  const [createOrganisation, setCreateOrganisation] = useState(false);
   const { data: session, update } = useSession();
   const locale = useLocale();
-  const router = useRouter();
   const [isLoading, setIsloading] = useState(false);
   useEffect(() => {
     const handleOnboarding = async () => {
       if (responseType === "invite") {
         setInvitedOrganisation(organisations);
+      } else if (responseType === "create") {
+        setCreateOrganisation(true);
       } else {
-        if (user?.organisations?.[0]?.organisationId) {
+        if (user?.organisations[0]?.organisationId) {
           try {
             await update({
               activeOrganisation: user.organisations[0],
             });
-            router.push(
-              `/analytics?organisationId=${user.organisations[0].organisationId}`
-            );
+            window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/${user.userPreference.appLanguage}/analytics`;
           } catch (error) {
-            console.error("Failed to update session:", error);
             toast.error("Failed to load organisation");
           }
         } else {
-          console.error("No organisation found for user");
           toast.error("No organisation found");
         }
       }
@@ -73,7 +70,7 @@ export default function OnboardingLogic({
         await update({
           activeOrganisation: organisation,
         });
-        router.push(`/analytics?organisationId=${organisation.organisationId}`);
+        window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/${user.userPreference.appLanguage}/analytics`;
       }
     } catch (error) {
       console.error("Failed to join organisation:", error);
@@ -81,13 +78,42 @@ export default function OnboardingLogic({
     }
     setIsloading(false);
   }
+  async function CreateOrganisation() {
+    setIsloading(true);
+    try {
+      const req = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/onboarding/createOrganisation`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user.accessToken}`,
+            "Accept-Language": locale,
+            Origin: process.env.NEXT_PUBLIC_APP_URL!,
+          },
+        }
+      );
+      const res = await req.json();
+      if (res.status === "success") {
+        await update({
+          activeOrganisation: res.user.organisations[0],
+        });
+        window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/${res.user.userPreference.appLanguage}/analytics`;
+      } else {
+        toast.error("Failed to Creare Organisation");
+      }
+    } catch (error) {
+      toast.error("Failed to Creare Organisation : " + error);
+    }
+    setIsloading(false);
+  }
 
   return (
     <div
-      className={`h-full flex flex-col items-center ${!invitedOrganisations && "justify-center"} w-full `}
+      className={`h-full flex flex-col items-center ${!invitedOrganisations && !createOrganisation && "justify-center"} w-full `}
     >
       <PageLoader isLoading={isLoading} />
-      {invitedOrganisations ? (
+      {invitedOrganisations && (
         <div className=" flex flex-col gap-[80px] pt-[40px] w-full">
           <div className="flex flex-col gap-8 items-center">
             <h3 className="font-medium font-primary text-[3.2rem] leading-[3.5rem] text-black">
@@ -131,9 +157,43 @@ export default function OnboardingLogic({
             );
           })}
         </div>
-      ) : (
-        <LoadingCircleSmall />
       )}
+      {createOrganisation && (
+        <div className="flex flex-col items-center justify-between h-full pb-12">
+          <div className=" flex flex-col  gap-[80px] pt-[40px] w-full">
+            <div className="flex flex-col gap-8 items-center">
+              <h3 className="font-medium font-primary text-center text-[3.2rem] leading-[3.5rem] text-black">
+                {t("title2")}
+              </h3>
+              <p className="text-[1.8rem] text-center leading-[2.5rem] text-neutral-700">
+                {t("description2")}
+              </p>
+            </div>
+            <div className="flex items-center flex-col gap-20 lg:gap-12">
+              {" "}
+              <p className="font-primary text-center font-medium text-[1.8rem] leading-10 text-neutral-900">
+                {t("alert")}
+              </p>
+              <ButtonPrimary
+                disabled={isLoading}
+                onClick={CreateOrganisation}
+                className="w-full hidden lg:flex"
+              >
+                {isLoading ? <LoadingCircleSmall /> : t("action")}
+              </ButtonPrimary>
+            </div>
+          </div>
+          <ButtonPrimary
+            onClick={CreateOrganisation}
+            className="w-full lg:hidden"
+            disabled={isLoading}
+          >
+            {isLoading ? <LoadingCircleSmall /> : t("action")}
+          </ButtonPrimary>
+        </div>
+      )}
+
+      {!createOrganisation && !invitedOrganisations && <LoadingCircleSmall />}
     </div>
   );
 }

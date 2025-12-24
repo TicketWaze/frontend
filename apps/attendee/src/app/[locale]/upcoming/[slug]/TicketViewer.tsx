@@ -10,11 +10,12 @@ import {
 } from "iconsax-react";
 import { useTranslations } from "next-intl";
 import { QRCodeCanvas } from "qrcode.react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import { domToPng } from "modern-screenshot";
 import Capitalize from "@workspace/ui/lib/Capitalize";
 import FormatDate from "@/lib/FormatDate";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
+import Image from "next/image";
+import Logo from "@workspace/ui/assets/images/logo-simple-orange.svg";
 
 export default function TicketViewer({
   tickets,
@@ -27,10 +28,7 @@ export default function TicketViewer({
   const t = useTranslations("Event");
   const isFree = event.eventTicketTypes[0].ticketTypePrice == 0;
 
-  // Mock data if no tickets provided
   const mockTickets = tickets;
-
-  //   const mockEvent = Object.keys(event).length > 0 ? event : { name: 'Sample Event Series' };
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : mockTickets.length - 1));
@@ -50,270 +48,51 @@ export default function TicketViewer({
 
   const ticketRef = useRef<HTMLDivElement>(null);
 
-  // Helper function to check if a color is a lab() function
-  const isLabColor = (colorValue: string): boolean => {
-    return (
-      colorValue.includes("lab(") ||
-      colorValue.includes("lch(") ||
-      colorValue.includes("oklab(") ||
-      colorValue.includes("oklch(")
-    );
-  };
-
-  // Helper function to convert problematic colors to safe alternatives
-  const getSafeColor = (colorValue: string, fallback: string): string => {
-    if (isLabColor(colorValue)) {
-      return fallback;
-    }
-    return colorValue;
-  };
-
-  // Function to handle canvas elements (like QR codes)
-  const handleCanvasElements = (
-    element: HTMLElement,
-    originalElement: HTMLElement
-  ) => {
-    const canvases = element.querySelectorAll("canvas");
-    const originalCanvases = originalElement.querySelectorAll("canvas");
-
-    canvases.forEach((canvas, index) => {
-      if (originalCanvases[index]) {
-        const originalCanvas = originalCanvases[index];
-        const ctx = canvas.getContext("2d");
-        if (ctx && originalCanvas) {
-          // Copy the original canvas content
-          canvas.width = originalCanvas.width;
-          canvas.height = originalCanvas.height;
-          ctx.drawImage(originalCanvas, 0, 0);
-        }
-      }
-    });
-  };
-
-  // Function to apply inline styles and fix problematic CSS
-  const applyInlineStyles = (
-    element: HTMLElement,
-    originalElement: HTMLElement
-  ) => {
-    const computed = window.getComputedStyle(element);
-
-    // Fix background color
-    const bgColor = computed.backgroundColor;
-    if (isLabColor(bgColor)) {
-      element.style.backgroundColor = bgColor.includes("neutral")
-        ? "#f5f5f5"
-        : "#ffffff";
-    } else if (
-      bgColor &&
-      bgColor !== "rgba(0, 0, 0, 0)" &&
-      bgColor !== "transparent"
-    ) {
-      element.style.backgroundColor = bgColor;
-    }
-
-    // Fix text color
-    const textColor = computed.color;
-    if (isLabColor(textColor)) {
-      element.style.color = textColor.includes("neutral")
-        ? "#666666"
-        : textColor.includes("primary")
-          ? "#E45B00"
-          : textColor.includes("deep")
-            ? "#0D0D0D"
-            : "#000000";
-    } else if (textColor) {
-      element.style.color = textColor;
-    }
-
-    // Fix border color
-    const borderColor = computed.borderColor;
-    if (isLabColor(borderColor)) {
-      element.style.borderColor = borderColor.includes("primary")
-        ? "#E45B00"
-        : borderColor.includes("neutral")
-          ? "#e5e5e5"
-          : "#cccccc";
-    } else if (borderColor && borderColor !== "rgba(0, 0, 0, 0)") {
-      element.style.borderColor = borderColor;
-    }
-
-    // Copy other important styles
-    element.style.fontSize = computed.fontSize;
-    element.style.fontFamily = computed.fontFamily;
-    element.style.fontWeight = computed.fontWeight;
-    element.style.padding = computed.padding;
-    element.style.margin = computed.margin;
-    element.style.borderRadius = computed.borderRadius;
-    element.style.borderWidth = computed.borderWidth;
-    element.style.borderStyle = computed.borderStyle;
-    element.style.display = computed.display;
-    element.style.flexDirection = computed.flexDirection;
-    element.style.alignItems = computed.alignItems;
-    element.style.justifyContent = computed.justifyContent;
-    element.style.gap = computed.gap;
-    element.style.width = computed.width;
-    element.style.height = computed.height;
-    element.style.textAlign = computed.textAlign;
-
-    // Handle canvas elements (QR codes)
-    handleCanvasElements(element, originalElement);
-
-    // Recursively apply to children
-    Array.from(element.children).forEach((child, index) => {
-      if (child instanceof HTMLElement) {
-        const originalChild = originalElement.children[index] as HTMLElement;
-        applyInlineStyles(child, originalChild);
-      }
-    });
-  };
-
-  // Download as Image with style preprocessing
   const downloadImage = async () => {
     if (!ticketRef.current) return;
 
     try {
-      // Create a temporary container
-      const tempContainer = document.createElement("div");
-      tempContainer.style.position = "absolute";
-      tempContainer.style.left = "-9999px";
-      tempContainer.style.top = "0";
-      document.body.appendChild(tempContainer);
+      const element = ticketRef.current;
+      const parent = element.parentElement;
 
-      // Clone the element (deep clone)
-      const clonedElement = ticketRef.current.cloneNode(true) as HTMLElement;
-      tempContainer.appendChild(clonedElement);
+      // Temporarily make visible for capture
+      if (parent) {
+        parent.style.position = "fixed";
+        parent.style.left = "0";
+        parent.style.top = "0";
+        parent.style.opacity = "1";
+        parent.style.zIndex = "9999";
+      }
 
-      // Wait for any dynamic content to render
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Wait for rendering
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // Apply inline styles to override problematic CSS
-      applyInlineStyles(clonedElement, ticketRef.current);
-
-      // Generate canvas
-      const canvas = await html2canvas(clonedElement, {
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: "#ffffff",
+      // Convert to PNG using modern-screenshot
+      const dataUrl = await domToPng(element, {
         scale: 2,
-        logging: false,
-        ignoreElements: (element) => {
-          // Skip elements that might cause issues
-          return false;
-        },
+        quality: 1,
       });
 
-      // Clean up
-      document.body.removeChild(tempContainer);
+      // Hide element again
+      if (parent) {
+        parent.style.position = "absolute";
+        parent.style.left = "-9999px";
+        parent.style.opacity = "0";
+        parent.style.zIndex = "auto";
+      }
 
-      // Download
-      const dataUrl = canvas.toDataURL("image/png");
+      // Generate filename and download
+      const ticketName = tickets[currentIndex].ticketName || "ticket";
+      const eventName = event.eventName?.replace(/[^a-z0-9]/gi, "_") || "event";
+      const filename = `${eventName}_${ticketName}.png`;
+
       const link = document.createElement("a");
+      link.download = filename;
       link.href = dataUrl;
-      link.download = `ticket-${tickets[currentIndex].ticketName}.png`;
       link.click();
     } catch (error) {
-      console.error("Error generating image:", error);
-
-      // Fallback: try with original element and different options
-      try {
-        const canvas = await html2canvas(ticketRef.current, {
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: "#ffffff",
-          scale: 1,
-          logging: false,
-        });
-
-        const dataUrl = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = `ticket-${tickets[currentIndex].ticketName}.png`;
-        link.click();
-      } catch (fallbackError) {
-        console.error("Fallback image generation failed:", fallbackError);
-        alert(
-          "Failed to generate ticket image. Please try again or contact support."
-        );
-      }
-    }
-  };
-
-  // Download as PDF with style preprocessing
-  const downloadPDF = async () => {
-    if (!ticketRef.current) return;
-
-    try {
-      // Create a temporary container
-      const tempContainer = document.createElement("div");
-      tempContainer.style.position = "absolute";
-      tempContainer.style.left = "-9999px";
-      tempContainer.style.top = "0";
-      document.body.appendChild(tempContainer);
-
-      // Clone the element to avoid modifying the original (deep clone)
-      const clonedElement = ticketRef.current.cloneNode(true) as HTMLElement;
-      tempContainer.appendChild(clonedElement);
-
-      // Wait for any dynamic content to render
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      // Apply inline styles to override problematic CSS
-      applyInlineStyles(clonedElement, ticketRef.current);
-
-      // Generate canvas from the processed clone
-      const canvas = await html2canvas(clonedElement, {
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: "#ffffff",
-        scale: 2, // Higher quality for PDF
-        logging: false,
-        width: clonedElement.offsetWidth,
-        height: clonedElement.offsetHeight,
-      });
-
-      // Clean up the temporary container
-      document.body.removeChild(tempContainer);
-
-      // Generate PDF
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-      // Center the image if it's smaller than the page
-      const xOffset = 0;
-      const yOffset =
-        pdfHeight < pdf.internal.pageSize.getHeight()
-          ? (pdf.internal.pageSize.getHeight() - pdfHeight) / 2
-          : 0;
-
-      pdf.addImage(imgData, "PNG", xOffset, yOffset, pdfWidth, pdfHeight);
-      pdf.save(`ticket-${tickets[currentIndex].ticketName}.pdf`);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-
-      // Fallback: try with simpler options
-      try {
-        const canvas = await html2canvas(ticketRef.current, {
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: "#ffffff",
-          scale: 1,
-          logging: false,
-        });
-
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`ticket-${tickets[currentIndex].ticketName}.pdf`);
-      } catch (fallbackError) {
-        console.error("Fallback PDF generation failed:", fallbackError);
-        alert("Failed to generate PDF. Please try again or contact support.");
-      }
+      console.error("Error generating PNG:", error);
+      alert("Failed to download ticket. Please try again.");
     }
   };
 
@@ -328,10 +107,19 @@ export default function TicketViewer({
         >
           <div
             className={
-              "w-full h-[250px] lg:h-[296px]  bg-neutral-100 p-[15px] text-center font-mono text-[1.4rem] flex flex-col justify-between items-center "
+              "w-full h-[250px] lg:h-[296px] relative  bg-neutral-100 p-[15px] pt-0 text-center font-mono text-[1.4rem] flex flex-col justify-between items-center "
             }
           >
-            <div className={"flex items-center justify-between gap-4 w-full"}>
+            <Image
+              src={Logo}
+              alt="Ticketwaze"
+              className="absolute w-full h-full opacity-10"
+            />
+            <div
+              className={
+                "flex items-center justify-between pt-[15px] gap-4 w-full"
+              }
+            >
               <span className="text-neutral-600">
                 1x {Capitalize(tickets[currentIndex].ticketType)}
               </span>
@@ -386,7 +174,8 @@ export default function TicketViewer({
           </div>
           <span className="text-warning flex gap-4 items-center">
             <Warning2 size="16" color="#ea961c" variant="TwoTone" />
-            {t("ticketWarning")}
+            {t("ticketWarning1")}{" "}
+            {!event.eventTicketTypes[0].isRefundable && t("ticketWarning2")}
           </span>
           <QRCodeCanvas
             value={tickets[currentIndex].ticketId}
@@ -418,7 +207,7 @@ export default function TicketViewer({
           </button>
         </div>
         <button
-          onClick={downloadPDF}
+          onClick={downloadImage}
           className="border-2 cursor-pointer border-primary-500 px-12 py-[7.5px] bg-[#FFEFE2] rounded-[100px] flex gap-4 items-center justify-center"
         >
           <DocumentDownload

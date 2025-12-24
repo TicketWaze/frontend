@@ -3,7 +3,7 @@ import BackButton from "@workspace/ui/components/BackButton";
 import AttendeeLayout from "@/components/Layouts/AttendeeLayout";
 import Image from "next/image";
 import EventActions from "./EventActions";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import {
   Calendar2,
   Call,
@@ -12,6 +12,7 @@ import {
   Google,
   Location,
   RouteSquare,
+  SecurityUser,
   Sms,
 } from "iconsax-react";
 import FormatDate from "@/lib/FormatDate";
@@ -21,7 +22,7 @@ import Follow from "./Follow";
 import { auth } from "@/lib/auth";
 import Unfollow from "./Unfollow";
 import Map from "./MapComponent";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import AddToCalendar from "./AddToCalendar";
 import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event, Ticket, User } from "@workspace/typescript-config";
@@ -54,6 +55,7 @@ export default async function EventPage({
 }) {
   const { slug } = await params;
   const session = await auth();
+  const locale = await getLocale();
   const eventRequest = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/events/${slug}`
   );
@@ -61,6 +63,51 @@ export default async function EventPage({
   const event: Event = eventResponse.event;
   const tickets: Ticket[] = eventResponse.tickets;
   const organisation = eventResponse.organisation;
+  const eventPerformers = event.eventPerformers;
+  const t = await getTranslations("Event");
+
+  if (event.eventType === "private") {
+    return (
+      <AttendeeLayout title={event.eventName}>
+        <div className="flex flex-col gap-8 h-full min-h-0">
+          <BackButton text={t("back")} />
+          <span className="font-primary font-medium text-[2.6rem] leading-12 text-black mb-4">
+            {event.eventName}
+          </span>
+          <div
+            className={
+              "w-[330px] lg:w-[460px] mx-auto h-full justify-center flex flex-col items-center gap-[5rem]"
+            }
+          >
+            <div
+              className={
+                "w-[120px] h-[120px] rounded-full flex items-center justify-center bg-neutral-100"
+              }
+            >
+              <div
+                className={
+                  "w-[90px] h-[90px] rounded-full flex items-center justify-center bg-neutral-200"
+                }
+              >
+                <SecurityUser size="50" color="#0d0d0d" variant="Bulk" />
+              </div>
+            </div>
+            <div
+              className={"flex flex-col gap-[3rem] items-center text-center"}
+            >
+              <p
+                className={
+                  "text-[1.8rem] leading-[25px] text-neutral-600 max-w-[330px] lg:max-w-[422px]"
+                }
+              >
+                {t("notInvited")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </AttendeeLayout>
+    );
+  }
 
   const favoriteRequest = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/events/${event.eventId}/favorite`,
@@ -74,11 +121,13 @@ export default async function EventPage({
   );
   const favoriteResponse = await favoriteRequest.json();
 
+  if (favoriteResponse.status === "failed") {
+    redirect({ href: "/explore", locale });
+  }
+
   const isFollowing = organisation.followers.filter(
     (follower: any) => follower.userId === session?.user.userId
   );
-
-  const t = await getTranslations("Event");
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${event.latitude},${event.longitude}`;
 
@@ -114,6 +163,29 @@ export default async function EventPage({
                 {event.eventDescription}
               </p>
             </div>
+            {eventPerformers.length > 0 && (
+              <>
+                <Separator />
+                <ul className=" flex items-center gap-8 overflow-x-auto scroll-smooth scrollbar-hide w-full min-h-[120px]">
+                  {eventPerformers.map((eventPerformer) => (
+                    <Link
+                      href={eventPerformer.performerLink}
+                      target="_blank"
+                      key={eventPerformer.eventPerformerId}
+                      className="flex items-center justify-center w-[120px] h-[120px] overflow-hidden rounded-full flex-shrink-0"
+                    >
+                      <Image
+                        src={eventPerformer.performerProfileUrl}
+                        width={120}
+                        height={120}
+                        loading="eager"
+                        alt={eventPerformer.performerName}
+                      />
+                    </Link>
+                  ))}
+                </ul>
+              </>
+            )}
             <Separator />
             <div>
               <span className="font-semibold text-[1.6rem] leading-8 text-deep-100">
@@ -272,40 +344,25 @@ export default async function EventPage({
                     </span>
                   </div>
                 )}
-                <div className={"flex items-center gap-[5px] "}>
-                  <div
-                    className={
-                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                    }
-                  >
-                    <Location size="20" color="#737c8a" variant="Bulk" />
+                {event.eventType !== "meet" && (
+                  <div className={"flex items-center gap-[5px] "}>
+                    <div
+                      className={
+                        "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                      }
+                    >
+                      <Location size="20" color="#737c8a" variant="Bulk" />
+                    </div>
+                    <span
+                      className={
+                        "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                      }
+                    >
+                      {event.address}, {event.city}, {Capitalize(event.state)},{" "}
+                      {event.country}
+                    </span>
                   </div>
-                  <span
-                    className={
-                      "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                    }
-                  >
-                    {event.address}, {event.city}, {Capitalize(event.state)},{" "}
-                    {event.country}
-                  </span>
-                </div>
-                {/*  sold*/}
-                {/* <div className={"flex items-center gap-[5px] "}>
-              <div
-                className={
-                  "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                }
-              >
-                <Ticket2 size="20" color="#737c8a" variant="Bulk" />
-              </div>
-              <span
-                className={
-                  "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                }
-              >
-                500+ {t("sold")}
-              </span>
-            </div> */}
+                )}
               </div>
               {event.eventType !== "meet" && (
                 <>
@@ -454,40 +511,25 @@ export default async function EventPage({
                   </span>
                 </div>
               )}
-              <div className={"flex items-center gap-[5px] "}>
-                <div
-                  className={
-                    "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                  }
-                >
-                  <Location size="20" color="#737c8a" variant="Bulk" />
+              {event.eventType !== "meet" && (
+                <div className={"flex items-center gap-[5px] "}>
+                  <div
+                    className={
+                      "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
+                    }
+                  >
+                    <Location size="20" color="#737c8a" variant="Bulk" />
+                  </div>
+                  <span
+                    className={
+                      "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
+                    }
+                  >
+                    {event.address}, {event.city}, {Capitalize(event.state)},{" "}
+                    {event.country}
+                  </span>
                 </div>
-                <span
-                  className={
-                    "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                  }
-                >
-                  {event.address}, {event.city}, {Capitalize(event.state)},{" "}
-                  {event.country}
-                </span>
-              </div>
-              {/*  sold*/}
-              {/* <div className={"flex items-center gap-[5px] "}>
-              <div
-                className={
-                  "w-[35px] h-[35px] flex items-center justify-center bg-neutral-100 rounded-full"
-                }
-              >
-                <Ticket2 size="20" color="#737c8a" variant="Bulk" />
-              </div>
-              <span
-                className={
-                  "font-normal text-[1.4rem] leading-8 text-deep-200 max-w-[293px]"
-                }
-              >
-                500+ {t("sold")}
-              </span>
-            </div> */}
+              )}
             </div>
             {event.eventType !== "meet" && (
               <>

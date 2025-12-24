@@ -1,13 +1,17 @@
 {
   "Auth": {
     "layout": {
-      "title": "Donnez du pouvoir aux événements à travers votre pays et au-delà",
-      "description": "Créez des événements en quelques minutes, vendez des billets, gérez les participants et suivez vos revenus — le tout en un seul endroit"
+      "title": "La billetterie simplifiée partout dans votre pays et au‑delà",
+      "description": "Lancez vos activités en quelques minutes, vendez vos billets sans effort, suivez vos ventes et gérez vos participants — tout en un seul endroit"
     },
     "onboarding": {
       "title": "Organisation Invitation",
       "description": "Vous avez été invité à rejoindre une organisation sur TicketWaze — une plateforme permettant de gérer et de vendre des billets d'événements en toute simplicité.",
-      "join": "Rejoindre"
+      "join": "Rejoindre",
+      "title2": "Préparez-vous à vendre vos billets",
+      "description2": "Créez des activités, gérez vos participants et suivez vos ventes — tout commence ici",
+      "alert": "Nous avons créé une organisation par défaut pour vous lancer. Pas d’inquiétude — vous pourrez modifier ses informations et la personnaliser une fois créée.",
+      "action": "Commencer"
     },
     "register": {
       "title": "Créer un compte",
@@ -126,7 +130,7 @@
       "cta": "Terminer"
     },
     "login": {
-      "title": "Se connecter",
+      "title": "Se connecter à votre organisation",
       "description": "Veuillez saisir les détails de votre compte pour continuer",
       "placeholders": {
         "email": "Adresse e-mail",
@@ -336,6 +340,7 @@
     "free": "Gratuit",
     "single_event": {
       "close": "Fermer",
+      "edit": "Modifier",
       "check_in": "Enregistrement",
       "back": "Retour",
       "share": "Partager",
@@ -346,9 +351,12 @@
       "checkers_description": "Les vérificateurs sont des utilisateurs chargés de vérifier les billets aux entrées des événements. Ils scannent et valident les billets pour s'assurer que seuls les participants autorisés peuvent entrer.",
       "select_checkers": "Sélectionner les vérificateurs",
       "update_checker": "Mettre à jour la liste des vérificateurs",
-      "startChecking": "Commencer le check-in",
-      "stopChecking": "Arrêter le check-in",
-      "check_in_description": "Saisissez l'ID du ticket ci-dessous pour vérifier et enregistrer un participant.",
+      "startChecking": "Enregistrer",
+      "stopChecking": "Pause",
+      "delete": "Supprimer l'activité",
+      "deleteWarning": "Vous êtes sur le point de supprimer définitivement cette activité. Cette action est irréversible et toutes les informations associées seront perdues. Voulez-vous continuer ?",
+      "type": "Saisissez le nom de l’activité pour confirmer",
+      "check_in_description": "Scanner le code Qr ou saisissez l'ID du ticket ci-dessous pour vérifier et enregistrer un participant.",
       "ticketID": "ID du billet",
       "revenue": "Revenus totaux",
       "sold": "Billets vendus",
@@ -407,6 +415,36 @@
           }
         }
       },
+      "attendees": {
+        "back": "Retour",
+        "subtitle": "Ajouter un participant",
+        "title": "Participants",
+        "fullName": "Nom complet",
+        "email": "Adresse e-mail",
+        "close": "Fermer",
+        "add": "Ajouter",
+        "more": "Plus",
+        "remove": "Retirer l'accès"
+      },
+      "artist": {
+        "add": "Ajouter un intervenant",
+        "description": "Vous pouvez téléverser une photo et ajouter un lien vers leur profil. Une fois ajouté, l’intervenant apparaîtra dans la programmation de votre événement.",
+        "noArtist": "Ajouter des intervenants pour donner vie à votre liste !",
+        "name": "Nom de l'intervenant",
+        "link": "Liens vers sont profile ou website",
+        "thumbnail": "Déposez votre miniature ici ou ",
+        "browse": "parcourir",
+        "resize": "Redimensionner votre image",
+        "errors": {
+          "name": "Entrez un nom valide",
+          "link": "Entrez un lien valide",
+          "image": {
+            "required": "L'intervenant doit avoir une image de profile",
+            "max": "La taille maximale du fichier est de 200ko.",
+            "type": "Les fichiers .jpg, .jpeg, .png et .webp sont acceptés."
+          }
+        }
+      },
       "filters": {
         "all": "Tous les statuts",
         "pending": "En attente",
@@ -437,6 +475,10 @@
         "meet": {
           "title": "Google Meet",
           "description": "Participez virtuellement avec Google Meet — la distance n’a pas d’importance."
+        },
+        "private": {
+          "title": "Activité privée",
+          "description": "Activité exclusive sur invitation uniquement, avec accès restreint pour des invités sélectionnés."
         }
       },
       "date_time": "Date et heure",
@@ -449,8 +491,8 @@
       "event_details": "Détails de l'événement",
       "event_name": "Nom de l'événement",
       "description": "Dites aux participants de quoi parle votre événement, à qui il s'adresse et à quoi ils peuvent s'attendre.",
-      "event_tags": "Tags de l'événement",
-      "select_tags": "Sélectionner les tags de l'événement",
+      "event_tags": "Tag de l'événement",
+      "select_tags": "Sélectionner un tag de l'activité",
       "location": "Lieu",
       "address": "Adresse",
       "city": "Ville",
@@ -479,7 +521,8 @@
       "select_platform": "Sélectionner la plateforme en ligne",
       "streaming_link": "Lien de diffusion/réunion",
       "password": "Mot de passe (si nécessaire)",
-      "mark_as_free": "Marquer cet événement comme gratuit",
+      "mark_as_free": "Marquer cet activité comme gratuit",
+      "mark_as_refundable": "Marquer les tickets comme remboursable",
       "currency": "Monnaie",
       "general_default": "Rejoignez-nous pour une expérience inoubliable, totalement gratuite ! Réservez votre place dès maintenant !",
       "draft": "Sauvegarder comme brouillon",

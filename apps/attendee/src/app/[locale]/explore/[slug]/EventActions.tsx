@@ -1,41 +1,39 @@
 "use client";
 import {
   AddEventToFavorite,
-  AddReportEvent,
   RemoveEventToFavorite,
 } from "@/actions/eventActions";
 import NoAuthDialog from "@/components/Layouts/NoAuthDialog";
 import { LinkPrimary } from "@/components/Links";
 import PageLoader from "@/components/Loaders/PageLoader";
-import { usePathname } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
 import TruncateUrl from "@/lib/TruncateUrl";
 import { Event, User } from "@workspace/typescript-config";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ButtonNeutral, ButtonPrimary } from "@workspace/ui/components/buttons";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@workspace/ui/components/dialog";
-import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
-import { Copy, Heart, MoreCircle, Send2, Warning2 } from "iconsax-react";
+import { Copy, Heart, MoreCircle, Send2 } from "iconsax-react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import z from "zod";
+import Image from "next/image";
+import Whatsapp from "@workspace/ui/assets/icons/whatsApp.svg";
+import Twitter from "@workspace/ui/assets/icons/twitter.svg";
+import Linkedin from "@workspace/ui/assets/icons/linkedIn.svg";
+import ReportEventComponent from "./ReportEventComponent";
+import ReportOrganisationComponent from "./ReportOrganisationComponent";
 
 export default function EventActions({
   event,
@@ -55,7 +53,6 @@ export default function EventActions({
 
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
-
   async function AddToFavorite() {
     setIsLoading(true);
     const result = await AddEventToFavorite(
@@ -67,10 +64,8 @@ export default function EventActions({
     if (result.error) {
       toast.error(result.message);
     }
-
     setIsLoading(false);
   }
-
   async function RemoveToFavorite() {
     setIsLoading(true);
     const result = await RemoveEventToFavorite(
@@ -82,51 +77,9 @@ export default function EventActions({
     if (result.error) {
       toast.error(result.message);
     }
-
     setIsLoading(false);
   }
-
-  const ReportEventSchema = z.object({
-    status: z.enum(
-      [
-        t("inappropriateContent"),
-        t("misleadingInformation"),
-        t("fraud"),
-        t("venue"),
-      ] as const,
-      { error: t("validStatus") }
-    ),
-  });
-
-  type TReportEventSchema = z.infer<typeof ReportEventSchema>;
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TReportEventSchema>({
-    resolver: zodResolver(ReportEventSchema),
-  });
-
-  const closeReportRef = useRef<HTMLButtonElement>(null);
-
-  async function ReportEvent(data: TReportEventSchema) {
-    setIsLoading(true);
-    const result = await AddReportEvent(
-      user.accessToken,
-      event.eventId,
-      pathname,
-      { message: data.status, organisationId: event.organisationId }
-    );
-
-    if (result.status !== "success") {
-      toast.error(result.message);
-    } else {
-      closeReportRef.current?.click();
-    }
-
-    setIsLoading(false);
-  }
+  const eventLink = currentUrl;
   return (
     <div className="flex items-center justify-between">
       <PageLoader isLoading={isLoading} />
@@ -199,6 +152,37 @@ export default function EventActions({
                   {t("copy")}
                 </button>
               </div>
+              <div className="flex w-full justify-center items-center gap-12">
+                <Link
+                  href={`https://wa.me/?text=${encodeURIComponent(`*Check this out — it’s worth your time!* \nSomething exciting is happening and I wanted you to be part of it.\nTap the link to explore - Reserve your spot now! \n${eventLink}`)}`}
+                  target="_blank"
+                  className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                >
+                  <Image src={Whatsapp} alt="whatsapp Icon" />
+                </Link>
+                {/* <div className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full">
+                      <Image src={Instagram} alt="instagram Icon" />
+                    </div> */}
+                <Link
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `Check this out — it’s worth your time! 🚀\nSomething exciting is happening and I wanted you to be part of it.\nReserve your spot now: ${eventLink}`
+                  )}`}
+                  target="_blank"
+                  className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                >
+                  <Image src={Twitter} alt="Twitter Icon" />
+                </Link>
+                {/* <div className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full">
+                      <Image src={Tiktok} alt="tiktok Icon" />
+                    </div> */}
+                <Link
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventLink)}`}
+                  target="_blank"
+                  className="flex items-center justify-center w-[45px] h-[45px] bg-neutral-100 rounded-full"
+                >
+                  <Image src={Linkedin} alt="LinkedIn Icon" />
+                </Link>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
@@ -238,12 +222,10 @@ export default function EventActions({
             <NoAuthDialog />
           </Dialog>
         )}
-
         <Popover>
           <PopoverTrigger asChild>
             <span className="w-[35px] h-[35px] group flex items-center justify-center bg-neutral-100 rounded-[30px] cursor-pointer hover:bg-primary-100 transition-all ease-in-out duration-500">
               <MoreCircle variant={"Bulk"} color={"#737C8A"} size={20} />
-              {/* {t('more')} */}
             </span>
           </PopoverTrigger>
           <PopoverContent
@@ -258,136 +240,9 @@ export default function EventActions({
             >
               {t("more")}
             </span>
-
-            {session?.user ? (
-              <Dialog>
-                <form>
-                  <DialogTrigger asChild>
-                    <div className="flex items-center gap-4 cursor-pointer">
-                      <Warning2 size="20" color="#DE0028" variant="Bulk" />
-                      <span className="text-[1.4rem] leading-8 text-failure">
-                        {t("reportEvent")}
-                      </span>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className="flex flex-col gap-8">
-                    <DialogHeader>
-                      <DialogTitle>{t("reportEvent")}</DialogTitle>
-                      <DialogDescription className=" text-[1.8rem] leading-8 text-neutral-400 text-center">
-                        {t("reportEventDescription")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex flex-col gap-8">
-                      <label
-                        htmlFor="inappropriateContent"
-                        // name="status"
-                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                      >
-                        {t("inappropriateContent")}
-                        <input
-                          type="radio"
-                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                          id="inappropriateContent"
-                          value={t("inappropriateContent")}
-                          {...register("status")}
-                        />
-                      </label>
-                      <label
-                        htmlFor="misleadingInformation"
-                        // name="status"
-                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                      >
-                        {t("misleadingInformation")}
-                        <input
-                          type="radio"
-                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                          id="misleadingInformation"
-                          value={t("misleadingInformation")}
-                          {...register("status")}
-                        />
-                      </label>
-                      <label
-                        htmlFor="fraud"
-                        // name="status"
-                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                      >
-                        {t("fraud")}
-                        <input
-                          type="radio"
-                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                          id="fraud"
-                          value={t("fraud")}
-                          {...register("status")}
-                        />
-                      </label>
-                      <label
-                        htmlFor="venue"
-                        // name="status"
-                        className="font-medium cursor-pointer  relative bg-neutral-100 hover:bg-zinc-100 flex items-center px-4 py-[1.5rem] gap-3 rounded-[10px] text-[1.6rem] leading-8 text-deep-100 has-[:checked]:bg-white has-[:checked]:ring-primary-500 has-checked:shadow-lg has-[:checked]:ring-1 select-none"
-                      >
-                        {t("venue")}
-                        <input
-                          type="radio"
-                          className="peer/html w-4 h-4 opacity-0 absolute accent-current right-3"
-                          id="venue"
-                          value={t("venue")}
-                          {...register("status")}
-                        />
-                      </label>
-                      <span className={"text-[1.2rem] px-8 py-2 text-failure"}>
-                        {errors.status?.message}
-                      </span>
-                    </div>
-
-                    <DialogFooter className="">
-                      <DialogClose ref={closeReportRef} asChild>
-                        <ButtonNeutral>{t("back")}</ButtonNeutral>
-                      </DialogClose>
-                      <ButtonPrimary
-                        type="submit"
-                        onClick={handleSubmit(ReportEvent)}
-                      >
-                        {isLoading ? <LoadingCircleSmall /> : t("reportEvent")}
-                      </ButtonPrimary>
-                    </DialogFooter>
-                  </DialogContent>
-                </form>
-              </Dialog>
-            ) : (
-              <Dialog>
-                <DialogTrigger>
-                  <div className="flex items-center gap-4 cursor-pointer">
-                    <Warning2 size="20" color="#DE0028" variant="Bulk" />
-                    <span className="text-[1.4rem] leading-8 text-failure">
-                      {t("reportEvent")}
-                    </span>
-                  </div>
-                </DialogTrigger>
-                <NoAuthDialog />
-              </Dialog>
-            )}
+            <ReportEventComponent event={event} />
             <div className="h-[1px] bg-neutral-200 w-full"></div>
-
-            {session?.user ? (
-              <div className="flex items-center gap-4">
-                <Warning2 size="20" color="#DE0028" variant="Bulk" />
-                <span className="text-[1.4rem] leading-8 text-failure">
-                  {t("reportOrg")}
-                </span>
-              </div>
-            ) : (
-              <Dialog>
-                <DialogTrigger>
-                  <div className="flex items-center gap-4">
-                    <Warning2 size="20" color="#DE0028" variant="Bulk" />
-                    <span className="text-[1.4rem] leading-8 text-failure">
-                      {t("reportOrg")}
-                    </span>
-                  </div>
-                </DialogTrigger>
-                <NoAuthDialog />
-              </Dialog>
-            )}
+            <ReportOrganisationComponent event={event} />
           </PopoverContent>
         </Popover>
       </div>

@@ -24,7 +24,6 @@ export default function UserProfileForm({
   const UpdateProfileSchema = z.object({
     firstName: z.string().min(1, t("errors.firstName")),
     lastName: z.string().min(1, t("errors.lastName")),
-    phoneNumber: z.string().min(8, t("errors.phoneNumber")),
   });
   type TUpdateProfileSchema = z.infer<typeof UpdateProfileSchema>;
   const {
@@ -38,7 +37,6 @@ export default function UserProfileForm({
     const result = await UpdateUserProfile(
       data.firstName,
       data.lastName,
-      String(data.phoneNumber),
       accessToken,
       locale
     );
@@ -60,7 +58,6 @@ export default function UserProfileForm({
       >
         {t("personal")}
       </span>
-      {/* <div> */}
       <div
         className={
           "flex flex-col w-full lg:flex-row lg:justify-between gap-[1.5rem]"
@@ -89,8 +86,6 @@ export default function UserProfileForm({
           {t("placeholders.lastname")}
         </Input>
       </div>
-
-      {/* </div> */}
       <Input
         defaultValue={user.email}
         readOnly
@@ -99,16 +94,6 @@ export default function UserProfileForm({
         type="email"
       >
         {t("placeholders.email")}
-      </Input>
-      <Input
-        defaultValue={user.phoneNumber}
-        {...register("phoneNumber")}
-        isLoading={isSubmitting}
-        name="phoneNumber"
-        error={errors.phoneNumber?.message}
-        type="string"
-      >
-        {t("placeholders.phone")}
       </Input>
       <Input
         defaultValue={FormatDate(user.dateOfBirth)}

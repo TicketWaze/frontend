@@ -3,7 +3,12 @@
   "style": "new-york",
   "rsc": true,
   "tsx": true,
-  "tailwind": {},
+  "tailwind": {
+    "config": "",
+    "css": "",
+    "baseColor": "",
+    "cssVariables": false
+  },
   "iconLibrary": "lucide",
   "aliases": {
     "components": "@workspace/ui/components",

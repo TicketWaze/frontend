@@ -5,7 +5,7 @@ import Separator from "@/components/Separator";
 import { UserPreference } from "@workspace/typescript-config";
 import ToggleIcon from "@workspace/ui/components/ToggleIcon";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -17,6 +17,7 @@ export default function EmailNotifications({
   const t = useTranslations("Preferences");
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+  const locale = useLocale();
 
   async function updatePreferences(e: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
@@ -35,7 +36,12 @@ export default function EmailNotifications({
 
     const response = await UpdateUserPreferences(
       session?.user.accessToken ?? "",
-      body
+      {
+        ...body,
+        currency: userPreferences.currency,
+        notifications: userPreferences.notifications,
+      },
+      locale
     );
     if (response.status === "failed") {
       toast.error(response.message);

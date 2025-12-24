@@ -1,47 +1,34 @@
+"use client";
 import { Link } from "@/i18n/navigation";
-import { EventTag } from "@workspace/typescript-config";
 import { Calendar2, Google, Location } from "iconsax-react";
-import { DateTime } from "luxon";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
+import { englishEventTags, frenchEventTags } from "@/lib/EventTags";
+import { Event } from "@workspace/typescript-config";
+import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
+import Slugify from "@/lib/Slugify";
 
-function EventCard({
-  image,
-  name,
-  date,
-  city,
-  country,
-  price,
-  currency,
-  href,
-  aside,
-  tags,
-  eventType,
-}: {
-  image: string;
-  name: string;
-  date: DateTime;
-  city: string;
-  country: string;
-  price: number;
-  currency: string;
-  href: string;
-  aside?: boolean;
-  tags: EventTag[];
-  eventType: string;
-}) {
+function EventCard({ event, aside }: { event: Event; aside?: boolean }) {
+  const date = TimesTampToDateTime(event.eventDays[0]?.startDate ?? "");
+  const slug = Slugify(event.eventName);
+  const locale = useLocale();
+  const eventTags = locale === "fr" ? frenchEventTags : englishEventTags;
   const t = useTranslations("Events");
+  const price =
+    event.currency === "USD"
+      ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
+      : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0);
   return (
     <Link
-      href={href}
+      href={`/events/show/${slug}`}
       className={`flex flex-row items-center lg:items-stretch lg:mb-8 lg:ml-4 lg:flex-col gap-4 w-full ${!aside && "lg:max-w-[350px]"} bg-white shadow-lg rounded-[1rem] overflow-hidden pb-4 pl-4 lg:pl-0`}
     >
       <Image
-        src={image}
+        src={event.eventImageUrl}
         className={
           "h-[155px] lg:h-[191px] flex-1 lg:flex-auto w-[155px] lg:w-full object-cover object-left-top rounded-[1rem] "
         }
-        alt={name}
+        alt={event.eventName}
         height={191}
         width={255}
       />
@@ -51,24 +38,33 @@ function EventCard({
         }
       >
         <ul className="lg:flex  items-center gap-4">
-          {tags.map((tag) => (
-            <li
-              key={tag.tagId}
-              className="bg-primary-50 hidden lg:block py-1 px-4 rounded-[30px] text-[1rem] text-primary-500 font-primary leading-[15px]"
-            >
-              {tag.tagName}
-            </li>
-          ))}
-          <span className="bg-primary-50 lg:hidden py-1 px-4 rounded-[30px] text-[1rem] text-primary-500 font-primary w-auto leading-[15px]">
-            {tags[0]?.tagName}
-          </span>
+          {eventTags
+            .filter((tag) => tag.id === event.eventTagId)
+            .map((tag) => (
+              <li
+                key={tag.id}
+                className="bg-primary-50 hidden lg:block py-1 px-4 rounded-[30px] text-[1rem] text-primary-500 font-primary leading-[15px]"
+              >
+                {tag.tag}
+              </li>
+            ))}
+          {eventTags
+            .filter((tag) => tag.id === event.eventTagId)
+            .map((tag) => (
+              <li
+                key={tag.id}
+                className="bg-primary-50 lg:hidden justify-self-start py-1 px-4 rounded-[30px] text-[1rem] text-primary-500 font-primary w-auto leading-[15px]"
+              >
+                {tag.tag}
+              </li>
+            ))}
         </ul>
         <h1
           className={
             "font-bold font-primary text-[1.2rem] text-deep-100 leading-[17px]"
           }
         >
-          {name}
+          {event.eventName}
         </h1>
         <div
           className={
@@ -87,7 +83,7 @@ function EventCard({
               {date.year}
             </span>
           </div>
-          {eventType === "meet" ? (
+          {event.eventType === "meet" ? (
             <div className={"flex items-center gap-[5px]"}>
               <Google size="15" color="#2e3237" variant="Bulk" />
               <p
@@ -106,7 +102,8 @@ function EventCard({
                   "font-medium text-[1rem] text-deep-100 leading-[15px]"
                 }
               >
-                {city}, <span className={"text-neutral-700"}>{country}</span>
+                {event.city},{" "}
+                <span className={"text-neutral-700"}>{event.country}</span>
               </p>
             </div>
           )}
@@ -115,7 +112,9 @@ function EventCard({
           {price > 0 ? (
             <>
               {t("from")} {price}{" "}
-              <span className="font-normal text-neutral-700">{currency}</span>
+              <span className="font-normal text-neutral-700">
+                {event.currency}
+              </span>
             </>
           ) : (
             t("free")

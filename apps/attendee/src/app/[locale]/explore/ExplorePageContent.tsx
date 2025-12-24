@@ -3,8 +3,8 @@ import EventCard from "@/components/EventCard";
 import NoAuthDialog from "@/components/Layouts/NoAuthDialog";
 import { Link } from "@/i18n/navigation";
 import Slugify from "@/lib/Slugify";
-import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
-import { Event } from "@workspace/typescript-config";
+import TruncateUrl from "@/lib/TruncateUrl";
+import { Event, UserWallet } from "@workspace/typescript-config";
 import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog";
 import {
   Tooltip,
@@ -12,6 +12,7 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import {
+  AddCircle,
   CloseCircle,
   Heart,
   Money3,
@@ -22,7 +23,13 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
-export default function ExplorePageContent({ events }: { events: Event[] }) {
+export default function ExplorePageContent({
+  events,
+  wallet,
+}: {
+  events: Event[];
+  wallet: UserWallet;
+}) {
   const t = useTranslations("Explore");
   const [query, setQuery] = useState("");
   const filteredEvents = events.filter((event) => {
@@ -99,6 +106,7 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
                 <SearchNormal size="20" color="#737c8a" variant="Bulk" />
               </button>
             )}
+            {/* Liked */}
             {session?.user ? (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -123,35 +131,42 @@ export default function ExplorePageContent({ events }: { events: Event[] }) {
                 <NoAuthDialog />
               </Dialog>
             )}
+            {/* Wallet */}
+            {session?.user && (
+              <Link
+                href={"/wallet"}
+                className="bg-neutral-200 text-black text-[1.4rem] hidden lg:flex gap-4 px-3 py-[6px] rounded-[3rem] items-center"
+              >
+                {TruncateUrl(
+                  `${
+                    session?.user?.userPreference?.currency === "USD"
+                      ? wallet.usdAvailableBalance
+                      : wallet.htgAvailableBalance
+                  }`,
+                  4
+                )}
+                <span className="font-medium text-primary-500">
+                  {session.user.userPreference.currency}
+                </span>
+                <AddCircle
+                  size="24"
+                  color="#E45B00"
+                  variant="Bulk"
+                  className="hidden lg:block"
+                />
+              </Link>
+            )}
           </div>
         </div>
       </header>
       {events.length > 0 ? (
         <>
-          <ul className="list pt-4">
+          <ul className="list pt-4 overflow-y-scroll">
             {filteredEvents.map((event) => {
-              const date = TimesTampToDateTime(
-                event.eventDays[0]?.startDate ?? ""
-              );
               const slug = Slugify(event.eventName);
               return (
                 <li key={event.eventId}>
-                  <EventCard
-                    href={`/explore/${slug}`}
-                    image={event.eventImageUrl}
-                    name={event.eventName}
-                    date={date}
-                    country={event.country ?? ""}
-                    city={event.city ?? ""}
-                    price={
-                      event.currency === "USD"
-                        ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
-                        : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
-                    }
-                    currency={event.currency}
-                    tags={event.eventTags}
-                    eventType={event.eventType}
-                  />
+                  <EventCard event={event} href={`/explore/${slug}`} />
                 </li>
               );
             })}

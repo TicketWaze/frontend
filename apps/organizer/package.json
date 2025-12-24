@@ -22,6 +22,7 @@
     "@workspace/ui": "workspace:*",
     "chart.js": "^4.5.0",
     "framer-motion": "^12.23.5",
+    "html5-qrcode": "^2.3.8",
     "iconsax-react": "^0.0.8",
     "lucide-react": "^0.475.0",
     "luxon": "^3.6.1",

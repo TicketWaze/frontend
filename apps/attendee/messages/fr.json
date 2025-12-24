@@ -1,8 +1,21 @@
 {
   "Auth": {
     "layout": {
-      "title": "Découvrez les événements, connectez-vous à la culture, vivez Haïti.",
-      "description": "Explorez, partagez et profitez facilement des meilleurs événements qu'Haïti a à offrir. Rejoignez-nous aujourd'hui et commencez votre voyage !"
+      "title": "La billetterie simplifiée. Des moments qui marquent à jamais.",
+      "description": "Gagnez du temps et vivez pleinement vos passions. Accédez facilement aux activités qui vous inspirent, avec une expérience fluide et sans accroc, du premier clic jusqu’au souvenir inoubliable."
+    },
+    "choice": {
+      "title": "Bienvenue sur TicketWaze",
+      "description": "Choisissez une option pour continuer et configurer votre compte.",
+      "cta": "Continuer",
+      "attendee": {
+        "title": "Participant",
+        "description": "Parcourez, découvrez et achetez facilement des billets pour une grande variété d’événements."
+      },
+      "organisation": {
+        "title": "Organisation",
+        "description": "Créez et gérez vos activités en toute simplicité. Suivez les ventes de billets et analysez les données des participants."
+      }
     },
     "login": {
       "title": "Se connecter",
@@ -18,6 +31,7 @@
       "forgot": "Mot de passe oublié",
       "cta": {
         "submit": "Se connecter",
+        "or": "Ou",
         "google": "Continuer avec Google"
       },
       "footer": {
@@ -29,6 +43,7 @@
       "title": "Créer un compte",
       "organizer": "Créer un compte",
       "description": "Veuillez compléter le formulaire ci-dessous pour continuer.",
+      "referral": " a pensée que vous aimeriez être ici.",
       "choice": {
         "title": "Créer un compte",
         "description": "Choisissez une option pour continuer et configurer votre compte.",
@@ -56,6 +71,9 @@
         "confirm": "Confirmer le mot de passe"
       },
       "errors": {
+        "characters": "Au moins 8 caractères",
+        "capital": "Au moins une lettre majuscule",
+        "special": "Au moins un caractère spécial",
         "password_length": "Le mot de passe doit contenir au moins 8 caractères",
         "password_match": "Les mots de passe ne correspondent pas",
         "firstname_length": "Le prénom doit contenir au moins 2 caractères",
@@ -82,6 +100,7 @@
     "complete": {
       "title": "Finaliser la configuration du compte",
       "description": "Veuillez remplir le formulaire ci-dessous pour finaliser la configuration de votre compte.",
+      "referral": " a pensée que vous aimeriez être ici.",
       "becoming": {
         "subtitle": "Créer une organisation",
         "description": "Veuillez remplir le formulaire ci-dessous pour créer une nouvelle organisation.",
@@ -139,6 +158,49 @@
       },
       "cta": "Terminer"
     },
+    "onboarding": {
+      "title": "Bienvenue sur TicketWaze",
+      "description": "Apprenons à mieux vous connaître pour personnaliser votre expérience.",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "submit": "Valider",
+      "error": "Veuillez sélectionner une option",
+      "onboarded": "Utilisateur déjà intégré",
+      "first": {
+        "question": "Comment comptez-vous utiliser TicketWaze ?",
+        "1": "Pour acheter des billets",
+        "2": "Pour vendre ou gérer des billets",
+        "3": "Les deux"
+      },
+      "second": {
+        "question": "Quels types de billets vous intéressent le plus ?",
+        "1": "Concerts et festivals",
+        "2": "Sports et compétitions",
+        "3": "Cinéma et divertissement",
+        "4": "Conférences et séminaires"
+      },
+      "third": {
+        "question": "Quelle devise préférez-vous ?",
+        "1": "USD - Dollar américain",
+        "2": "HTG - Gourde haïtienne"
+      },
+      "fourth": {
+        "question": "Souhaitez-vous recevoir des notifications sur les activités tendance et les offres exclusives ?",
+        "1": "Oui",
+        "2": "Non"
+      },
+      "fith": {
+        "question": "Comment souhaitez-vous recevoir les mises à jour ?",
+        "1": "Notifications par e-mail",
+        "2": "Notifications par WhatsApp",
+        "3": "Aucune"
+      },
+      "sixth": {
+        "question": "Représentez-vous une organisation ou une entreprise ? (ex: Sumfest, Banj...)",
+        "1": "Oui",
+        "2": "Non, je suis un particulier"
+      }
+    },
     "forgot": {
       "title": "Réinitialiser le mot de passe",
       "description": "Veuillez saisir les détails de votre compte pour continuer",
@@ -187,6 +249,8 @@
         "title1": "Événements",
         "explore": "Explorer",
         "upcoming": "À venir",
+        "wallet": "Portefeuille",
+        "liked": "Portefeuille",
         "history": "Historique",
         "organizers": "Organisateurs",
         "title2": "Utilisateur",
@@ -236,6 +300,74 @@
       }
     }
   },
+  "Wallet": {
+    "title": "Portefeuille",
+    "subtitle": "Bon retour",
+    "amounts": {
+      "available": "Solde disponible",
+      "pending": "Solde en attente"
+    },
+    "ticketwazeToken": "Jeton Ticketwaze",
+    "token": "jeton(s)",
+    "invitedUser": "Utilisateur invité",
+    "user": "utilisateur(s)",
+    "referralTitle": "Invitez des amis",
+    "referralDescription": "Faisons grandir notre communauté ensemble. Aidez vos amis à découvrir des billets et des expériences exceptionnels, et gagnez 5 points pour chaque recommandation réussie !",
+    "copy": "Copier",
+    "filters": {
+      "all": "Tous les statuts",
+      "pending": "En attente",
+      "successful": "Réussi"
+    },
+    "search": "Rechercher un identifiant de transaction",
+    "transactions": {
+      "title": "Transactions récentes",
+      "description": "Vos commandes apparaîtront ici dès que les transactions commenceront à arriver.",
+      "table": {
+        "id": "ID de transaction",
+        "provider": "Fournisseur",
+        "class": "Billets",
+        "amount": "Montant payé",
+        "status": "Statut de la transaction",
+        "date": "Date d'achat"
+      },
+      "more": "Voir tout",
+      "details": {
+        "title": "Détails de la transaction",
+        "name": "Nom du participant",
+        "email": "E-mail",
+        "event_name": "Nom de l'événement",
+        "date": "Date",
+        "time": "Heure",
+        "location": "Lieu",
+        "ticket_class": "Nombre de billets",
+        "price": "Prix",
+        "ticket_id": "ID du billet",
+        "total": "Total",
+        "transaction_id": "ID de transaction",
+        "payment_method": "Méthode de paiement",
+        "payment_date": "Créé le",
+        "transaction_status": "Statut de la transaction",
+        "check_status": "Statut",
+        "check_time": "Heure de validation",
+        "close": "Fermer",
+        "resend": "Renvoyer le billet"
+      }
+    },
+    "withdrawal": {
+      "title": "Historique des retraits",
+      "description": "Votre historique de retraits s'affichera ici une fois que vous aurez effectué une demande de retrait.",
+      "table": {
+        "id": "ID de retrait",
+        "name": "Nom de la banque",
+        "provider": "Fournisseur",
+        "account": "Numéro de compte",
+        "amount": "Montant",
+        "status": "Statut de la transaction",
+        "date": "Date d'achat"
+      }
+    }
+  },
   "Upcoming": {
     "title": "Événements à venir",
     "subtitle": "Bon retour ",
@@ -253,6 +385,7 @@
     "from": "À partir de",
     "free": "Gratuit",
     "back": "Retour",
+    "notInvited": "Accès restreint : il s'agit d'une activité privée visible uniquement par les participants invités.",
     "share": "Partager",
     "share_text": "Faites passer le mot et invitez vos amis ! Partagez cet événement sur les réseaux sociaux ou par message direct.",
     "copy": "Copier",
@@ -267,11 +400,18 @@
     "viewProfile": "Voir le profil",
     "more": "Plus",
     "reportEvent": "Signaler l'événement",
+    "reportOrganisation": "Signaler cet Organisation",
     "reportEventDescription": "Aidez-nous à maintenir la sécurité de la plateforme. Partagez les détails sur tout problème avec cet événement.",
+    "reportOrganisationDescription": "Aidez-nous à maintenir la sécurité de la plateforme. Partagez les détails sur tout problème avec cet organisation.",
     "inappropriateContent": "Contenu inapproprié",
     "misleadingInformation": "Informations trompeuses",
     "fraud": "Préoccupations de fraude ou d'arnaque",
     "venue": "Problèmes de lieu ou de date",
+    "other": "Autre",
+    "question": "Quel problème rencontrez-vous avec cet événement ?",
+    "question2": "Quel problème rencontrez-vous avec cette organisation ?",
+    "message": "Message",
+    "pleaseSpecifyReason": "Veuillez préciser une raison valable",
     "validStatus": "Vous devez sélectionner une raison valide",
     "reportOrg": "Signaler l'organisation",
     "sold": "Vendu",
@@ -290,7 +430,8 @@
     "ticketId": "ID du billet",
     "name": "Nom complet",
     "email": "E-mail",
-    "ticketWarning": "Votre billet est personnel — ne le partagez pas. Ce billet est non remboursable",
+    "ticketWarning1": "Votre billet est personnel — ne le partagez pas.",
+    "ticketWarning2": "Ce billet est non remboursable",
     "liked": "Événements aimés"
   },
   "Checkout": {
@@ -304,6 +445,8 @@
       "quantity": "Quantité",
       "summary": "Résumé",
       "select": "Sélectionnez un type de billet pour continuer",
+      "left": "tickets restant",
+      "soldout": "Rupture de stock",
       "platform": "Frais + taxes / ticket",
       "discount": "Appliquer un code de réduction",
       "discount_code": "Code de réduction",
@@ -322,6 +465,7 @@
     "payment": {
       "title": "Paiement",
       "payment": "Effectuer le paiement",
+      "wallet": "Portefeuille Ticketwaze",
       "card": "Payer par carte",
       "paypal": "Payer avec PayPal",
       "moncash": "Payer avec MonCash",
@@ -407,6 +551,12 @@
       "upcoming": "Me notifier des événements à venir pour lesquels j'ai acheté des billets.",
       "preferred": "Me notifier des nouveaux événements dans mes catégories préférées.",
       "follow": "Me notifier quand un organisateur que je suis ajoute de nouveaux événements."
+    },
+    "user": {
+      "title": "Préférences de l'application",
+      "currency": "Devise préférée",
+      "notifications": "Fournisseur de notifications préféré",
+      "none": "Aucun"
     }
   },
   "Settings": {
@@ -414,11 +564,20 @@
     "password": {
       "title": "Changer le mot de passe",
       "cta": "Changer le mot de passe",
+      "tips": {
+        "title": "Conseil de sécurité",
+        "description": "Après avoir mis à jour votre mot de passe, vous devrez vous reconnecter sur tous vos appareils pour des raisons de sécurité."
+      },
       "errors": {
         "blank": "Le champ ne peut pas être vide",
         "password": "Le mot de passe doit contenir au moins 8 caractères",
         "confirm": "Le mot de passe doit être identique"
       }
+    },
+    "errors": {
+      "characters": "Au moins 8 caractères",
+      "capital": "Au moins une lettre majuscule",
+      "special": "Au moins un caractère spécial"
     },
     "placeholders": {
       "password": "Mot de passe actuel",
@@ -439,27 +598,27 @@
     }
   },
   "Organizers": {
-    "title": "Organisateurs",
+    "title": "Organisation",
     "subtitle": "Bon retour ",
     "back": "Retour",
-    "search": "Rechercher des organisateurs",
+    "search": "Rechercher des organisations",
     "filters": {
       "all": "Tous",
       "popular": "Populaires",
       "following": "Suivis"
     },
-    "event": "événements",
+    "event": "activités",
     "follow": "Suivre",
     "unfollow": "Ne plus suivre",
     "profile": {
-      "upcoming": "Événements à venir",
-      "noUpcoming": "Aucun événement à venir",
+      "upcoming": "Activités à venir",
+      "noUpcoming": "Aucune activité à venir",
       "rating": "note",
       "followers": "abonnés",
-      "events": "Événements",
+      "events": "Activités",
       "follow": "Suivre",
       "unfollow": "Ne plus suivre",
-      "about": "À propos de l'organisateur",
+      "about": "À propos de l'organisation",
       "contact": "Informations de contact",
       "noResult": "Il n'y a aucun résultat pour "
     }

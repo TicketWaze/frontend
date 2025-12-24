@@ -11,6 +11,41 @@ export interface Country {
   };
 }
 
+export interface OrganisationTicket extends Ticket {
+  event: Event;
+}
+export interface EventAttendee {
+  eventAttendeeId: string;
+  eventId: string;
+  fullName: string;
+  email: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
+export interface UserWallet {
+  walletId: string;
+  userId: string;
+  usdPendingBalance: number;
+  usdAvailableBalance: number;
+  htgPendingBalance: number;
+  htgAvailableBalance: number;
+  userInvited: number;
+  ticketwazeToken: number;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
+export interface EventPerformer {
+  eventPerformerId: string;
+  performerName: string;
+  performerLink: string;
+  performerProfileUrl: string;
+  eventId: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
 export interface WaitlistMember {
   organisationId: string;
   fullName: string;
@@ -29,6 +64,12 @@ export interface UserPreference {
   upcomingEvents: boolean;
   newEventsPreferredCategories: boolean;
   newEventsFollowedOrganizer: boolean;
+  intent: "buyer" | "seller" | "both";
+  interest: string[];
+  currency: "HTG" | "USD";
+  recommendation: boolean;
+  isOnboarded: boolean;
+  notifications: "email" | "whatsapp" | "none";
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -111,6 +152,7 @@ export interface Order {
   orderName: string;
   provider: string;
   status: "PENDING" | "SUCCESSFUL";
+  tickets: Ticket[];
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -136,6 +178,8 @@ export interface EventTicketType {
   usdPrice: number;
   // currencyId: string;
   ticketTypeQuantity: number;
+  ticketTypeQuantitySold: number;
+  isRefundable: boolean;
   createdAt?: DateTime;
   updatedAt?: DateTime;
 }
@@ -147,14 +191,6 @@ export interface EventDay {
   dayNumber: number;
   startDate: string;
   endTime: string;
-  createdAt: DateTime;
-  updatedAt: DateTime;
-}
-
-export interface EventTag {
-  tagId: string;
-  tagName: string;
-  tagDescription: string;
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -177,8 +213,10 @@ export interface Event {
   currency: string;
   eventDays: EventDay[];
   eventTicketTypes: EventTicketType[];
-  eventTags: EventTag[];
+  eventTagId: string;
   discountCodes: DiscountCode[];
+  eventPerformers: EventPerformer[];
+  eventAttendees: EventAttendee[];
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -190,7 +228,7 @@ export interface User {
   lastName: string;
   email: string;
   gender: string;
-  phoneNumber: string;
+  whatsappPhoneNumber: string | undefined;
   profileImageUrl: string | undefined;
   country: string;
   state: string;
@@ -200,10 +238,14 @@ export interface User {
   tokenExpiresAt: DateTime;
   resendCount: number;
   lastResendAt: DateTime;
+  referralCode: string;
   isVerified: boolean;
+  mfaEnabled: boolean;
   createdAt: DateTime;
   updatedAt: DateTime;
   organisations: Organisation[];
+  userPreference: UserPreference;
+  isOnboarded: boolean;
 }
 
 export interface Currency {

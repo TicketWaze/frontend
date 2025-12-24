@@ -9,6 +9,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import InPerson from "@/assets/in-person.jpg";
 import GoogleMeet from "@/assets/meet.jpg";
+import Private from "@/assets/private.jpeg";
 import cinema from "@/assets/cinema.jpg";
 import match from "@/assets/match.jpg";
 import { useSession } from "next-auth/react";
@@ -31,6 +32,12 @@ export default function EventTypeList() {
       description: t("list.meet.description"),
       image: GoogleMeet,
       value: "meet",
+    },
+    {
+      title: t("list.private.title"),
+      description: t("list.private.description"),
+      image: Private,
+      value: "private",
     },
     // {
     //     title: 'Cinema',

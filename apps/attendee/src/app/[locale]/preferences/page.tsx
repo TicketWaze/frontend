@@ -6,6 +6,7 @@ import EmailNotifications from "./EmailNotifications";
 import { auth } from "@/lib/auth";
 import { redirect } from "@/i18n/navigation";
 import { UserPreference } from "@workspace/typescript-config";
+import UserPreferences from "./UserPreferences";
 
 export default async function PreferencesPage() {
   const t = await getTranslations("Preferences");
@@ -33,10 +34,12 @@ export default async function PreferencesPage() {
       <SimpleTopbar title={t("title")} />
       <div
         className={
-          "flex flex-col justify-between gap-[40px] w-full lg:w-[530px] mx-auto overflow-y-scroll overflow-x-hidden h-full"
+          "flex flex-col gap-[40px] w-full lg:w-[530px] mx-auto overflow-y-scroll overflow-x-hidden h-full"
         }
       >
+        <UserPreferences userPreferences={userPreferences} />
         <EmailNotifications userPreferences={userPreferences} />
+        <div></div>
       </div>
     </AttendeeLayout>
   );

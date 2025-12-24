@@ -1,13 +1,17 @@
 {
   "Auth": {
     "layout": {
-      "title": "Empowering events across Your Country & beyond",
-      "description": "Create events in minutes, sell tickets, manage attendees, and track earnings — all in one place"
+      "title": "Selling tickets made simple — nationwide & beyond",
+      "description": "Launch activities in minutes, sell tickets effortlessly, track sales, and manage attendees — all in one place"
     },
     "onboarding": {
       "title": "Organisation Invitation",
       "description": "You've been invited to join and organisation on TicketWaze — a platform for managing and selling event tickets with ease.",
-      "join": "Join"
+      "join": "Join",
+      "title2": "Get ready to sell tickets",
+      "description2": "Create activities, manage attendees, and track sales — everything starts here",
+      "alert": "We’ve set up a default organisation to get you started. Don’t worry — you’ll be able to change its information and customise it once it’s created.",
+      "action": "Get started"
     },
     "register": {
       "title": "Create an Account",
@@ -126,7 +130,7 @@
       "cta": "Complete"
     },
     "login": {
-      "title": "Sign In",
+      "title": "Sign in your organisation",
       "description": "Please enter you account details to continue",
       "placeholders": {
         "email": "Email Address",
@@ -336,6 +340,7 @@
     "free": "Free",
     "single_event": {
       "close": "Close",
+      "edit": "Edit",
       "check_in": "Check In",
       "back": "Back",
       "share": "Share Event",
@@ -348,7 +353,10 @@
       "update_checker": "Update Checkers list",
       "startChecking": "Start CheckIn",
       "stopChecking": "Stop CheckIn",
-      "check_in_description": "Enter the ticket ID below to verify and check in an attendee.",
+      "delete": "Delete Activity",
+      "deleteWarning": "You are about to permanently delete this activity. This action cannot be undone, and all related information will be lost. Do you wish to continue?",
+      "type": "Type the name of the activity to confirm",
+      "check_in_description": "Scan Qr code or enter the ticket ID below to verify and check in an attendee.",
       "ticketID": "Ticket ID",
       "revenue": "Total Revenue",
       "sold": "Tickets Sold",
@@ -407,6 +415,36 @@
           }
         }
       },
+      "attendees": {
+        "back": "Back",
+        "subtitle": "Add Attendee",
+        "title": "Attendees",
+        "fullName": "Full name",
+        "email": "Email Address",
+        "close": "Close",
+        "add": "Add",
+        "more": "More",
+        "remove": "Remove access"
+      },
+      "artist": {
+        "add": "Add Performer",
+        "description": "You can upload a photo and link to their profile, Once added, the artist will appear in your event lineup.",
+        "noArtist": "Start adding performers to see your list come to life!",
+        "name": "Performer Name",
+        "link": "Link to profile or website",
+        "thumbnail": "Drop your thumbnail here or ",
+        "browse": "browse",
+        "resize": "Resize the image",
+        "errors": {
+          "name": "Performer name cannot be blank",
+          "link": "Please enter a valid Link",
+          "image": {
+            "required": "Performer should have a profile image",
+            "max": "Max file size is 200ko.",
+            "type": ".jpg, .jpeg, .png and .webp files are accepted."
+          }
+        }
+      },
       "filters": {
         "all": "All status",
         "pending": "Pending",
@@ -437,6 +475,10 @@
         "meet": {
           "title": "Google Meet",
           "description": "Attend virtually with Google Meet — distance doesn’t matter."
+        },
+        "private": {
+          "title": "Private Activity",
+          "description": "Exclusive invitation-only activity with restricted access for select guests."
         }
       },
       "date_time": "Date & Time",
@@ -449,8 +491,8 @@
       "event_details": "Event Details",
       "event_name": "Event name",
       "description": "Tell attendees what your event is about, who's it for, and what they can expect.",
-      "event_tags": "Event tags",
-      "select_tags": "Select event tags",
+      "event_tags": "Event tag",
+      "select_tags": "Select activity tag",
       "location": "Location",
       "address": "Address",
       "city": "City",
@@ -479,7 +521,8 @@
       "select_platform": "Select Online Platform",
       "streaming_link": "Streaming/meeting Link",
       "password": "Password (if needed)",
-      "mark_as_free": "Mark this event as free",
+      "mark_as_free": "Mark this activity as free",
+      "mark_as_refundable": "Mark tickets as refundable",
       "currency": "Currency",
       "general_default": "Enjoy full access without any cost! Join us for an unforgettable experience. Secure your spot today!",
       "draft": "Save as draft",

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@workspace/ui/lib/utils";
-import Logo from "@workspace/ui/assets/images/logo-horizontal-orange.svg";
+import Logo from "@workspace/ui/assets/images/logo-horizontal-orange-org.svg";
 import Image from "next/image";
 import {
   Add,
@@ -107,7 +107,7 @@ function Sidebar({ className }: { className: string }) {
   return (
     <aside className={cn("flex-col hidden lg:flex", className)}>
       <div className={"flex-1 pt-12 flex flex-col gap-16"}>
-        <Image src={Logo} alt={"Ticket Waze Logo"} width={140} height={40} />
+        <Image src={Logo} alt={"Ticket Waze Logo"} width={250} height={40} />
         <nav>
           <ul className="flex flex-col gap-4">
             {links.map(({ path, Icon, label }) => {
@@ -267,7 +267,7 @@ function Sidebar({ className }: { className: string }) {
               onClick={() =>
                 signOut({
                   redirect: true,
-                  redirectTo: process.env.NEXT_PUBLIC_APP_URL,
+                  redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/${session?.user.userPreference.appLanguage}`,
                 })
               }
               className={"flex gap-4 items-center cursor-pointer p-4"}

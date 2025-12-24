@@ -1,11 +1,12 @@
 "use client";
 import { ButtonRed } from "@workspace/ui/components/buttons";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React from "react";
 
 export default function Signout() {
   const t = useTranslations("Settings");
+  const { data: session } = useSession();
   return (
     <li className="lg:hidden">
       <ButtonRed
@@ -13,7 +14,7 @@ export default function Signout() {
         onClick={() =>
           signOut({
             redirect: true,
-            redirectTo: process.env.NEXT_PUBLIC_APP_URL,
+            redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/${session?.user.userPreference.appLanguage}`,
           })
         }
       >

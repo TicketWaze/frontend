@@ -125,7 +125,7 @@ export default function UpcomingPageContent({ events }: { events: any }) {
       {events.length === 0 && (
         <div
           className={
-            "w-[330px] lg:w-[460px] mx-auto flex flex-col items-center gap-[5rem]"
+            "w-[330px] lg:w-[460px] mx-auto h-full flex flex-col items-center justify-center gap-[5rem]"
           }
         >
           <div

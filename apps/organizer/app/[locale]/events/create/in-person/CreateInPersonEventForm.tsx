@@ -24,7 +24,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { CreateInPersonEvent } from "@/actions/EventActions";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import Capitalize from "@workspace/ui/lib/Capitalize";
 import LoadingCircleSmall from "@workspace/ui/components/LoadingCircleSmall";
 import { redirect } from "next/navigation";
 import mapboxgl from "mapbox-gl";
@@ -33,19 +32,15 @@ import StepBasic from "./BasicDetails";
 import StepDateTime from "./EventDays";
 import StepTicket from "./TicketClasses";
 import { makeCreateInPersonSchema } from "./schema";
-import type { EventTag } from "./types";
 
-export default function CreateInPersonEventForm({
-  tags,
-}: {
-  tags: EventTag[];
-}) {
+export default function CreateInPersonEventForm() {
   const t = useTranslations("Events.create_event");
   const locale = useLocale();
   const { data: session } = useSession();
   const organisation = session?.activeOrganisation;
   const countries = UseCountries();
   const [isFree, setIsfree] = useState(false);
+  const [isRefundable, setIsRefundable] = useState(false);
 
   // create schema using factory (depends on isFree)
   const FormDataSchema = makeCreateInPersonSchema(isFree, (k: string) => t(k));
@@ -63,7 +58,7 @@ export default function CreateInPersonEventForm({
         "country",
         "longitude",
         "latitude",
-        "eventTags",
+        "eventTagId",
         "eventImage",
       ],
     },
@@ -90,10 +85,10 @@ export default function CreateInPersonEventForm({
       address: "",
       state: "",
       city: "",
-      country: Capitalize(organisation?.country ?? ""),
+      country: "Haiti",
       longitude: "",
       latitude: "",
-      eventTags: [],
+      eventTagId: "",
       eventImage: undefined as unknown as File,
       eventDays: [{ startTime: "", endTime: "" }],
       ticketTypes: [
@@ -119,10 +114,11 @@ export default function CreateInPersonEventForm({
     formData.append("country", data.country);
     formData.append("longitude", data.longitude);
     formData.append("latitude", data.latitude);
-    formData.append("eventTags", JSON.stringify(data.eventTags));
+    formData.append("eventTagId", data.eventTagId);
     formData.append("eventImage", data.eventImage);
     formData.append("eventDays", JSON.stringify(data.eventDays));
     formData.append("eventCurrency", data.eventCurrency);
+    formData.append("isRefundable", JSON.stringify(isRefundable));
     if (isFree) {
       formData.append(
         "ticketTypes",
@@ -262,10 +258,10 @@ export default function CreateInPersonEventForm({
 
   return (
     <div className="relative flex flex-col gap-8 overflow-hidden h-full ">
-      <div className="absolute bottom-4 z-[99999999999] w-full hidden lg:block">
+      <div className="absolute bottom-4 z-[9999] w-full hidden lg:block">
         <ButtonPrimary
           onClick={next}
-          className=" w-full max-w-[530px] z-[99999999999] mx-auto  "
+          className=" w-full max-w-[530px] mx-auto  "
           disabled={isSubmitting}
         >
           {isSubmitting ? <LoadingCircleSmall /> : t("proceed")}
@@ -277,7 +273,9 @@ export default function CreateInPersonEventForm({
           <div className="text-[2.2rem] text-neutral-600">
             <span className="text-primary-500">{currentStep + 1}</span>/3
           </div>
-          <ButtonPrimary onClick={next}>{t("proceed")}</ButtonPrimary>
+          <ButtonPrimary onClick={next}>
+            {isSubmitting ? <LoadingCircleSmall /> : t("proceed")}
+          </ButtonPrimary>
         </div>
       </div>
 
@@ -369,7 +367,7 @@ export default function CreateInPersonEventForm({
       </Dialog>
 
       <form
-        className=" flex flex-col gap-12 h-full overflow-y-scroll"
+        className=" flex flex-col gap-12 h-full overflow-y-scroll overflow-x-hidden"
         onSubmit={handleSubmit(processForm)}
       >
         {currentStep === 0 && (
@@ -384,12 +382,10 @@ export default function CreateInPersonEventForm({
               register={register}
               control={control}
               errors={errors}
-              countries={countries}
-              organisationCountry={Capitalize(organisation?.country ?? "")}
               imagePreview={imagePreview}
               handleFileChange={handleFileChange}
-              tags={tags}
               mapContainerRef={mapContainerRef}
+              setValue={setValue}
             />
           </motion.div>
         )}
@@ -426,6 +422,8 @@ export default function CreateInPersonEventForm({
               setTicketClasses={setTicketClasses}
               isFree={isFree}
               setIsFree={setIsfree}
+              isRefundable={isRefundable}
+              setIsRefundable={setIsRefundable}
               setValue={setValue}
               t={(k) => t(k)}
             />

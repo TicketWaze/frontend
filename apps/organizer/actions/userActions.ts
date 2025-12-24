@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 export async function UpdateUserProfile(
   firstName: string,
   lastName: string,
-  phoneNumber: string,
   accessToken: string,
   locale: string
 ) {
@@ -20,7 +19,6 @@ export async function UpdateUserProfile(
       body: JSON.stringify({
         firstName,
         lastName,
-        phoneNumber,
       }),
     });
     const response = await request.json();

@@ -2,12 +2,10 @@ import OrganizerLayout from "@/components/Layouts/OrganizerLayout";
 import React from "react";
 import CreateOnlineEventForm from "./CreateOnlineEventForm";
 
-export default async function Page() {
-  const tagRequest = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tags`);
-  const tagResponse = await tagRequest.json();
+export default async function InPersonPage() {
   return (
     <OrganizerLayout title="">
-      <CreateOnlineEventForm tags={tagResponse.tags} />
+      <CreateOnlineEventForm />
     </OrganizerLayout>
   );
 }

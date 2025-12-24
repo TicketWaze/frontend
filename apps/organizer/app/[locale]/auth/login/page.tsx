@@ -46,12 +46,12 @@ export default function LoginPage() {
   return (
     <form
       onSubmit={handleSubmit(submitHandler)}
-      className="flex flex-col items-center h-full pb-4"
+      className="flex flex-col items-center h-full pb-4 gap-8"
     >
       <div className="flex-1 flex lg:justify-center flex-col w-full pt-[4.5rem]">
         <div className="flex flex-col gap-16 items-center">
           <div className="flex flex-col gap-8 items-center">
-            <h3 className="font-medium font-primary text-[3.2rem] leading-[3.5rem] text-black">
+            <h3 className="font-medium font-primary text-center text-[3.2rem] leading-[3.5rem] text-black">
               {t("title")}
             </h3>
             <p className="text-[1.8rem] text-center leading-[2.5rem] text-neutral-700">
@@ -106,7 +106,12 @@ export default function LoginPage() {
           <span className="text-[1.8rem] leading-[2.5rem] text-neutral-700">
             {t("footer.text")}
           </span>
-          <LinkAccent href="/auth/register">{t("footer.cta")}</LinkAccent>
+          <LinkAccent
+            target="_blank"
+            href={`${process.env.NEXT_PUBLIC_ATTENDEE_URL}/fr/auth/register`}
+          >
+            {t("footer.cta")}
+          </LinkAccent>
         </div>
       </div>
     </form>

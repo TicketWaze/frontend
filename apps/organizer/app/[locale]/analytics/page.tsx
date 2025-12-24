@@ -14,18 +14,11 @@ import { Ticket } from "@workspace/typescript-config";
 import { signOut } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-export default async function AnalyticsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const organisationId = (await searchParams).accessToken as string;
+export default async function AnalyticsPage() {
   const session = await auth();
   const currentOrganisation = session?.activeOrganisation;
-  const currentOrganisationId =
-    organisationId ?? session?.activeOrganisation?.organisationId;
-  console.log(currentOrganisationId);
-  if (!organisationId && !session?.activeOrganisation?.organisationId) {
+  const currentOrganisationId = session?.activeOrganisation?.organisationId;
+  if (!session?.activeOrganisation?.organisationId) {
     redirect(`/auth/logout`);
   }
   const t = await getTranslations("Analytics");

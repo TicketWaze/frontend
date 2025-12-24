@@ -1,10 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  UseFormGetValues,
-  UseFormRegister,
-  UseFormSetValue,
-} from "react-hook-form";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import {
   Select as UISelect,
   SelectContent,
@@ -42,7 +38,9 @@ type Props = {
     >
   >;
   isFree: boolean;
+  isRefundable: boolean;
   setIsFree: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsRefundable: React.Dispatch<React.SetStateAction<boolean>>;
   t: (s: string) => string;
 };
 
@@ -53,6 +51,8 @@ export default function StepTicket({
   setTicketClasses,
   isFree,
   setIsFree,
+  isRefundable,
+  setIsRefundable,
   t,
   setValue,
 }: Props) {
@@ -66,6 +66,7 @@ export default function StepTicket({
   }
   return (
     <div className="flex flex-col gap-12">
+      {/* set free */}
       <div className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100">
         <div className="flex items-center justify-between">
           <p className="text-[1.6rem] leading-[22px] text-deep-100 max-w-[380px]">
@@ -107,6 +108,24 @@ export default function StepTicket({
           </label>
         </div>
       </div>
+      {/* set refundable */}
+      <div className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100">
+        <div className="flex items-center justify-between">
+          <p className="text-[1.6rem] leading-[22px] text-deep-100 max-w-[380px]">
+            {t("mark_as_refundable")}
+          </p>
+          <label className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-primary-500 has-[:disabled]:cursor-not-allowed">
+            <input
+              className="peer sr-only"
+              id="free-event"
+              type="checkbox"
+              checked={isRefundable}
+              onChange={() => setIsRefundable((prev) => !prev)}
+            />
+            <ToggleIcon />
+          </label>
+        </div>
+      </div>
 
       {!isFree && (
         <div className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100">
@@ -135,7 +154,7 @@ export default function StepTicket({
 
       {isFree ? (
         <div className="max-w-[540px] w-full mx-auto p-[15px] rounded-[15px] flex flex-col gap-[15px] border border-neutral-100">
-          <Input defaultValue={"General"} disabled readOnly>
+          <Input defaultValue={"general"} disabled readOnly>
             {t("class_name")}
           </Input>
           <textarea

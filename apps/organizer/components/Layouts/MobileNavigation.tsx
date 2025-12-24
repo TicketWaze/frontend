@@ -39,36 +39,8 @@ export default function MobileNavigation({
   function isActive(path: string) {
     return pathname.startsWith(path);
   }
-
-  // const [scrollY, setScrollY] = useState(0);
-
-  // useEffect(() => {
-  //     const mainEl = document.querySelector('.main') as Element
-  //     const handleScroll = () => {
-  //         setScrollY(mainEl.scrollTop);
-  //     };
-
-  //     mainEl.addEventListener('scroll', handleScroll, { passive: true });
-
-  //     handleScroll()
-
-  //     return () => mainEl.removeEventListener('scroll', handleScroll);
-  // }, []);
-
-  // const maxScroll = 100;
-  // const opacity = scrollY < maxScroll ? 1 - scrollY / maxScroll : 0;
-  // const translateY = scrollY < maxScroll ? 0 : 100;
-
-  // const navStyle: React.CSSProperties = {
-  //     opacity,
-  //     transform: `translateY(${translateY}px)`,
-  //     transition: 'all 0.3s ease, all 0.3s ease',
-  // }
   return (
-    <nav
-      // style={navStyle}
-      className={cn(`lg:hidden rounded-t-3xl px-[1.5rem]`, className)}
-    >
+    <nav className={cn(`lg:hidden rounded-t-3xl px-[1.5rem]`, className)}>
       <ul className={" flex gap-4 justify-between w-full"}>
         {links.map(({ label, Icon, path }) => {
           return (

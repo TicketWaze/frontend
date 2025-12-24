@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function Separator() {
-  return (
-    <div className='h-[2px] bg-neutral-100'></div>
-  )
+  return <div className="h-[2px] bg-neutral-200"></div>;
 }

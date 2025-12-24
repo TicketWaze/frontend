@@ -1,46 +1,54 @@
 "use client";
 import React, { useState } from "react";
-import { Controller, UseFormRegister, Control } from "react-hook-form";
-import Select from "react-select";
 import {
-  Select as UISelect,
+  Controller,
+  UseFormRegister,
+  Control,
+  UseFormSetValue,
+} from "react-hook-form";
+import {
+  Select,
   SelectContent,
   SelectTrigger,
   SelectValue,
   SelectItem,
 } from "@workspace/ui/components/select";
 import { Input } from "@workspace/ui/components/Inputs";
-import type { CreateInPersonFormValues, EventTag } from "./types";
-import { useTranslations } from "next-intl";
+import type { CreateInPersonFormValues } from "./types";
+import { useLocale, useTranslations } from "next-intl";
+import { englishEventTags, frenchEventTags } from "@/lib/EventTags";
+import countries from "@/lib/Countries";
 
 type Props = {
   register: UseFormRegister<CreateInPersonFormValues>;
   control: Control<CreateInPersonFormValues>;
   errors: any;
-  countries: { name: { common: string } }[] | undefined;
-  organisationCountry?: string;
   imagePreview: string | null;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  tags: EventTag[];
   mapContainerRef: React.RefObject<HTMLDivElement | null>;
+  setValue: UseFormSetValue<CreateInPersonFormValues>;
 };
 
 export default function BasicDetails({
   register,
   control,
   errors,
-  countries,
-  organisationCountry,
   imagePreview,
   handleFileChange,
-  tags,
   mapContainerRef,
+  setValue,
 }: Props) {
   const t = useTranslations("Events.create_event");
   const [wordCount, setWordCount] = useState(0);
   function handleWordCount(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setWordCount(e.target.value.length);
   }
+  const locale = useLocale();
+  const eventTags = locale === "fr" ? frenchEventTags : englishEventTags;
+  const availableCountries = countries.map((country) => country.name);
+  const availableState = countries.map((country) => country.state).flat();
+  const [selectedState, setSelectedState] = useState<string>();
+  const cities = availableState.filter((state) => state.name === selectedState);
   return (
     <div className="flex flex-col gap-12">
       {/* Event details */}
@@ -96,22 +104,81 @@ export default function BasicDetails({
         </Input>
 
         <div className="flex flex-col lg:flex-row w-full gap-[15px] items-center justify-between">
-          <Input
-            {...register("state")}
-            type="text"
-            error={errors.state?.message}
-            className="w-full"
-          >
-            {t("state")}
-          </Input>
-          <Input
-            {...register("city")}
-            type="text"
-            error={errors.city?.message}
-            className="w-full"
-          >
-            {t("city")}
-          </Input>
+          <div className="flex-1 w-full">
+            <Controller
+              control={control}
+              name="state"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value}
+                  onValueChange={(e) => {
+                    field.onChange(e);
+                    setSelectedState(e);
+                    setValue("city", "");
+                  }}
+                  defaultValue={"sud"}
+                >
+                  <SelectTrigger className="bg-neutral-100 w-full rounded-[5rem] p-12 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500 z">
+                    <SelectValue placeholder={t("state")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableState.map((state, i) => {
+                      return (
+                        <SelectItem
+                          className={"text-[1.4rem] text-deep-100"}
+                          key={i}
+                          value={state.name}
+                        >
+                          {state.name}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.state && (
+              <span className="text-[1.2rem] px-8 py-2 text-failure">
+                {errors.state?.message}
+              </span>
+            )}
+          </div>
+          <div className="flex-1 w-full">
+            <Controller
+              control={control}
+              name="city"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="bg-neutral-100 w-full rounded-[5rem] p-12 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500 z">
+                    <SelectValue placeholder={t("city")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cities[0]?.cities.map((city, i) => {
+                      return (
+                        <SelectItem
+                          className={"text-[1.4rem] text-deep-100"}
+                          key={i}
+                          value={city}
+                        >
+                          {city}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.city && (
+              <span className="text-[1.2rem] px-8 py-2 text-failure">
+                {errors.city?.message}
+              </span>
+            )}
+          </div>
         </div>
 
         <div>
@@ -119,43 +186,35 @@ export default function BasicDetails({
             control={control}
             name="country"
             render={({ field }) => (
-              <UISelect
+              <Select
                 {...field}
                 value={field.value}
                 onValueChange={field.onChange}
-                defaultValue={organisationCountry}
+                defaultValue={availableCountries[0]}
               >
                 <SelectTrigger className="bg-neutral-100 w-full rounded-[5rem] p-12 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500 z">
                   <SelectValue placeholder={t("country")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {countries?.map((country, i) => (
-                    <SelectItem
-                      key={i}
-                      value={country.name.common}
-                      className="text-[1.5rem] leading-[20px] border-b border-neutral-100 mb-3 pb-3"
-                    >
-                      {country.name.common}
-                    </SelectItem>
-                  ))}
+                  {availableCountries.map((country) => {
+                    return (
+                      <SelectItem
+                        className={"text-[1.4rem] text-deep-100"}
+                        key={country}
+                        value={country}
+                      >
+                        {country}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
-              </UISelect>
+              </Select>
             )}
           />
           <span className="text-[1.2rem] px-8 py-2 text-failure">
             {errors.country?.message}
           </span>
         </div>
-
-        {/* <Input
-          defaultValue={`${getValues().longitude} - ${getValues().latitude}`}
-          error={errors.longitude?.message}
-          disabled
-          readOnly
-        >
-          {t("coordinates")}
-        </Input> */}
-
         <div className="w-full h-[300px] relative">
           <div
             style={{ height: "100%" }}
@@ -176,27 +235,32 @@ export default function BasicDetails({
         <div>
           <Controller
             control={control}
-            name="eventTags"
+            name="eventTagId"
             render={({ field }) => (
               <Select
                 {...field}
-                isMulti
-                options={tags}
-                placeholder={t("event_tags")}
-                styles={{
-                  control: () => ({
-                    borderColor: "transparent",
-                    display: "flex",
-                  }),
-                }}
-                getOptionLabel={(option) => option.tagName}
-                getOptionValue={(option) => option.tagId}
-                className="bg-neutral-100 w-full rounded-[5rem] p-4 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border disabled:text-neutral-600 disabled:cursor-not-allowed border-transparent focus:border-primary-500"
-              />
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <SelectTrigger className="bg-neutral-100 w-full rounded-[5rem] p-12 text-[1.5rem] leading-[20px] placeholder:text-neutral-600 text-deep-200 outline-none border border-transparent focus:border-primary-500 z">
+                  <SelectValue placeholder={t("select_tags")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {eventTags.map((tag, i) => (
+                    <SelectItem
+                      key={tag.id}
+                      value={tag.id}
+                      className="text-[1.5rem] leading-[20px] border-b border-neutral-100 mb-3 pb-3"
+                    >
+                      {tag.tag}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
           />
           <span className="text-[1.2rem] px-8 py-2 text-failure">
-            {errors.eventTags?.message}
+            {errors.eventTagId?.message}
           </span>
         </div>
       </div>

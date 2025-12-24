@@ -8,10 +8,8 @@ import {
 } from "@workspace/ui/components/tabs";
 import EventCard from "@/components/EventCard";
 import { DateTime } from "luxon";
-import Slugify from "@/lib/Slugify";
 import { Money3 } from "iconsax-react";
 import { useTranslations } from "next-intl";
-import TimesTampToDateTime from "@/lib/TimesTampToDateTime";
 import { Event } from "@workspace/typescript-config";
 
 export default function EventPageContent({ events }: { events: Event[] }) {
@@ -24,31 +22,12 @@ export default function EventPageContent({ events }: { events: Event[] }) {
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
-        <TabsContent value="all">
-          <ul className="list pt-4">
+        <TabsContent value="all" className="overflow-y-scroll">
+          <ul className="list pt-4 overflow-y-scroll">
             {events.map((event) => {
-              const date = TimesTampToDateTime(
-                event.eventDays[0]?.startDate ?? ""
-              );
-              const slug = Slugify(event.eventName);
               return (
                 <li key={event.eventId}>
-                  <EventCard
-                    href={`/events/show/${slug}`}
-                    image={event.eventImageUrl}
-                    name={event.eventName}
-                    date={date}
-                    country={event.country ?? ""}
-                    city={event.city ?? ""}
-                    price={
-                      event.currency === "USD"
-                        ? (event.eventTicketTypes[0]?.usdPrice ?? 0)
-                        : (event.eventTicketTypes[0]?.ticketTypePrice ?? 0)
-                    }
-                    currency={event.currency}
-                    tags={event.eventTags}
-                    eventType={event.eventType}
-                  />
+                  <EventCard event={event} />
                 </li>
               );
             })}
@@ -108,22 +87,9 @@ function UpcomingContent({ events }: { events: Event[] }) {
     <TabsContent value="upcoming">
       <ul className="list pt-4">
         {upcoming.map((event) => {
-          const date = TimesTampToDateTime(event.eventDays[0]?.startDate ?? "");
-          const slug = Slugify(event.eventName);
           return (
             <li key={event.eventId}>
-              <EventCard
-                href={`/events/show/${slug}`}
-                image={event.eventImageUrl}
-                name={event.eventName}
-                date={date}
-                country={event.country ?? ""}
-                city={event.city ?? ""}
-                price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
-                currency={event.currency}
-                tags={event.eventTags}
-                eventType={event.eventType}
-              />
+              <EventCard event={event} />
             </li>
           );
         })}
@@ -176,22 +142,9 @@ function HistoryContent({ events }: { events: Event[] }) {
     <TabsContent value="history">
       <ul className="list pt-4">
         {history.map((event) => {
-          const date = TimesTampToDateTime(event.eventDays[0]?.startDate ?? "");
-          const slug = Slugify(event.eventName);
           return (
             <li key={event.eventId}>
-              <EventCard
-                href={`/events/show/${slug}`}
-                image={event.eventImageUrl}
-                name={event.eventName}
-                date={date}
-                country={event.country ?? ""}
-                city={event.city ?? ""}
-                price={event.eventTicketTypes[0]?.ticketTypePrice ?? 0}
-                currency={event.currency}
-                tags={event.eventTags}
-                eventType={event.eventType}
-              />
+              <EventCard event={event} />
             </li>
           );
         })}
