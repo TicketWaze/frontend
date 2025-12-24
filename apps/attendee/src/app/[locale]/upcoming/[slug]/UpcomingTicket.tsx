@@ -17,7 +17,7 @@ export default function UpcomingTicket({
   event: Event;
 }) {
   const t = useTranslations("Event");
-  const isFree = event.eventTicketTypes[0].ticketTypePrice == 0;
+  const isFree = ticket.ticketPrice === 0 || ticket.ticketUsdPrice === 0;
   return (
     <div className=" flex flex-col gap-8 h-[500px] bg-[rgba(0,0,0,0.05)] w-full lg:h-[681px] relative shadow-[0_15px_25px_0_rgba(0,0,0,0.05)]">
       <Image src={ticketBG} alt={"ticket bg"} className="h-full" />
