@@ -26,7 +26,9 @@ export default function TicketViewer({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const t = useTranslations("Event");
-  const isFree = event.eventTicketTypes[0].ticketTypePrice == 0;
+  const isFree =
+    tickets[currentIndex].ticketPrice === 0 ||
+    tickets[currentIndex].ticketUsdPrice === 0;
 
   const mockTickets = tickets;
 
